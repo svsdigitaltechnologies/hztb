@@ -6,8 +6,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile project(':hztb-common')
+	compile()
+	compile project(':hztb-common'),
+		"org.springframework.boot:spring-boot-starter-web",
+		"org.springframework.boot:spring-boot-starter-data-jpa",
+		"org.springframework.boot:spring-boot-starter-jersey",
+		"org.postgresql:postgresql:9.4-1201-jdbc41"
+		
 }
 
 task stage {
