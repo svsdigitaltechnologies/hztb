@@ -1,5 +1,6 @@
 package com.svs.speakthrough.controller;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class UserServicesController {
 	}
 
 	private ResponseEntity<?> buildGetUserDetailsResponse(UserEntity userResponse) {
-		return ResponseEntity.ok().body(userResponse);
+		return ResponseEntity.status(HttpStatus.SC_OK).body(userResponse);
 	}
 
 }
