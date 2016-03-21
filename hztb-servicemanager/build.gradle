@@ -1,6 +1,8 @@
-jar {
-	baseName = 'hztb-servicemanager'
-	version = '0.0.1-SNAPSHOT'
+apply plugin: "war"
+apply plugin: "spring-boot"
+
+war {
+	destinationDir = file("build/libs")
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -11,13 +13,19 @@ dependencies {
 		"org.springframework.boot:spring-boot-starter-web",
 		"org.springframework.boot:spring-boot-starter-data-jpa",
 		"org.springframework.boot:spring-boot-starter-jersey",
-		"org.postgresql:postgresql:9.4-1201-jdbc41",
-		"org.apache.httpcomponents:httpclient:4.3.6"
+		"mysql:mysql-connector-java:5.1.38",
+		"org.apache.httpcomponents:httpclient:4.3.6",
+		"javax.validation:validation-api:1.1.0.Final"
 		
+		providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 task stage {
   dependsOn build
+}
+
+task debug << {
+    println "java.home is " + System.properties['java.home']
 }
 
 task copyToLib(type: Copy) {

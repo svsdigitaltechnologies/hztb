@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.svs.speakthrough.api.model.user.UserRequest;
 import com.svs.speakthrough.entity.UserEntity;
 import com.svs.speakthrough.repository.UserRepository;
 

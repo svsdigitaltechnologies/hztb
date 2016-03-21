@@ -13,7 +13,7 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer>{
 	@Query("from UserEntity")
 	List<UserEntity> findAllUsers();
 	
-	@Query("from UserEntity where username = ?1")
+	@Query("from UserEntity where idtest = ?1")
 	UserEntity findUserByUserId(String userName);
 /*	
 	@Query("from UserEntity U " 
