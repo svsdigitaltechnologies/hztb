@@ -9,7 +9,7 @@ targetCompatibility = 1.8
 
 dependencies {
 	compile()
-	compile project(':hztb-common'),
+	compile project(':hztb-common'),project(':hztb-rest-api'),
 		"org.springframework.boot:spring-boot-starter-web",
 		"org.springframework.boot:spring-boot-starter-data-jpa",
 		"org.springframework.boot:spring-boot-starter-jersey",

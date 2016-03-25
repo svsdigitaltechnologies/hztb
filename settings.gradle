@@ -1,1 +1,1 @@
-include ":hztb-servicemanager",":hztb-common"
+include ":hztb-servicemanager",":hztb-common",":hztb-rest-api"
