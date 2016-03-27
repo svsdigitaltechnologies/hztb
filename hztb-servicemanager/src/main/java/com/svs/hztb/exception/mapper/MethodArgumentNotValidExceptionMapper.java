@@ -19,7 +19,6 @@ import com.svs.hztb.common.model.HztbResponse;
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MethodArgumentNotValidExceptionMapper extends AbstractJSRConstraintExceptionMapper {
-	
 	private final static Logger logger = LoggerFactory.getLogger(MethodArgumentNotValidExceptionMapper.class);
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
