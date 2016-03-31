@@ -1,5 +1,11 @@
 package com.svs.hztb.sm.registration.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
@@ -13,18 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
+import com.svs.hztb.api.sm.model.user.UserProfileRequest;
+import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
 @RequestMapping("/user")
 public class RegistrationController {
-	
+
 	@Autowired
 	private UserDataService userDataService;
 
 	@RequestMapping(value = "/register", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<RegistrationResponse> register(@RequestBody @Valid RegistrationRequest registrationRequest) {
+	public @ResponseBody ResponseEntity<RegistrationResponse> register(
+			@RequestBody @Valid RegistrationRequest registrationRequest) {
 		RegistrationResponse registrationResponse = userDataService.register(registrationRequest);
 		return buildRegisterResponse(registrationResponse);
 	}
@@ -33,4 +42,35 @@ public class RegistrationController {
 		return ResponseEntity.status(HttpStatus.SC_OK).body(registrationResponse);
 	}
 
+	@RequestMapping(value = "/updateUserProfile", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<UserProfileResponse> updateUserProfile(
+			@RequestBody @Valid UserProfileRequest userProfileRequest) {
+		UserProfileResponse userProfileResponse = new UserProfileResponse();
+		userProfileResponse.setPhoneNumber(userProfileRequest.getPhoneNumber());
+		
+		byte[] buffer = userProfileRequest.getProfilePic();
+		File f = new File("C:\\temp\\"  + "ABC123.jpeg");   
+		try {
+			f.createNewFile();
+		FileOutputStream fos;
+			fos = new FileOutputStream(f);
+			fos.write(buffer);
+			fos.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  //This is where I write it to the C Drive
+		
+		return buildUserProfileResponse(userProfileResponse);
+	}
+	
+	private ResponseEntity<UserProfileResponse> buildUserProfileResponse(UserProfileResponse userProfileResponse) {
+		return ResponseEntity.status(HttpStatus.SC_OK).body(userProfileResponse);
+	}
 }
