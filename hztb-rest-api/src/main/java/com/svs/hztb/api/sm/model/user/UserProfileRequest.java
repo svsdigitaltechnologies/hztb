@@ -1,7 +1,10 @@
 package com.svs.hztb.api.sm.model.user;
 
+import javax.validation.constraints.NotNull;
+
 public class UserProfileRequest {
-	private long phoneNumber;
+	@NotNull
+	private String phoneNumber;
 	private byte[] profilePic;
 	private String profilePicS3Url;
 	private long pictureVersion;
@@ -9,11 +12,11 @@ public class UserProfileRequest {
 	public UserProfileRequest() {
 	}
 
-	public long getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(long phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 

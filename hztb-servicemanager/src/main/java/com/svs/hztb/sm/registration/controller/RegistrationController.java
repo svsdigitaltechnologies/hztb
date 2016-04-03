@@ -29,7 +29,16 @@ public class RegistrationController {
 
 	@Autowired
 	private UserDataService userDataService;
-
+	
+	/** 
+	 * 
+	 * @param registrationRequest
+	 * @return registrationResponse
+	 * 
+	 * This method is used to register a new user to the application
+	 * 1. Check if the phone number is already registered or not
+	 * 2. If it exists, send a error message saying "user already exists on 
+	 */
 	@RequestMapping(value = "/register", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<RegistrationResponse> register(
@@ -48,12 +57,12 @@ public class RegistrationController {
 			@RequestBody @Valid UserProfileRequest userProfileRequest) {
 		UserProfileResponse userProfileResponse = new UserProfileResponse();
 		userProfileResponse.setPhoneNumber(userProfileRequest.getPhoneNumber());
-		
+
 		byte[] buffer = userProfileRequest.getProfilePic();
-		File f = new File("C:\\temp\\"  + "ABC123.jpeg");   
+		File f = new File("C:\\temp\\" + "ABC123.jpeg");
 		try {
 			f.createNewFile();
-		FileOutputStream fos;
+			FileOutputStream fos;
 			fos = new FileOutputStream(f);
 			fos.write(buffer);
 			fos.close();
@@ -61,15 +70,14 @@ public class RegistrationController {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  
-		catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}  //This is where I write it to the C Drive
-		
+		} // This is where I write it to the C Drive
+
 		return buildUserProfileResponse(userProfileResponse);
 	}
-	
+
 	private ResponseEntity<UserProfileResponse> buildUserProfileResponse(UserProfileResponse userProfileResponse) {
 		return ResponseEntity.status(HttpStatus.SC_OK).body(userProfileResponse);
 	}
