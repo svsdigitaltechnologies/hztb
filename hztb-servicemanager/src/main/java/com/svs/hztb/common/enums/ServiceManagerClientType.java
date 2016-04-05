@@ -4,7 +4,8 @@ import com.svs.hztb.client.ClientErrorMapping;
 import com.svs.hztb.client.ClientType;
 
 public enum ServiceManagerClientType implements ClientType {
-	DATASERVICES(ClientErrorMappingImpl.DS);
+	DATASERVICES(ClientErrorMappingImpl.DS),
+	SERVICE_MANAGER(ClientErrorMappingImpl.SERVICE_MANAGER);
 	
 	private ClientErrorMappingImpl errorMapping;
 

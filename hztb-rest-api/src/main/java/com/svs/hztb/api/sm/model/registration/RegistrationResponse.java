@@ -2,14 +2,14 @@ package com.svs.hztb.api.sm.model.registration;
 
 public class RegistrationResponse {
 
-	private String phoneNumber;
+	private String mobileNumber;
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 	
 }

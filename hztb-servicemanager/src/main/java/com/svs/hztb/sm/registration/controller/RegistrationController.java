@@ -1,11 +1,5 @@
 package com.svs.hztb.sm.registration.controller;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
@@ -19,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
-import com.svs.hztb.api.sm.model.user.UserProfileRequest;
-import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
@@ -36,8 +28,8 @@ public class RegistrationController {
 	 * @return registrationResponse
 	 * 
 	 * This method is used to register a new user to the application
-	 * 1. Check if the phone number is already registered or not
-	 * 2. If it exists, send a error message saying "user already exists on 
+	 * 1. Generates a new OTP code and inserts/updates a record in user table.
+	 * 2. sends the otp code to the mobile phone.
 	 */
 	@RequestMapping(value = "/register", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
@@ -50,7 +42,7 @@ public class RegistrationController {
 	private ResponseEntity<RegistrationResponse> buildRegisterResponse(RegistrationResponse registrationResponse) {
 		return ResponseEntity.status(HttpStatus.SC_OK).body(registrationResponse);
 	}
-
+/*
 	@RequestMapping(value = "/updateUserProfile", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<UserProfileResponse> updateUserProfile(
@@ -81,4 +73,4 @@ public class RegistrationController {
 	private ResponseEntity<UserProfileResponse> buildUserProfileResponse(UserProfileResponse userProfileResponse) {
 		return ResponseEntity.status(HttpStatus.SC_OK).body(userProfileResponse);
 	}
-}
+*/}

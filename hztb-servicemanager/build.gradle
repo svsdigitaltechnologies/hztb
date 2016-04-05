@@ -15,7 +15,8 @@ dependencies {
 		"org.springframework.boot:spring-boot-starter-jersey",
 		"mysql:mysql-connector-java:5.1.38",
 		"org.apache.httpcomponents:httpclient:4.3.6",
-		"javax.validation:validation-api:1.1.0.Final"
+		"javax.validation:validation-api:1.1.0.Final",
+		"com.fasterxml.jackson.core:jackson-databind"
 		
 		providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }

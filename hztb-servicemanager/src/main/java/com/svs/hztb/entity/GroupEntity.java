@@ -10,8 +10,9 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Group.findAll", query="SELECT g FROM Group g")
-public class Group implements Serializable {
+@Table(name = "group", schema = "ebdb")
+@NamedQuery(name="GroupEntity.findAll", query="SELECT g FROM GroupEntity g")
+public class GroupEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -29,9 +30,9 @@ public class Group implements Serializable {
 
 	//bi-directional many-to-many association to User
 	@ManyToMany(mappedBy="groups")
-	private List<User> users;
+	private List<UserEntity> users;
 
-	public Group() {
+	public GroupEntity() {
 	}
 
 	public int getGroupId() {
@@ -66,11 +67,11 @@ public class Group implements Serializable {
 		this.groupOwner = groupOwner;
 	}
 
-	public List<User> getUsers() {
+	public List<UserEntity> getUsers() {
 		return this.users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<UserEntity> users) {
 		this.users = users;
 	}
 

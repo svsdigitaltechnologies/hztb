@@ -4,44 +4,36 @@ import javax.validation.constraints.NotNull;
 
 public class UserProfileRequest {
 	@NotNull
-	private String phoneNumber;
-	private byte[] profilePic;
-	private String profilePicS3Url;
-	private long pictureVersion;
+	private String mobileNumber;
+	
+	private String name;
+	private String emailAddress;
 
 	public UserProfileRequest() {
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
-	public byte[] getProfilePic() {
-		return profilePic;
+	public String getName() {
+		return name;
 	}
 
-	public void setProfilePic(byte[] profilePic) {
-		this.profilePic = profilePic;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getProfilePicS3Url() {
-		return profilePicS3Url;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 
-	public void setProfilePicS3Url(String profilePicS3Url) {
-		this.profilePicS3Url = profilePicS3Url;
-	}
-
-	public long getPictureVersion() {
-		return pictureVersion;
-	}
-
-	public void setPictureVersion(long pictureVersion) {
-		this.pictureVersion = pictureVersion;
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 }

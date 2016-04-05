@@ -12,9 +12,11 @@ import com.svs.hztb.common.model.StatusCode;
 
 public enum ClientErrorMappingImpl implements ClientErrorMapping {
 
-	DS(entry(1, ServiceManagerStatusCode.DATA_SERVICES_ERROR),
-		entry(2, ServiceManagerStatusCode.USER_NOT_AVAILABLE),
-		entry(3, ServiceManagerStatusCode.USER_ALREADY_REGISTERED));
+	DS(entry(1, ServiceManagerStatusCode.DATA_SERVICES_ERROR), entry(2, ServiceManagerStatusCode.USER_NOT_AVAILABLE),
+			entry(3, ServiceManagerStatusCode.USER_ALREADY_REGISTERED),
+			entry(4, ServiceManagerStatusCode.USER_NOT_AVAILABLE_MOBILE_IMEI)), 
+	SERVICE_MANAGER(
+					entry(100, ServiceManagerStatusCode.INVALID_OTP), entry(101, ServiceManagerStatusCode.EXPIRED_OTP));
 
 	private final static Logger logger = LoggerFactory.getLogger(ClientErrorMappingImpl.class);
 
