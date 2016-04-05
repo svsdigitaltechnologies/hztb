@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableWebMvc
-@EnableJpaRepositories(basePackages = {"com.svs.hztb.repository"})
+@EnableJpaRepositories(basePackages = { "com.svs.hztb.repository" })
 @ComponentScan({ "com.svs.hztb" })
 @EntityScan(basePackages = "com.svs.hztb.entity")
 @PropertySources({ @PropertySource(value = "classpath:application.properties") })

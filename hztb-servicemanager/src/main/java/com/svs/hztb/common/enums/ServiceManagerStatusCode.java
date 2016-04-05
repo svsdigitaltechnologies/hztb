@@ -7,9 +7,14 @@ import com.svs.hztb.common.model.StatusCode;
 
 public enum ServiceManagerStatusCode implements StatusCode {
 	
-	DATA_SERVICES_ERROR("30000",String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Data Services Error"),
-	USER_NOT_AVAILABLE("30001",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Username not available"),
-	USER_ALREADY_REGISTERED("30002",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User already registered");
+	DATA_SERVICES_ERROR("10000",String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Data Services Error"),
+	USER_NOT_AVAILABLE("10001",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Username not available"),
+	USER_ALREADY_REGISTERED("10002",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User already registered"),
+	USER_NOT_AVAILABLE_MOBILE_IMEI("10003",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User not available with mobile number and imei"),
+	INVALID_OTP("20000", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid OTP"),
+	EXPIRED_OTP("20001", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Expired OTP");
+	
+
 
 	private String statusCode;
 	private String httpStatusCode;
