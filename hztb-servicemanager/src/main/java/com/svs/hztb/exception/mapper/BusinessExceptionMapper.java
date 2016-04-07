@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.svs.hztb.common.model.HztbResponse;
-import com.svs.hztb.exception.BusinessException;
-import com.svs.hztb.exception.mapper.BaseExceptionMapper;
+import com.svs.hztb.orchestration.exception.BusinessException;
 
 @ControllerAdvice
 public class BusinessExceptionMapper extends BaseExceptionMapper<BusinessException> {

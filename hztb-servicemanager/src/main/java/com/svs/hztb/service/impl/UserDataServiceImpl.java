@@ -1,25 +1,16 @@
 package com.svs.hztb.service.impl;
 
-import java.text.MessageFormat;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import com.svs.hztb.adapter.UserAdapter;
 import com.svs.hztb.api.common.utils.GCMMessageNotificationClient;
 import com.svs.hztb.api.common.utils.HZTBUtil;
-import com.svs.hztb.api.sm.model.clickatell.ClickatellRequest;
-import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
@@ -34,9 +25,13 @@ import com.svs.hztb.common.exception.SystemException;
 import com.svs.hztb.common.model.PlatformStatusCode;
 import com.svs.hztb.common.model.business.User;
 import com.svs.hztb.ds.model.DataServiceRequest;
-import com.svs.hztb.exception.BusinessException;
 import com.svs.hztb.exception.DataServiceException;
+import com.svs.hztb.orchestration.component.model.FlowContext;
+import com.svs.hztb.orchestration.component.step.StepDefinition;
+import com.svs.hztb.orchestration.component.step.StepDefinitionFactory;
+import com.svs.hztb.orchestration.exception.BusinessException;
 import com.svs.hztb.service.UserDataService;
+import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 
 @Service
 @Transactional
@@ -44,6 +39,9 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Autowired
 	private UserAdapter userAdapter;
+
+	@Autowired
+	private StepDefinitionFactory stepDefinitionFactory;
 
 	private final static Logger logger = LoggerFactory.getLogger(UserDataServiceImpl.class);
 
@@ -67,36 +65,16 @@ public class UserDataServiceImpl implements UserDataService {
 				user = userAdapter.createUser(dataServiceRequest);
 			}
 
-			RestTemplate restTemplate = new RestTemplate();
-			ClickatellRequest clickatellRequest = new ClickatellRequest();
-			clickatellRequest.setTo(user.getMobileNumber());
-			clickatellRequest.setText(user.getOtpCode());
-
-			HttpHeaders requestHeaders = new HttpHeaders();
-			requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-			requestHeaders.add("Accept", "application/json;charset=utf-8");
-			requestHeaders.add("X-Version", "1");
-			requestHeaders.set("Authorization",
-					"bearer VAHTu2T5yNlcyXKBDV6PdXsZuhQACZWfSLViD9Q7emmkkxbpXUfW3Tu8dUi_Y_HiP_o");
-
-			/*
-			 * HttpEntity requestEntity = new HttpEntity(clickatellRequest,
-			 * requestHeaders);
-			 * 
-			 * ResponseEntity<ClickatellResponse> clickatellResponse =
-			 * restTemplate.exchange( "https://api.clickatell.com/rest/message",
-			 * HttpMethod.POST, requestEntity, ClickatellResponse.class);
-			 */
-
-			HttpEntity requestEntity = new HttpEntity(null, requestHeaders);
-
-			ResponseEntity<ClickatellResponse> clickatellResponse = restTemplate.exchange(
-					"http://localhost:8082/user/jsonResponse", HttpMethod.GET, requestEntity, ClickatellResponse.class);
-			System.out.println("Clickatell to : " + clickatellResponse.getBody().getData().getMessage().get(0).getTo());
+			FlowContext flowContext = new FlowContext(null);
+			StepDefinition stepDefinition = stepDefinitionFactory
+					.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL_GET);
+			stepDefinition.execute(flowContext);
 
 			registrationResponse = populateRegistrationUserResponse(user);
 		} catch (DataServiceException e) {
-			throw BusinessException.build(ServiceManagerClientType.DATASERVICES, e.getMessage(), e.getStatusCode());
+			throw BusinessException.build(ServiceManagerClientType.DS, e.getMessage(), e.getStatusCode());
+		} catch (BusinessException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new SystemException(e.getMessage(), e, PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
@@ -118,7 +96,7 @@ public class UserDataServiceImpl implements UserDataService {
 			user = userAdapter.ping(dataServiceRequest);
 			pingResponse = populatePingResponse(user);
 		} catch (DataServiceException dataServiceException) {
-			throw BusinessException.build(ServiceManagerClientType.DATASERVICES, dataServiceException.getMessage(),
+			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
 		} catch (Exception exception) {
 			throw new SystemException(exception.getMessage(), exception,
@@ -147,12 +125,12 @@ public class UserDataServiceImpl implements UserDataService {
 				if (validateOTPRequest.getOtpCode().equals(userFromDB.getOtpCode())) {
 					dataServiceRequest.getPayload().setUserId(userFromDB.getUserId());
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
-					
-					GCMMessageNotificationClient client=new GCMMessageNotificationClient();
-					
+
+					GCMMessageNotificationClient client = new GCMMessageNotificationClient();
+
 					String formattedMessage = "Welcome to hztb";
 					client.processPushNotification(userFromDB.getDeviceRegId(), formattedMessage);
-					
+
 					isOTPValiationSuccesful = true;
 				} else {
 					// update the code to increment the otp attempt failed
@@ -168,7 +146,7 @@ public class UserDataServiceImpl implements UserDataService {
 			}
 			validateOTPResponse = populateValidateOTPResponse(user, isOTPValiationSuccesful);
 		} catch (DataServiceException dataServiceException) {
-			throw BusinessException.build(ServiceManagerClientType.DATASERVICES, dataServiceException.getMessage(),
+			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
 		} catch (BusinessException businessException) {
 			throw businessException;
@@ -199,7 +177,7 @@ public class UserDataServiceImpl implements UserDataService {
 			}
 			userProfileResponse = populateUserResponse(user);
 		} catch (DataServiceException dataServiceException) {
-			throw BusinessException.build(ServiceManagerClientType.DATASERVICES, dataServiceException.getMessage(),
+			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
 		} catch (BusinessException businessException) {
 			throw businessException;
@@ -235,7 +213,7 @@ public class UserDataServiceImpl implements UserDataService {
 			user = userAdapter.updateUserDetails(dataServiceRequest);
 			userProfileResponse = populateUserResponse(user);
 		} catch (DataServiceException dataServiceException) {
-			throw BusinessException.build(ServiceManagerClientType.DATASERVICES, dataServiceException.getMessage(),
+			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
 		} catch (BusinessException businessException) {
 			throw businessException;

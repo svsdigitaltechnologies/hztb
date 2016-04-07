@@ -1,10 +1,10 @@
-package com.svs.hztb.client;
+package com.svs.hztb.restfulclient;
 
 import java.util.Map;
 
 import com.svs.hztb.common.model.StatusCode;
 
-public interface ClientErrorMapping {
+public interface RestfulEndpointErrorMapping {
 	
 	Map<Integer, StatusCode> getMappings();
 	

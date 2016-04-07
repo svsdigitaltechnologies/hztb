@@ -1,15 +1,20 @@
 package com.svs.hztb.common.enums;
 
-import com.svs.hztb.client.ClientErrorMapping;
-import com.svs.hztb.client.ClientType;
+import org.springframework.http.MediaType;
+
+import com.svs.hztb.restfulclient.ClientType;
+import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 
 public enum ServiceManagerClientType implements ClientType {
-	DATASERVICES(ClientErrorMappingImpl.DS),
-	SERVICE_MANAGER(ClientErrorMappingImpl.SERVICE_MANAGER);
+	DS(MediaType.ALL, RestfulEndpointErrorMappingImpl.DS),
+	SM(MediaType.ALL, RestfulEndpointErrorMappingImpl.SM),
+	CT(MediaType.APPLICATION_JSON, RestfulEndpointErrorMappingImpl.CT);
 	
-	private ClientErrorMappingImpl errorMapping;
+	private RestfulEndpointErrorMappingImpl errorMapping;
+	private MediaType mediaType;
 
-	private ServiceManagerClientType(ClientErrorMappingImpl errorMapping) {
+	private ServiceManagerClientType(MediaType mediaType, RestfulEndpointErrorMappingImpl errorMapping) {
+		this.mediaType = mediaType;
 		this.errorMapping = errorMapping;
 	}
 	
@@ -19,8 +24,13 @@ public enum ServiceManagerClientType implements ClientType {
 	}
 
 	@Override
-	public ClientErrorMapping getErrorMapping() {
+	public RestfulEndpointErrorMapping getErrorMapping() {
 		return errorMapping;
+	}
+
+	@Override
+	public MediaType getMediaType() {
+		return mediaType;
 	}
 
 }
