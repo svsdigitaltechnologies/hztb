@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
 import com.svs.hztb.common.enums.ServiceManagerStatusCode;
-import com.svs.hztb.exception.BusinessException;
+import com.svs.hztb.orchestration.exception.BusinessException;
 import com.svs.hztb.service.UserDataService;
 
 @RestController

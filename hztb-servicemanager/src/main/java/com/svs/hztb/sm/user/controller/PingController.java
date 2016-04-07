@@ -45,7 +45,7 @@ public class PingController {
 		return ResponseEntity.status(HttpStatus.SC_OK).body(pingResponse);
 	}
 
-	@RequestMapping(value = "/jsonResponse", consumes = { "application/json" }, produces = {
+	@RequestMapping(value = "/jsonGetResponse", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<ClickatellResponse> jsonResponse() {
 		ClickatellResponse clickatellResponse = new ClickatellResponse();
@@ -56,12 +56,25 @@ public class PingController {
 		clickatellMessage.setTo("18479874489");
 		List<ClickatellMessage> list = new ArrayList<ClickatellMessage>();
 		list.add(clickatellMessage);
-				
+
 		clickatellData.setMessage(list);
 		clickatellResponse.setData(clickatellData);
-		
-		
-		
+		return ResponseEntity.status(HttpStatus.SC_OK).body(clickatellResponse);
+	}
+
+	@RequestMapping(value = "/jsonPostResponse", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<ClickatellResponse> jsonPostResponse() {
+		ClickatellResponse clickatellResponse = new ClickatellResponse();
+		ClickatellData clickatellData = new ClickatellData();
+		ClickatellMessage clickatellMessage = new ClickatellMessage();
+		clickatellMessage.setAccepted("true");
+		clickatellMessage.setApiMessageId("4e14462eab36c639ed3a06b1a0d05ed6");
+		clickatellMessage.setTo("18479874489");
+		List<ClickatellMessage> list = new ArrayList<ClickatellMessage>();
+		list.add(clickatellMessage);
+		clickatellData.setMessage(list);
+		clickatellResponse.setData(clickatellData);
 		return ResponseEntity.status(HttpStatus.SC_OK).body(clickatellResponse);
 	}
 

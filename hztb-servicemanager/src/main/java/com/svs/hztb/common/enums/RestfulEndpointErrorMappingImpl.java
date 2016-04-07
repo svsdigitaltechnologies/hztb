@@ -7,22 +7,24 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.svs.hztb.client.ClientErrorMapping;
 import com.svs.hztb.common.model.StatusCode;
+import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 
-public enum ClientErrorMappingImpl implements ClientErrorMapping {
+public enum RestfulEndpointErrorMappingImpl implements RestfulEndpointErrorMapping{
 
 	DS(entry(1, ServiceManagerStatusCode.DATA_SERVICES_ERROR), entry(2, ServiceManagerStatusCode.USER_NOT_AVAILABLE),
 			entry(3, ServiceManagerStatusCode.USER_ALREADY_REGISTERED),
 			entry(4, ServiceManagerStatusCode.USER_NOT_AVAILABLE_MOBILE_IMEI)), 
-	SERVICE_MANAGER(
-					entry(100, ServiceManagerStatusCode.INVALID_OTP), entry(101, ServiceManagerStatusCode.EXPIRED_OTP));
+	SM(
+					entry(100, ServiceManagerStatusCode.INVALID_OTP), entry(101, ServiceManagerStatusCode.EXPIRED_OTP)),
+	CT(
+			entry(1, ServiceManagerStatusCode.NEED_PAYMENT), entry(101, ServiceManagerStatusCode.EXPIRED_OTP));
 
-	private final static Logger logger = LoggerFactory.getLogger(ClientErrorMappingImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(RestfulEndpointErrorMappingImpl.class);
 
 	private final transient Map<Integer, StatusCode> mappings = new HashMap<>();
 
-	private ClientErrorMappingImpl(Map.Entry<Integer, StatusCode>... entries) {
+	private RestfulEndpointErrorMappingImpl(Map.Entry<Integer, StatusCode>... entries) {
 		for (Map.Entry<Integer, StatusCode> entry : entries) {
 			mappings.put(entry.getKey(), entry.getValue());
 		}

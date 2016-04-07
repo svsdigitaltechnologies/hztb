@@ -12,7 +12,9 @@ public enum ServiceManagerStatusCode implements StatusCode {
 	USER_ALREADY_REGISTERED("10002",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User already registered"),
 	USER_NOT_AVAILABLE_MOBILE_IMEI("10003",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User not available with mobile number and imei"),
 	INVALID_OTP("20000", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid OTP"),
-	EXPIRED_OTP("20001", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Expired OTP");
+	EXPIRED_OTP("20001", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Expired OTP"),
+	
+	NEED_PAYMENT("30000",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Need Payment");
 	
 
 

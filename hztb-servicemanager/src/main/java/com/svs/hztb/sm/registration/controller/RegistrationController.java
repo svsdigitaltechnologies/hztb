@@ -30,11 +30,12 @@ public class RegistrationController {
 	 * This method is used to register a new user to the application
 	 * 1. Generates a new OTP code and inserts/updates a record in user table.
 	 * 2. sends the otp code to the mobile phone.
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/register", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<RegistrationResponse> register(
-			@RequestBody @Valid RegistrationRequest registrationRequest) {
+			@RequestBody @Valid RegistrationRequest registrationRequest) throws Exception {
 		RegistrationResponse registrationResponse = userDataService.register(registrationRequest);
 		return buildRegisterResponse(registrationResponse);
 	}
