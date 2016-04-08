@@ -9,13 +9,19 @@ targetCompatibility = 1.8
 
 dependencies {
 	compile()
-	compile project(':hztb-common'),project(':hztb-rest-api'),
+	compile project(':hztb-common'),
+	project(':hztb-rest-api'),
+	project(':hztb-restful'),
+	project(':hztb-orchestration'),
+	project(':hztb-security'),
 		"org.springframework.boot:spring-boot-starter-web",
 		"org.springframework.boot:spring-boot-starter-data-jpa",
 		"org.springframework.boot:spring-boot-starter-jersey",
 		"mysql:mysql-connector-java:5.1.38",
 		"org.apache.httpcomponents:httpclient:4.3.6",
-		"javax.validation:validation-api:1.1.0.Final"
+		"javax.validation:validation-api:1.1.0.Final",
+		"com.fasterxml.jackson.core:jackson-databind",
+		'commons-io:commons-io:2.4'
 		
 		providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
