@@ -46,6 +46,7 @@ public class UserAdapterImpl implements UserAdapter {
 		return user;
 	}
 
+	
 	/**
 	 * This method is used to register a user with hztb.
 	 * 
