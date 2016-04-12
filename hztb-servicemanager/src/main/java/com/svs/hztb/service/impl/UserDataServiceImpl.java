@@ -2,8 +2,6 @@ package com.svs.hztb.service.impl;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +20,8 @@ import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
 import com.svs.hztb.common.enums.ServiceManagerStatusCode;
 import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
 import com.svs.hztb.common.model.business.User;
 import com.svs.hztb.ds.model.DataServiceRequest;
@@ -36,14 +36,15 @@ import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 @Service
 @Transactional
 public class UserDataServiceImpl implements UserDataService {
+	
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserDataServiceImpl.class);
+	
 
 	@Autowired
 	private UserAdapter userAdapter;
 
 	@Autowired
 	private StepDefinitionFactory stepDefinitionFactory;
-
-	private final static Logger logger = LoggerFactory.getLogger(UserDataServiceImpl.class);
 
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) {
@@ -89,6 +90,8 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Override
 	public PingResponse ping(PingRequest pingRequest) {
+		
+		LOGGER.debug("UserDataServiceImpl:ping operation");
 		PingResponse pingResponse = null;
 		try {
 			User user = new User(pingRequest);
@@ -96,6 +99,7 @@ public class UserDataServiceImpl implements UserDataService {
 			user = userAdapter.ping(dataServiceRequest);
 			pingResponse = populatePingResponse(user);
 		} catch (DataServiceException dataServiceException) {
+			LOGGER.callOut("Callout Error: {}" , dataServiceException);
 			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
 		} catch (Exception exception) {

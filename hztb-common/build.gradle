@@ -1,12 +1,22 @@
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2',
-    		'org.slf4j:slf4j-simple:1.7.16',
+    		'org.slf4j:slf4j-api:1.7.12',
+    		'org.apache.logging.log4j:log4j-slf4j-impl:2.5',
+    		'org.apache.logging.log4j:log4j-api:2.5',
+    		'org.apache.logging.log4j:log4j-core:2.5',
+    		'org.apache.logging.log4j:log4j-1.2-api:2.5',
+    		'org.apache.logging.log4j:log4j-web:2.5',
 			'javax.validation:validation-api:1.1.0.Final',
 			'com.ganyo:gcm-server:1.0.2',
 			'org.springframework:spring-expression:4.1.7.RELEASE',
 			'com.google.guava:guava:16.0.1',
 			'com.fasterxml.jackson.core:jackson-databind:2.4.6',
-			'commons-io:commons-io:2.4'
+			'commons-io:commons-io:2.4',
+			'commons-codec:commons-codec:1.10',
+			'org.apache.logging.log4j:log4j-core:2.5',
+			'com.lmax:disruptor:3.3.0',
+			'javax.servlet:javax.servlet-api:3.1.0'
+			
 			
 			
 }

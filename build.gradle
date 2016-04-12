@@ -21,6 +21,11 @@ subprojects {
     apply plugin: 'spring-boot'
   }
   
+  configurations.all {
+  	resolutionStrategy.cacheChangingModulesFor 0, "seconds"
+  	exclude group: "ch.qos.logback"
+  	exclude group: "org.apache.log4j", module: "log4j"
+  }
  
   repositories {
     mavenCentral()
