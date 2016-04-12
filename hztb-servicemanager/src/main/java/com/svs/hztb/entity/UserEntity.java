@@ -56,6 +56,11 @@ public class UserEntity implements Serializable {
 			}
 		)
 	private List<GroupEntity> groups;
+	
+	@Column(name="invalid_otp_retries")
+	private String invalidOtpRetries;
+
+	
 
 	public UserEntity() {
 	}
@@ -147,5 +152,15 @@ public class UserEntity implements Serializable {
 	public void setGroups(List<GroupEntity> groups) {
 		this.groups = groups;
 	}
+
+	public String getInvalidOtpRetries() {
+		return invalidOtpRetries;
+	}
+
+	public void setInvalidOtpRetries(String invalidOtpRetries) {
+		this.invalidOtpRetries = invalidOtpRetries;
+	}
+	
+	
 
 }
