@@ -2,8 +2,6 @@ package com.svs.hztb.sm;
 
 import javax.servlet.ServletContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +17,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.orchestration.component.service.StartupService;
 
 @SpringBootApplication
@@ -26,16 +26,27 @@ import com.svs.hztb.orchestration.component.service.StartupService;
 @EnableJpaRepositories(basePackages = { "com.svs.hztb.repository" })
 @ComponentScan({ "com.svs.hztb" })
 @EntityScan(basePackages = "com.svs.hztb.entity")
-@PropertySources({ @PropertySource(value = "classpath:application.properties"), @PropertySource(value = "classpath:restful.client.properties")})
-public class ServiceManager extends SpringBootServletInitializer implements ApplicationListener<ContextRefreshedEvent>, ServletContextAware {
+@PropertySources({ @PropertySource(value = "classpath:application.properties"),
+		@PropertySource(value = "classpath:restful.client.properties") })
+public class ServiceManager extends SpringBootServletInitializer
+		implements ApplicationListener<ContextRefreshedEvent>, ServletContextAware {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManager.class);
+	private static Logger LOGGER = LoggerFactory.INSTANCE.getLogger(ServiceManager.class);
+
 	@Autowired
 	private StartupService startupService;
-	
+
 	public static void main(String[] args) {
-		LOGGER.info("Service Manager Spring Boot Application getting started");
+		configureLogging();
 		SpringApplication.run(ServiceManager.class, args);
+		LOGGER.debug("ServiceManager started succesfully");
+	}
+
+	private static void configureLogging() {
+		System.setProperty("log4j.configurationFile", "log4j2.xml");
+		System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+		// System.setProperty(LoggingSystem.SYSTEM_PROPERTY,
+		// Log4J2LoggingSystem.class.getName());
 	}
 
 	@Override
@@ -46,13 +57,11 @@ public class ServiceManager extends SpringBootServletInitializer implements Appl
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		startupService.start(ServiceManager.class.getAnnotation(ComponentScan.class).value());
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -8,11 +8,11 @@ import com.svs.hztb.common.model.StatusCode;
 public enum ServiceManagerStatusCode implements StatusCode {
 	
 	DATA_SERVICES_ERROR("10000",String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Data Services Error"),
-	USER_NOT_AVAILABLE("10001",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Username not available"),
+	USER_NOT_AVAILABLE("10001",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User not available"),
 	USER_ALREADY_REGISTERED("10002",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User already registered"),
 	USER_NOT_AVAILABLE_MOBILE_IMEI("10003",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User not available with mobile number and imei"),
 	INVALID_OTP("20000", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid OTP"),
-	EXPIRED_OTP("20001", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Expired OTP"),
+	OTP_NOT_VALID("20001", String.valueOf(HttpStatus.BAD_REQUEST.value()), "OTP is either expired or invalid OTP count exceeded"),
 	
 	NEED_PAYMENT("30000",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Need Payment");
 	
@@ -49,19 +49,16 @@ public enum ServiceManagerStatusCode implements StatusCode {
 	
 	@Override
 	public String getStatusCode() {
-		// TODO Auto-generated method stub
 		return statusCode;
 	}
 
 	@Override
 	public String getHttpStatusCode() {
-		// TODO Auto-generated method stub
 		return httpStatusCode;
 	}
 
 	@Override
 	public String getMessage() {
-		// TODO Auto-generated method stub
 		return message;
 	}
 

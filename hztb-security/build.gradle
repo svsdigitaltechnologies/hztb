@@ -1,4 +1,3 @@
 dependencies {
-	compile project(':hztb-security'),
-			'org.springframework:spring-web:4.1.7.RELEASE'
+	compile 'org.springframework:spring-web:4.1.7.RELEASE'
 }

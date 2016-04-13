@@ -4,19 +4,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.svs.hztb.common.exception.BaseException;
 import com.svs.hztb.common.model.StatusCode;
 
 public class SystemException extends BaseException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -677418850964124526L;
-
-	public SystemException() {
-		super("System error occured");
-	}
 
 	public SystemException(String message, Throwable exception, StatusCode statusCode) {
 		super(message, exception, statusCode);

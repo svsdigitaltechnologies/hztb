@@ -1,7 +1,7 @@
 package com.svs.hztb.ds.model;
 
 public abstract class AbstractRequest<T> {
-	
+
 	protected T payload;
 
 	public T getPayload() {

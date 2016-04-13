@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.svs.hztb.common.exception.BaseException;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.DownstreamError;
 import com.svs.hztb.common.model.PlatformStatusCode;
 import com.svs.hztb.common.model.StatusCode;
@@ -22,7 +22,7 @@ public class BusinessException extends BaseException {
 	 * 
 	 */
 
-	private final static Logger logger = LoggerFactory.getLogger(BusinessException.class);
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(BusinessException.class);
 
 	private static final long serialVersionUID = -677418850964124526L;
 
@@ -36,7 +36,6 @@ public class BusinessException extends BaseException {
 
 	public BusinessException(String message, StatusCode statusCode) {
 		super(message, statusCode);
-		logger.error("Business error occured - statusCode: " + statusCode + ". message: " + message);
 	}
 
 	public BusinessException(String message, Throwable cause) {
@@ -53,6 +52,7 @@ public class BusinessException extends BaseException {
 
 	private static String listMessages(List<Pair<StatusCode, String>> statusCodes) {
 		StringBuilder result = new StringBuilder();
+
 		for (Pair<StatusCode, String> pair : statusCodes) {
 			if (result.length() > 0) {
 				result.append(",");
@@ -64,6 +64,7 @@ public class BusinessException extends BaseException {
 
 	public static BusinessException build(ClientType clientType, String message, String errorCode) {
 		RestfulEndpointErrorMapping errorMapping = clientType.getErrorMapping();
+
 		List<Pair<StatusCode, String>> statusCodes = new ArrayList<>();
 
 		if (errorMapping != null) {
@@ -85,7 +86,7 @@ public class BusinessException extends BaseException {
 		}
 		List<Pair<StatusCode, String>> statusCodes = new ArrayList<>();
 		for (DownstreamError downstreamError : errors) {
-
+			LOGGER.debug("Downstream service error, code: {}, message: {}", downstreamError.getCode(), downstreamError.getMessage());
 			if (errorMapping != null) {
 				StatusCode statusCode = errorMapping.getStatusCode(downstreamError.getCode());
 

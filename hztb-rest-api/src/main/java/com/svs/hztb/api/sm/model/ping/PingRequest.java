@@ -16,7 +16,6 @@ public class PingRequest {
 	@Pattern(regexp = HZTBRegularExpressions.ALPHA_NUMERIC_REGEX)
 	private String imei;
 
-	
 	public String getMobileNumber() {
 		return mobileNumber;
 	}

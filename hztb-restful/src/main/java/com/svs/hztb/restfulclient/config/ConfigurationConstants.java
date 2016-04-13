@@ -1,7 +1,7 @@
 package com.svs.hztb.restfulclient.config;
 
 public class ConfigurationConstants {
-	
+
 	public static final String CLIENT_VALUE = "clients";
 	public static final String BASE_URL = ".base.url";
 	public static final String CONTENT_HEADER = "Content-Type";
@@ -15,5 +15,5 @@ public class ConfigurationConstants {
 	public static final String HTTP_CONNECTIONS_MAX = ".connection.pool.size";
 	public static final String CONNECTION_TIMEOUT_VALUE = ".connection.timeout";
 	public static final String REQUEST_TIMEOUT_VALUE = ".request.timeout";
-					
+
 }

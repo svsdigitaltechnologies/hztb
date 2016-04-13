@@ -1,11 +1,8 @@
 package com.svs.hztb.restfulclient.config;
 
-import java.rmi.registry.Registry;
-import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -19,21 +16,19 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import com.sun.net.ssl.SSLContext;
 import com.svs.hztb.common.exception.SystemException;
 import com.svs.hztb.restfulclient.ClientRequestHandler;
 import com.svs.hztb.restfulclient.JSONClientRequestHandler;
+import com.svs.hztb.restfulclient.validation.ValidatorService;
 import com.svs.hztb.security.key.HttpsTrustManager;
 import com.svs.hztb.security.key.KeyStoreProvider;
 
@@ -45,7 +40,10 @@ public class ClientConfigurationFactory {
 
 	@Autowired
 	private KeyStoreProvider keyStoreProvider;
-	
+
+	@Autowired
+	private ValidatorService validatorService;
+
 	private Map<String, ClientRequestHandler> clientRequestHandlerMap = new HashMap<String, ClientRequestHandler>();
 
 	@PostConstruct
@@ -54,7 +52,6 @@ public class ClientConfigurationFactory {
 	}
 
 	private void loadConfigurations() {
-		System.out.println("ClientConfigurationFactory init called");
 		configurationProvider.getClientConfigurations().stream().forEach(
 				config -> clientRequestHandlerMap.put(config.getName().toUpperCase(), getClientRequestHandler(config)));
 
@@ -62,7 +59,8 @@ public class ClientConfigurationFactory {
 
 	private ClientRequestHandler getClientRequestHandler(ClientConfiguration clientConfiguration) {
 		if (getMediaType(clientConfiguration).equals(MediaType.APPLICATION_JSON_VALUE)) {
-			return new JSONClientRequestHandler(clientConfiguration.getBaseUrl(), clientConfiguration.getHeaders(),createContext(clientConfiguration),buildHttpClient(clientConfiguration));
+			return new JSONClientRequestHandler(clientConfiguration.getBaseUrl(), clientConfiguration.getHeaders(),
+					createContext(clientConfiguration), buildHttpClient(clientConfiguration), validatorService);
 		}
 		return null;
 
@@ -110,14 +108,15 @@ public class ClientConfigurationFactory {
 
 		try {
 			javax.net.ssl.SSLContext sslContext = SSLContexts.custom().useSSL().build();
-			
-			sslContext.init(null, new X509TrustManager[]{ new HttpsTrustManager() }, new SecureRandom());
+
+			sslContext.init(null, new X509TrustManager[] { new HttpsTrustManager() }, new SecureRandom());
 			/*
-			KeyStore trustStore = keyStoreProvider.getDefaultTrustStore();
-			sslContext = SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
-			*/
+			 * KeyStore trustStore = keyStoreProvider.getDefaultTrustStore();
+			 * sslContext = SSLContexts.custom().loadTrustMaterial(trustStore,
+			 * new TrustSelfSignedStrategy()).build();
+			 */
 			return new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-			
+
 		} catch (Exception e) {
 			throw new SystemException("Could not create SSL context", e);
 		}

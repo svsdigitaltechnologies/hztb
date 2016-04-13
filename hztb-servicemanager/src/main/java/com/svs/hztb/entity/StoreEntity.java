@@ -1,33 +1,36 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * The persistent class for the store database table.
  * 
  */
 @Entity
-@NamedQuery(name="Store.findAll", query="SELECT s FROM Store s")
+// @NamedQuery(name="Store.findAll", query="SELECT s FROM Store s")
 public class StoreEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="store_id")
+	@Column(name = "store_id")
 	private int storeId;
 
-	@Column(name="geo_code")
+	@Column(name = "geo_code")
 	private String geoCode;
 
-	//bi-directional many-to-one association to Opinion
-	@OneToMany(mappedBy="store")
-	private List<OpinionEntity> opinions;
-
-	//bi-directional many-to-one association to Address
+	// bi-directional many-to-one association to Opinion
+	/*
+	 * @OneToMany(mappedBy="store") private List<OpinionEntity> opinions;
+	 */
+	// bi-directional many-to-one association to Address
 	@ManyToOne
-	@JoinColumn(name="address_id")
+	@JoinColumn(name = "address_id")
 	private AddressEntity address;
 
 	public StoreEntity() {
@@ -49,15 +52,12 @@ public class StoreEntity implements Serializable {
 		this.geoCode = geoCode;
 	}
 
-	public List<OpinionEntity> getOpinions() {
-		return this.opinions;
-	}
-
-	public void setOpinions(List<OpinionEntity> opinions) {
-		this.opinions = opinions;
-	}
-
-	
+	/*
+	 * public List<OpinionEntity> getOpinions() { return this.opinions; }
+	 * 
+	 * public void setOpinions(List<OpinionEntity> opinions) { this.opinions =
+	 * opinions; }
+	 */
 
 	public AddressEntity getAddress() {
 		return this.address;

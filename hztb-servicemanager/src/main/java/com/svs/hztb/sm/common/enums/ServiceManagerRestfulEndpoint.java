@@ -15,8 +15,6 @@ public enum ServiceManagerRestfulEndpoint implements RestfulEndPoint {
 	CLICKATELL_GET(ServiceManagerClientType.CT,"/user/jsonGetResponse",HttpMethod.GET, RestfulEndpointErrorMappingImpl.CT),
 	CLICKATELL_POST(ServiceManagerClientType.CT,"/user/jsonPostResponse",HttpMethod.POST, RestfulEndpointErrorMappingImpl.CT),
 	CLICKATELL(ServiceManagerClientType.CT,"/rest/message",HttpMethod.POST, RestfulEndpointErrorMappingImpl.CT);
-
-	
 	
 	private final transient ClientType clientType;
 	private final String endpoint;

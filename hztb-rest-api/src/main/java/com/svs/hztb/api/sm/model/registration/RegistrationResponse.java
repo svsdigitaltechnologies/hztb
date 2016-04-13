@@ -11,5 +11,5 @@ public class RegistrationResponse {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
-	
+
 }

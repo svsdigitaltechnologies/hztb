@@ -4,7 +4,7 @@ public class GCMMessageNotification {
 
 	private String gcmRegistrationID;
 	private String message;
-	
+
 	public GCMMessageNotification(String gcmRegistrationID, String message) {
 		this.gcmRegistrationID = gcmRegistrationID;
 		this.message = message;

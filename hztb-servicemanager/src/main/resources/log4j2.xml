@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG" monitorInterval="10">
+	<Properties>
+		<Property name="HOST_INSTANCE"> $${hostName} -
+			$${bundle:application:hztb.instance.name}
+		</Property>
+		<Property name="LOG_PATTERN"> %d %p %c{1.} [%t] [$${HOST_INSTANCE}] %m
+			%ex%n</Property>
+		<Property name="FAILURE_LOG_PATTERN">[$${HOST_INSTANCE}] %m %n</Property>
+		<Property name="LOG_DIR">${bundle:application:hztb.logspath}</Property>
+		<Property name="ARCHIVE">${bundle:application:hztb.logsarchivepath}
+		</Property>
+
+	</Properties>
+
+	<Appenders>
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+
+		<Console name="CONSOLE-WIRE-FILTER" target="SYSTEM_OUT">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+
+		<Console name="CONSOLE-MSG-ONLY" target="SYSTEM_OUT">
+			<PatternLayout pattern="${FAILURE_LOG_PATTERN}" />
+		</Console>
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="ROLLING-WIRE-FILTER" fileName="${LOG_DIR}/service-manager.log"
+			filePattern="${ARCHIVE}/service-manager-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+
+		</RollingFile>
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="ROLLING" fileName="${LOG_DIR}/service-manager.log"
+			filePattern="${ARCHIVE}/service-manager-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="STACKTRACES" fileName="${LOG_DIR}/stacktraces.log"
+			filePattern="${ARCHIVE}/stacktraces-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+
+		</RollingFile>
+
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="PERFORMANCE" fileName="${LOG_DIR}/performance.log"
+			filePattern="${ARCHIVE}/performance-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+
+		</RollingFile>
+
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="SECURITY" fileName="${LOG_DIR}/security.log"
+			filePattern="${ARCHIVE}/security-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+
+		</RollingFile>
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="CALLOUT" fileName="${LOG_DIR}/callout.log"
+			filePattern="${ARCHIVE}/callout-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+
+		</RollingFile>
+
+
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="FAILURE" fileName="${LOG_DIR}/failures.log"
+			filePattern="${ARCHIVE}/failures-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${FAILURE_LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+
+		</RollingFile>
+
+	</Appenders>
+	<Loggers>
+
+		<Root level="DEBUG" includeLocation="true">
+			<AppenderRef ref="CONSOLE" />
+			<AppenderRef ref="ROLLING" />
+		</Root>
+
+		<Logger name="org.apache.http.wire" level="debug" additivity="false">
+			<AppenderRef ref="CONSOLE-WIRE-FILTER" />
+			<AppenderRef ref="ROLLING-WIRE-FILTER" />
+		</Logger>
+		<Logger name="org.apache.http" level="debug" />
+		<Logger name="com.svs.hztb" level="debug" />
+		<Logger name="org.springframework" level="info" />
+		<Logger name="performance" level="debug" additivity="false">
+			<AppenderRef ref="PERFORMANCE" />
+		</Logger>
+		<Logger name="security" level="debug" additivity="false">
+			<AppenderRef ref="SECURITY" />
+		</Logger>
+		<Logger name="callout" level="debug" additivity="false">
+			<AppenderRef ref="CALLOUT" />
+		</Logger>
+		<Logger name="failures" level="info" additivity="false">
+			<AppenderRef ref="CONSOLE-MSG-ONLY" />
+			<AppenderRef ref="FAILURE" />
+		</Logger>
+		<Logger name="stacktraces" level="debug" additivity="false">
+			<AppenderRef ref="STACKTRACES" />
+		</Logger>
+
+	</Loggers>
+</Configuration>

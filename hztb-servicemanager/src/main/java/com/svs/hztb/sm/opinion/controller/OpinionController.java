@@ -34,17 +34,14 @@ public class OpinionController {
 			"application/json" }, method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<RequestOpinionResponse> requestOpinion(
 			@RequestBody @Valid RequestOpinionRequest requestOpinionRequest) {
-		
+
 		RequestOpinionResponse requestOpinionResponse = opinionDataService.requestOpinion(requestOpinionRequest);
 		return buildUpdateRequestOpinionResponse(requestOpinionResponse);
 	}
-	
-	
-	@RequestMapping(value = "/sample", produces = {
-	"application/json" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<RequestOpinionRequest> sample()
-	 {
-		
+
+	@RequestMapping(value = "/sample", produces = { "application/json" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<RequestOpinionRequest> sample() {
+
 		RequestOpinionRequest requestOpinionRequest = new RequestOpinionRequest();
 		requestOpinionRequest.setRequesterUserId(12345);
 		requestOpinionRequest.setRequestedGroupId(0001);
@@ -52,15 +49,14 @@ public class OpinionController {
 		requestedUserIds.add(00123);
 		requestedUserIds.add(00234);
 		requestOpinionRequest.setRequestedUserIds(requestedUserIds);
-		//requestOpinionRequest.setProduct(product);
+		// requestOpinionRequest.setProduct(product);
 		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionRequest);
-	
-	}
-	
-	private ResponseEntity<RequestOpinionResponse> buildUpdateRequestOpinionResponse(RequestOpinionResponse requestOpinionResponse) {
-		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionResponse);
+
 	}
 
-	
+	private ResponseEntity<RequestOpinionResponse> buildUpdateRequestOpinionResponse(
+			RequestOpinionResponse requestOpinionResponse) {
+		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionResponse);
+	}
 
 }
