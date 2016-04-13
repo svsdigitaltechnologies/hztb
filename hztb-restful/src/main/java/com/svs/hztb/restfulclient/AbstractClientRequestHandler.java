@@ -17,16 +17,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.protocol.HttpContext;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
-import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
-import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.RequestData;
+import com.svs.hztb.common.util.PerformanceTimer;
 import com.svs.hztb.restfulclient.model.RestfulRequest;
 import com.svs.hztb.restfulclient.model.RestfulResponse;
 
 public abstract class AbstractClientRequestHandler implements ClientRequestHandler {
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(AbstractClientRequestHandler.class);
 
 	private final String baseURL;
 	protected Map<String, String> headers = new HashMap<>();
@@ -48,6 +50,7 @@ public abstract class AbstractClientRequestHandler implements ClientRequestHandl
 
 	@SuppressWarnings("unchecked")
 	private <T, S> RestfulResponse<S> call(RestfulRequest<T, S> request) throws IOException {
+		LOGGER.info("Running endpoint {}", request.getEndpoint().name());
 		CloseableHttpResponse httpResponse = null;
 
 		try {
@@ -58,18 +61,26 @@ public abstract class AbstractClientRequestHandler implements ClientRequestHandl
 			}
 			int statusCode = httpResponse.getStatusLine().getStatusCode();
 			if (HttpStatus.SC_OK != statusCode) {
-				System.out.println("Downstream call error ");
+				LOGGER.callOutDownStream("{} returned from downstream call",
+						request.getEndpoint().getClientType().getName(), request.getEndpoint().getURI(), statusCode);
 			}
 			String response = getResponse(httpResponse);
 
 			try {
+				PerformanceTimer timer = new PerformanceTimer();
 				RestfulResponse<S> restfulResponse = RestfulResponse.buildResponse(statusCode,
 						unmarshall(request.getRequestData(), response, request.getResponseClass()));
+				timer.logPerformance("unmarshall." + request.getEndpoint().getClientType().getName() + "."
+						+ request.getEndpoint().name());
 				if (HttpStatus.SC_OK == statusCode) {
-					System.out.println("200 Ok response received ");
+					timer = new PerformanceTimer();
+					validate(request.getRequestData(), response);
+					timer.logPerformance("validate.response." + request.getEndpoint().getClientType().getName() + "."
+							+ request.getEndpoint().name());
 				}
 				return restfulResponse;
 			} catch (MarshallingException e) {
+				LOGGER.callOut("Error occured while marshalling response: {}", e);
 				return handleError(statusCode, response, request);
 			}
 		} finally {
@@ -90,6 +101,7 @@ public abstract class AbstractClientRequestHandler implements ClientRequestHandl
 						unmarshall(request.getRequestData(), response, request.getEndpoint().getErrorClass().get()));
 
 			} catch (MarshallingException e) {
+				LOGGER.error("Failed to umarshall error response: {}", e);
 				return RestfulResponse.buildErrorResponse(statusCode, response);
 			}
 		} else {
@@ -104,22 +116,30 @@ public abstract class AbstractClientRequestHandler implements ClientRequestHandl
 
 	private <T, S> CloseableHttpResponse doGet(RestfulRequest<T, S> request) throws IOException {
 		String uri = baseURL + request.getUri();
-
+		LOGGER.info("Get request uri {}", uri);
 		HttpGet get = new HttpGet(uri);
 		return makeCall(request, get);
 	}
 
 	private <T, S> CloseableHttpResponse doPost(RestfulRequest<T, S> request) throws IOException {
 		String uri = baseURL + request.getUri();
+		LOGGER.info("Post request uri {}", uri);
+
 		HttpPost httpPost = new HttpPost(uri);
+		PerformanceTimer timer = new PerformanceTimer();
 		httpPost.setEntity(marshall(request.getRequestData(), request.getPayload()));
+		timer.logPerformance(
+				"marshall." + request.getEndpoint().getClientType().getName() + "." + request.getEndpoint().name());
 		return makeCall(request, httpPost);
 	}
 
 	private <T, S> CloseableHttpResponse makeCall(RestfulRequest<T, S> request, HttpRequestBase requestBase)
 			throws IOException, ClientProtocolException {
+		PerformanceTimer timer = new PerformanceTimer();
 		addHeaders(requestBase, request);
 		CloseableHttpResponse response = httpClient.execute(requestBase, httpContext);
+		timer.logPerformance(requestBase.getMethod() + "." + request.getEndpoint().getClientType().getName() + "."
+				+ request.getEndpoint().name());
 		return response;
 	}
 

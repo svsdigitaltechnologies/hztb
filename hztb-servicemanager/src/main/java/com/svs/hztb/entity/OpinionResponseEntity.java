@@ -1,42 +1,50 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the opinion_response database table.
  * 
  */
 @Entity
-@Table(name="opinion_response")
-@NamedQuery(name="OpinionResponse.findAll", query="SELECT o FROM OpinionResponse o")
+@Table(name = "opinion_response")
+// @NamedQuery(name="OpinionResponse.findAll", query="SELECT o FROM
+// OpinionResponse o")
 public class OpinionResponseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="response_id")
+	@Column(name = "response_id")
 	private int responseId;
 
-	@Column(name="responder_user_id")
+	@Column(name = "responder_user_id")
 	private int responderUserId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="response_time")
+	@Column(name = "response_time")
 	private Date responseTime;
 
-	@Column(name="response_txt")
+	@Column(name = "response_txt")
 	private String responseTxt;
 
-	//bi-directional many-to-one association to Opinion
+	// bi-directional many-to-one association to Opinion
 	@ManyToOne
-	@JoinColumn(name="opinion_id")
+	@JoinColumn(name = "opinion_id")
 	private OpinionEntity opinion;
 
-	//bi-directional many-to-one association to OpinionResponseType
+	// bi-directional many-to-one association to OpinionResponseType
 	@ManyToOne
-	@JoinColumn(name="response_type")
+	@JoinColumn(name = "response_type")
 	private OpinionResponseTypeEntity opinionResponseType;
 
 	public OpinionResponseEntity() {

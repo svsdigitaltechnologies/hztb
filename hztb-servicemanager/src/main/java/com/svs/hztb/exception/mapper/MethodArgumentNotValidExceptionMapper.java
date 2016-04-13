@@ -12,14 +12,20 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.HztbResponse;
 
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class MethodArgumentNotValidExceptionMapper extends AbstractJSRConstraintExceptionMapper {
-	
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(MethodArgumentNotValidExceptionMapper.class);
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<HztbResponse> toResponse(MethodArgumentNotValidException exception) {
+		LOGGER.error("JSON JSR-303 validation exception occured: {}", exception);
+
 		List<Pair<String, String>> errors = new ArrayList<>();
 
 		for (ObjectError error : exception.getBindingResult().getAllErrors()) {

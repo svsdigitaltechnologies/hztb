@@ -40,7 +40,7 @@ public class ClientConfigurationFactory {
 
 	@Autowired
 	private KeyStoreProvider keyStoreProvider;
-	
+
 	@Autowired
 	private ValidatorService validatorService;
 

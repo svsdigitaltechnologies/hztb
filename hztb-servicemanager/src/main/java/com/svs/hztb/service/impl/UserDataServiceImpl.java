@@ -38,9 +38,10 @@ import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 @Service
 @Transactional
 public class UserDataServiceImpl implements UserDataService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserDataServiceImpl.class);
-	
+
+	private final String ZERO = "0";
 
 	@Autowired
 	private UserAdapter userAdapter;
@@ -54,34 +55,40 @@ public class UserDataServiceImpl implements UserDataService {
 		try {
 			Long otpCode = HZTBUtil.generateSixDigitNumber();
 			String utcDateTime = HZTBUtil.getUTCDate();
+
 			User user = new User(registrationRequest);
 			user.setOtpCode(otpCode.toString());
 			user.setOtpCreationDateTime(utcDateTime);
 
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User findUser = userAdapter.findUser(dataServiceRequest);
+
 			if (null != findUser) {
 				user.setUserId(findUser.getUserId());
+				user.setInvalidOtpCount(ZERO);
 				dataServiceRequest = new DataServiceRequest<User>(user);
 				user = userAdapter.updateUserDetails(dataServiceRequest);
 			} else {
 				user = userAdapter.createUser(dataServiceRequest);
 			}
-			
+
 			FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
 			StepDefinition stepDefinition = stepDefinitionFactory
 					.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL_POST);
 			stepDefinition.execute(flowContext);
+
 			ClickatellResponse clickatellResponse = flowContext.getModelElement(ClickatellResponse.class);
 			LOGGER.debug("Clickatell Response {} ", clickatellResponse.getData().getMessage().get(0).getApiMessageId());
 
 			registrationResponse = populateRegistrationUserResponse(user);
-		} catch (DataServiceException e) {
-			throw BusinessException.build(ServiceManagerClientType.DS, e.getMessage(), e.getStatusCode());
-		} catch (BusinessException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new SystemException(e.getMessage(), e, PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
+		} catch (DataServiceException dataServiceException) { 
+			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+					dataServiceException.getStatusCode());
+		} catch (BusinessException businessException) {
+			throw businessException;
+		} catch (Exception exception) {
+			throw new SystemException(exception.getMessage(), exception,
+					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		return registrationResponse;
 	}
@@ -94,8 +101,7 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Override
 	public PingResponse ping(PingRequest pingRequest) {
-		
-		LOGGER.debug("UserDataServiceImpl:ping operation");
+
 		PingResponse pingResponse = null;
 		try {
 			User user = new User(pingRequest);
@@ -103,8 +109,8 @@ public class UserDataServiceImpl implements UserDataService {
 			user = userAdapter.ping(dataServiceRequest);
 			pingResponse = populatePingResponse(user);
 		} catch (DataServiceException dataServiceException) {
-			BusinessException businessException=  BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
-					dataServiceException.getStatusCode());
+			BusinessException businessException = BusinessException.build(ServiceManagerClientType.DS,
+					dataServiceException.getMessage(), dataServiceException.getStatusCode());
 			throw businessException;
 		} catch (Exception exception) {
 			throw new SystemException(exception.getMessage(), exception,
@@ -123,35 +129,38 @@ public class UserDataServiceImpl implements UserDataService {
 	public ValidateOTPResponse validateOTP(ValidateOTPRequest validateOTPRequest) {
 		ValidateOTPResponse validateOTPResponse = null;
 		Boolean isOTPValiationSuccesful = false;
+		
 		try {
 			User user = new User(validateOTPRequest);
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User userFromDB = userAdapter.getUserDetails(dataServiceRequest);
-			Boolean isOTPValidationAllowed = HZTBUtil.isOtpValidationAllowed(userFromDB.getOtpCreationDateTime());
+			Boolean isOTPValidationAllowed = HZTBUtil.isOtpValidationAllowed(userFromDB.getOtpCreationDateTime(),
+					userFromDB.getInvalidOtpCount());
 
 			if (isOTPValidationAllowed) {
 				if (validateOTPRequest.getOtpCode().equals(userFromDB.getOtpCode())) {
 					dataServiceRequest.getPayload().setUserId(userFromDB.getUserId());
+					
+					//updating IMEI, device registration id
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
 
 					GCMMessageNotificationClient client = new GCMMessageNotificationClient();
-
 					String formattedMessage = "Welcome to hztb";
 					client.processPushNotification(userFromDB.getDeviceRegId(), formattedMessage);
-
 					isOTPValiationSuccesful = true;
 				} else {
-					// update the code to increment the otp attempt failed
-					// count.
+					//OTP incorrect scenario
 					User updateUser = new User();
-					
 					updateUser.setUserId(userFromDB.getUserId());
+					Integer invalidOtpEntries = Integer.parseInt(userFromDB.getInvalidOtpCount());
+					invalidOtpEntries = invalidOtpEntries + 1;
+					updateUser.setInvalidOtpCount(invalidOtpEntries.toString());
 					dataServiceRequest = new DataServiceRequest<User>(updateUser);
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
 				}
 			} else {
-				throw new BusinessException(ServiceManagerStatusCode.EXPIRED_OTP.getMessage(),
-						ServiceManagerStatusCode.EXPIRED_OTP);
+				throw new BusinessException(ServiceManagerStatusCode.OTP_NOT_VALID.getMessage(),
+						ServiceManagerStatusCode.OTP_NOT_VALID);
 			}
 			validateOTPResponse = populateValidateOTPResponse(user, isOTPValiationSuccesful);
 		} catch (DataServiceException dataServiceException) {

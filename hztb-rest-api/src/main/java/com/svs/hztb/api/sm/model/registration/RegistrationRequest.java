@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
 
 public class RegistrationRequest {
-	
+
 	@NotNull
 	@Size(min = 1, max = 15)
 	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)
@@ -20,5 +20,5 @@ public class RegistrationRequest {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
-	
+
 }

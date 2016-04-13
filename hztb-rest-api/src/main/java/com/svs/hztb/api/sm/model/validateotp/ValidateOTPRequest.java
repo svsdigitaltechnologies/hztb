@@ -7,21 +7,21 @@ import javax.validation.constraints.Size;
 import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
 
 public class ValidateOTPRequest {
-	
+
 	@NotNull
 	@Size(min = 1, max = 15)
 	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)
 	private String mobileNumber;
-	
+
 	@NotNull
 	@Size(min = 1, max = 6)
 	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)
 	private String otpCode;
-	
+
 	@NotNull
 	@Pattern(regexp = HZTBRegularExpressions.ALPHA_NUMERIC_REGEX)
 	private String imei;
-	
+
 	@NotNull
 	private String deviceRegId;
 
@@ -56,5 +56,5 @@ public class ValidateOTPRequest {
 	public void setDeviceRegId(String deviceRegId) {
 		this.deviceRegId = deviceRegId;
 	}
-	
+
 }

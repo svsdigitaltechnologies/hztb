@@ -25,9 +25,14 @@ public class HZTBUtil {
 		return aNumber;
 	}
 
-	public static boolean isOtpValidationAllowed(String otpCreationDateTime) {
-
+	public static boolean isOtpValidationAllowed(String otpCreationDateTime, String invalidOtpCount) {
+		
 		boolean isOtpValidationAllowed = false;
+
+		Integer count = Integer.parseInt(invalidOtpCount);
+		if( count > 4) {
+			return isOtpValidationAllowed;
+		}
 
 		Instant otpInstantTime = Instant.parse(otpCreationDateTime);
 		Instant currentInstantTime = Instant.now();
@@ -36,7 +41,9 @@ public class HZTBUtil {
 
 		if ((differenceInMinutes <= 10)) {
 			isOtpValidationAllowed = true;
+			return isOtpValidationAllowed;
 		}
+		
 		return isOtpValidationAllowed;
 	}
 }

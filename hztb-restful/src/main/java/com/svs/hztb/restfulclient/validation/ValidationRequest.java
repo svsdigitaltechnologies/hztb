@@ -5,7 +5,7 @@ import com.svs.hztb.common.model.RequestData;
 public class ValidationRequest<T> {
 	private final RequestData requestData;
 	private final T payload;
-	
+
 	public ValidationRequest(RequestData requestData, T payload) {
 		super();
 		this.requestData = requestData;
@@ -19,6 +19,5 @@ public class ValidationRequest<T> {
 	public T getPayload() {
 		return payload;
 	}
-	
-	
+
 }

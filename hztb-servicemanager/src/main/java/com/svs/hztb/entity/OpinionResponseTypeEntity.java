@@ -1,29 +1,34 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the opinion_response_type database table.
  * 
  */
 @Entity
-@Table(name="opinion_response_type")
-@NamedQuery(name="OpinionResponseType.findAll", query="SELECT o FROM OpinionResponseType o")
+@Table(name = "opinion_response_type")
+// @NamedQuery(name="OpinionResponseType.findAll", query="SELECT o FROM
+// OpinionResponseType o")
 public class OpinionResponseTypeEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="response_type")
+	@Column(name = "response_type")
 	private String responseType;
 
-	@Column(name="response_description")
+	@Column(name = "response_description")
 	private String responseDescription;
 
-	//bi-directional many-to-one association to OpinionResponse
-	@OneToMany(mappedBy="opinionResponseType")
+	// bi-directional many-to-one association to OpinionResponse
+	@OneToMany(mappedBy = "opinionResponseType")
 	private List<OpinionResponseEntity> opinionResponses;
 
 	public OpinionResponseTypeEntity() {

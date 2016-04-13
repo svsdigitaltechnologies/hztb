@@ -12,8 +12,12 @@ import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
 public interface UserDataService {
 
 	RegistrationResponse register(RegistrationRequest registrationRequest);
+
 	PingResponse ping(PingRequest pingRequest);
+
 	ValidateOTPResponse validateOTP(ValidateOTPRequest validateOTPRequest);
+
 	UserProfileResponse getUserProfile(UserProfileRequest userProfileRequest);
+
 	UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest);
 }

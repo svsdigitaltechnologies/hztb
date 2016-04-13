@@ -13,11 +13,10 @@ import com.svs.hztb.common.model.HztbResponse;
 public class SystemExceptionMapper extends BaseExceptionMapper<SystemException> {
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(SystemExceptionMapper.class);
 
-	
 	@Override
 	@ExceptionHandler(SystemException.class)
 	public ResponseEntity<HztbResponse> toResponse(SystemException exception) {
-		LOGGER.debug("In SystemExceptionMapper.toResponse()", exception);
+		LOGGER.debug("System Exception occured: {}", exception);
 		return super.toResponse(exception);
 	}
 }

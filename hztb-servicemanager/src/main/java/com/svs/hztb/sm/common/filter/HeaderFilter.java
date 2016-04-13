@@ -15,8 +15,11 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
 import com.svs.hztb.common.model.RequestData;
+import com.svs.hztb.common.util.PerformanceTimer;
 import com.svs.hztb.sm.common.model.business.SimpleRequestMetadata;
 import com.svs.hztb.sm.common.util.HeaderUtil;
 
@@ -35,10 +38,14 @@ public class HeaderFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		PerformanceTimer timer = new PerformanceTimer();
+		String uri = ((HttpServletRequest) request).getRequestURI();
 		RequestData requestData = new SimpleRequestMetadata();
-		headerUtil.populateRequestDataFromHeader(requestData, headerUtil.buildHeaderMap((HttpServletRequest)request));
+		headerUtil.populateRequestDataFromHeader(requestData, headerUtil.buildHeaderMap((HttpServletRequest) request));
 		PlatformThreadLocalDataFactory.getInstance().setRequestData(requestData);
 		chain.doFilter(request, response);
+		timer.logPerformance("Request completed for URI: " + uri + " Overall time took for : "
+				+ ((HttpServletRequest) request).getRequestURI());
 	}
 
 	@Override

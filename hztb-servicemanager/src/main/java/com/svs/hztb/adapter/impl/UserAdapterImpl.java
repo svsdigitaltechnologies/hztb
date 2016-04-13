@@ -2,12 +2,12 @@ package com.svs.hztb.adapter.impl;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.svs.hztb.adapter.UserAdapter;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.business.User;
 import com.svs.hztb.ds.model.DataServiceRequest;
 import com.svs.hztb.entity.UserEntity;
@@ -17,7 +17,7 @@ import com.svs.hztb.repository.UserRepository;
 @Service
 public class UserAdapterImpl implements UserAdapter {
 
-	private final static Logger logger = LoggerFactory.getLogger(UserAdapterImpl.class);
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserAdapterImpl.class);
 
 	@Autowired
 	private UserRepository userRepository;
@@ -37,7 +37,7 @@ public class UserAdapterImpl implements UserAdapter {
 				user = populateUserResponse(userEntity);
 			}
 		} catch (Exception exception) {
-			logger.error(
+			LOGGER.error(
 					"Data Services - Unexpected exception occured while registering the user. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
@@ -46,7 +46,6 @@ public class UserAdapterImpl implements UserAdapter {
 		return user;
 	}
 
-	
 	/**
 	 * This method is used to register a user with hztb.
 	 * 
@@ -64,12 +63,12 @@ public class UserAdapterImpl implements UserAdapter {
 			userRepository.save(userEntity);
 			user = populateUserResponse(userEntity);
 		} catch (Exception exception) {
-			logger.error(
+			LOGGER.error(
 					"Data Services - Unexpected exception occured while registering the user. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
-		logger.info("Data Services saved new record in Test table succesfully. Phoner Number: [ "
+		LOGGER.info("Data Services saved new record in Test table succesfully. Phoner Number: [ "
 				+ dataServiceRequest.getPayload().getMobileNumber() + " ]");
 		return user;
 	}
@@ -88,11 +87,11 @@ public class UserAdapterImpl implements UserAdapter {
 			}
 			user = populatePingResponse(userEntity);
 		} catch (DataServiceException dataServiceException) {
-			logger.error("Data Services exception occured during ping. the detailed exception is: {} ",
+			LOGGER.error("Data Services exception occured during ping. the detailed exception is: {} ",
 					dataServiceException);
 			throw dataServiceException;
 		} catch (Exception exception) {
-			logger.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
+			LOGGER.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
@@ -119,11 +118,11 @@ public class UserAdapterImpl implements UserAdapter {
 			}
 			user = populateUserResponse(userEntity);
 		} catch (DataServiceException dataServiceException) {
-			logger.error("Data Services exception occured during ping. the detailed exception is: {} ",
+			LOGGER.error("Data Services exception occured during ping. the detailed exception is: {} ",
 					dataServiceException);
 			throw dataServiceException;
 		} catch (Exception exception) {
-			logger.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
+			LOGGER.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
@@ -141,14 +140,16 @@ public class UserAdapterImpl implements UserAdapter {
 		Optional.ofNullable(userEntity.getOtpCode()).ifPresent(p -> user.setOtpCode(p));
 		Optional.ofNullable(userEntity.getOtpCreateTime()).ifPresent(p -> user.setOtpCreationDateTime(p));
 		Optional.ofNullable(userEntity.getUserId()).ifPresent(p -> user.setUserId(p.toString()));
+		Optional.ofNullable(userEntity.getInvalidOtpRetries()).ifPresent(p -> user.setInvalidOtpCount(p));
 		return user;
 	}
 
 	@Override
 	public User updateUserDetails(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
 		try {
-			UserEntity userEntity = userRepository.findOne(Integer.parseInt(dataServiceRequest.getPayload().getUserId()));
-			
+			UserEntity userEntity = userRepository
+					.findOne(Integer.parseInt(dataServiceRequest.getPayload().getUserId()));
+
 			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceRegId())
 					.ifPresent(p -> userEntity.setGcmRegId(p));
 			Optional.ofNullable(dataServiceRequest.getPayload().getEmailAddress())
@@ -162,10 +163,12 @@ public class UserAdapterImpl implements UserAdapter {
 			Optional.ofNullable(dataServiceRequest.getPayload().getOtpCode()).ifPresent(p -> userEntity.setOtpCode(p));
 			Optional.ofNullable(dataServiceRequest.getPayload().getOtpCreationDateTime())
 					.ifPresent(p -> userEntity.setOtpCreateTime(p));
+			Optional.ofNullable(dataServiceRequest.getPayload().getInvalidOtpCount())
+					.ifPresent(p -> userEntity.setInvalidOtpRetries(p));
 
 			userRepository.save(userEntity);
 		} catch (Exception exception) {
-			logger.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
+			LOGGER.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}

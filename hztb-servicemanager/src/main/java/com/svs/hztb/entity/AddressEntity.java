@@ -1,21 +1,24 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * The persistent class for the address database table.
  * 
  */
 @Entity
-@NamedQuery(name="Address.findAll", query="SELECT a FROM Address a")
+// @NamedQuery(name="Address.findAll", query="SELECT a FROM Address a")
 public class AddressEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="address_id")
+	@Column(name = "address_id")
 	private int addressId;
 
 	private String address1;
@@ -26,8 +29,8 @@ public class AddressEntity implements Serializable {
 
 	private String zipcode;
 
-	//bi-directional many-to-one association to Store
-	@OneToMany(mappedBy="address")
+	// bi-directional many-to-one association to Store
+	@OneToMany(mappedBy = "address")
 	private List<StoreEntity> stores;
 
 	public AddressEntity() {

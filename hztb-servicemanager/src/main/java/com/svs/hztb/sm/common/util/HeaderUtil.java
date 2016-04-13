@@ -31,71 +31,76 @@ public class HeaderUtil {
 
 	public void checkMandatory(RequestData requestData, String... customHttpHeaderName) {
 		List<Pair<StatusCode, String>> errors = new ArrayList<>();
-		for(Field field : requestData.getClass().getDeclaredFields()) {
+		for (Field field : requestData.getClass().getDeclaredFields()) {
 			HeaderParam headerParam = field.getAnnotation(HeaderParam.class);
-			if (headerParam !=null && Arrays.asList(customHttpHeaderName).contains(headerParam.value())) {
+			if (headerParam != null && Arrays.asList(customHttpHeaderName).contains(headerParam.value())) {
 				Pair<StatusCode, String> error = getError(requestData, headerParam.value(), field);
-				if(error != null) {
+				if (error != null) {
 					errors.add(error);
 				}
 			}
 		}
-		if(!errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			throw new BusinessException("Custom mandatory check for mandatory header fields failed", errors);
 		}
 	}
-	
+
 	public void populateRequestDataFromHeader(RequestData requestData, Map<String, String> headers) {
 		for (Field field : requestData.getClass().getDeclaredFields()) {
 			HeaderParam headerParam = field.getAnnotation(HeaderParam.class);
-			if(headerParam != null) {
+			if (headerParam != null) {
 				String headerValue = headers.get(headerParam.value());
-				if(headerValue != null) {
+				if (headerValue != null) {
 					field.setAccessible(true);
-					try{
+					try {
 						field.set(requestData, headerValue);
-					} catch(IllegalAccessException | IllegalArgumentException e) {
-						throw new SystemException(String.format("Failed to reflectively populate request data with header values for field %s", field.getName()));
+					} catch (IllegalAccessException | IllegalArgumentException e) {
+						throw new SystemException(String.format(
+								"Failed to reflectively populate request data with header values for field %s",
+								field.getName()));
 					}
 				}
 			}
 		}
 	}
-	
+
 	public HttpServletRequest getServletThreadLocalRequest() {
 		return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 	}
-	
+
 	public Map<String, String> buildHeaderMap(HttpServletRequest httpServletRequest) {
 		Map<String, String> result = new HashMap<>();
 		Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
-		if(headerNames != null) {
-			while(headerNames.hasMoreElements()) {
+		if (headerNames != null) {
+			while (headerNames.hasMoreElements()) {
 				String headerName = headerNames.nextElement();
 				result.put(headerName.toUpperCase(), httpServletRequest.getHeader(headerName));
 			}
 		}
-		if(result.get(ServiceManagerConstants.HTTP_HEADER_ACCEPT) == null) {
+		if (result.get(ServiceManagerConstants.HTTP_HEADER_ACCEPT) == null) {
 			result.put(ServiceManagerConstants.HTTP_HEADER_ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 		}
-		if(result.get(ServiceManagerConstants.HTTP_HEADER_CACHE_CONTROL) == null) {
+		if (result.get(ServiceManagerConstants.HTTP_HEADER_CACHE_CONTROL) == null) {
 			result.put(ServiceManagerConstants.HTTP_HEADER_CACHE_CONTROL, RequestMetaData.DEFAULT_CACHE_CONTROL);
 		}
-		if(result.get(ServiceManagerConstants.HTTP_HEADER_ACCEPT_LANGUAGE) == null) {
+		if (result.get(ServiceManagerConstants.HTTP_HEADER_ACCEPT_LANGUAGE) == null) {
 			result.put(ServiceManagerConstants.HTTP_HEADER_ACCEPT_LANGUAGE, RequestMetaData.DEFAULT_ACCEPT_LANGUAGE);
 		}
 		return result;
 	}
-	
+
 	private Pair<StatusCode, String> getError(RequestData requestData, String headerParamName, Field field) {
 		try {
 			field.setAccessible(true);
 			String fieldValue = (String) field.get(requestData);
-			if(StringUtils.isEmpty(fieldValue)) {
-				return Pair.of(PlatformStatusCode.MANDATORY_DOCUMENT_FIELD_MISSING, String.format("The header field %s is mandatory", headerParamName));
+			if (StringUtils.isEmpty(fieldValue)) {
+				return Pair.of(PlatformStatusCode.MANDATORY_DOCUMENT_FIELD_MISSING,
+						String.format("The header field %s is mandatory", headerParamName));
 			}
-		} catch(IllegalAccessException | IllegalArgumentException e) {
-			throw new SystemException("Custom mandatory check for mandatory header fields failed because the field is NOT accessible", PlatformStatusCode.MANDATORY_DOCUMENT_FIELD_MISSING);
+		} catch (IllegalAccessException | IllegalArgumentException e) {
+			throw new SystemException(
+					"Custom mandatory check for mandatory header fields failed because the field is NOT accessible",
+					PlatformStatusCode.MANDATORY_DOCUMENT_FIELD_MISSING);
 		}
 		return null;
 	}

@@ -36,7 +36,7 @@ public class ClickatellTransformer extends RestfulServiceAbstractTransformer<Cli
 	@Override
 	public List<DownstreamError> getErrors(RestfulResponse<ClickatellResponse> response) {
 		Optional<ClickatellResponse> clickatellResponse = response.getResponse();
-		if(!response.getErrorPayload().isPresent()) {
+		if (!response.getErrorPayload().isPresent()) {
 			return Arrays.asList(new DownstreamError(1, "need payment"));
 		}
 		return null;

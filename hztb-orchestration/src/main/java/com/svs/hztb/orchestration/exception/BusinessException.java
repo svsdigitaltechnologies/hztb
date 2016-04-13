@@ -86,7 +86,7 @@ public class BusinessException extends BaseException {
 		}
 		List<Pair<StatusCode, String>> statusCodes = new ArrayList<>();
 		for (DownstreamError downstreamError : errors) {
-
+			LOGGER.debug("Downstream service error, code: {}, message: {}", downstreamError.getCode(), downstreamError.getMessage());
 			if (errorMapping != null) {
 				StatusCode statusCode = errorMapping.getStatusCode(downstreamError.getCode());
 

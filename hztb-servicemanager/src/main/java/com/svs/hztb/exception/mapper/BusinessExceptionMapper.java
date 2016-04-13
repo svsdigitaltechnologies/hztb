@@ -14,14 +14,13 @@ import com.svs.hztb.orchestration.exception.BusinessException;
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class BusinessExceptionMapper extends BaseExceptionMapper<BusinessException> {
-	
+
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(BusinessExceptionMapper.class);
 
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<HztbResponse> toResponse(BusinessException exception) {
-		LOGGER.debug("In BusinessExceptionMapper.toResponse()", exception);
+		LOGGER.debug("Business exception occured: {} ", exception);
 		return super.toResponse(exception);
 	}
 
-	
 }

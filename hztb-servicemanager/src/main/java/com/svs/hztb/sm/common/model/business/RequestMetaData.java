@@ -1,9 +1,7 @@
 package com.svs.hztb.sm.common.model.business;
 
-import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
-import com.svs.hztb.common.model.RequestData;
-import static com.svs.hztb.sm.common.model.ServiceManagerConstants.CUSTOM_HTTP_HEADER_REQUEST_ID;
 import static com.svs.hztb.sm.common.model.ServiceManagerConstants.CUSTOM_HTTP_HEADER_REQUESTOR_ID;
+import static com.svs.hztb.sm.common.model.ServiceManagerConstants.CUSTOM_HTTP_HEADER_REQUEST_ID;
 import static com.svs.hztb.sm.common.model.ServiceManagerConstants.CUSTOM_HTTP_HEADER_TIMESTAMP;
 import static com.svs.hztb.sm.common.model.ServiceManagerConstants.HTTP_HEADER_ACCEPT;
 import static com.svs.hztb.sm.common.model.ServiceManagerConstants.HTTP_HEADER_ACCEPT_LANGUAGE;
@@ -18,36 +16,39 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.HeaderParam;
 
+import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
+import com.svs.hztb.common.model.RequestData;
+
 public class RequestMetaData implements RequestData {
-	
+
 	public static final String DEFAULT_ACCEPT_LANGUAGE = "en-US";
 	public static final String DEFAULT_CACHE_CONTROL = "no-store";
 
 	@HeaderParam(HTTP_HEADER_ACCEPT)
 	@Pattern(regexp = HZTBRegularExpressions.ACCEPT)
 	private String accept;
-	
+
 	@HeaderParam(HTTP_HEADER_CACHE_CONTROL)
 	@Pattern(regexp = HZTBRegularExpressions.CACHE_CONTROL)
 	private String cacheControl;
-	
+
 	@HeaderParam(HTTP_HEADER_ACCEPT_LANGUAGE)
 	@Pattern(regexp = HZTBRegularExpressions.ACCEPT_LANGUAGE)
 	private String acceptLanguage;
-	
+
 	@HeaderParam(CUSTOM_HTTP_HEADER_REQUEST_ID)
 	@Pattern(regexp = HZTBRegularExpressions.REQUEST_ID)
 	@NotNull
 	@Size(min = 1, max = 64)
 	private String requestId;
-	
+
 	@HeaderParam(CUSTOM_HTTP_HEADER_REQUESTOR_ID)
 	@Pattern(regexp = HZTBRegularExpressions.REQUESTOR_ID)
 	private String requestorId;
-	
+
 	@HeaderParam(CUSTOM_HTTP_HEADER_TIMESTAMP)
 	private String timestamp;
-	
+
 	@Override
 	public String getRequestId() {
 		return requestId;
@@ -111,5 +112,5 @@ public class RequestMetaData implements RequestData {
 		}
 		return Optional.of(headers);
 	}
-	
+
 }

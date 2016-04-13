@@ -24,9 +24,8 @@ import com.svs.hztb.sm.common.model.business.RequestMetaData;
 @ControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultExceptionMapper {
-	
-	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(DefaultExceptionMapper.class);
 
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(DefaultExceptionMapper.class);
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<HztbResponse> toResponse(HttpServletRequest request, Exception exception) {

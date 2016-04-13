@@ -1,46 +1,51 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * The persistent class for the product database table.
  * 
  */
 @Entity
-@NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
+// @NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
 public class ProductEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private int code;
 
-	@Column(name="image_url")
+	@Column(name = "image_url")
 	private String imageUrl;
 
-	@Column(name="long_desc")
+	@Column(name = "long_desc")
 	private String longDesc;
 
 	private String name;
 
 	private double price;
 
-	@Column(name="short_desc")
+	@Column(name = "short_desc")
 	private String shortDesc;
 
-	//bi-directional many-to-one association to Coupon
-	@OneToMany(mappedBy="product")
-	private List<CouponEntity> coupons;
+	/*
+	 * //bi-directional many-to-one association to Coupon
+	 * 
+	 * @OneToMany(mappedBy="product") private List<CouponEntity> coupons;
+	 * 
+	 * //bi-directional many-to-one association to Opinion
+	 * 
+	 * @OneToMany(mappedBy="product") private List<OpinionEntity> opinions;
+	 */
 
-	//bi-directional many-to-one association to Opinion
-	@OneToMany(mappedBy="product")
-	private List<OpinionEntity> opinions;
-
-	//bi-directional many-to-one association to Retailer
+	// bi-directional many-to-one association to Retailer
 	@ManyToOne
-	@JoinColumn(name="retailer_id")
+	@JoinColumn(name = "retailer_id")
 	private RetailerEntity retailer;
 
 	public ProductEntity() {
@@ -94,37 +99,31 @@ public class ProductEntity implements Serializable {
 		this.shortDesc = shortDesc;
 	}
 
-	public List<CouponEntity> getCoupons() {
-		return this.coupons;
-	}
+	/*
+	 * public List<CouponEntity> getCoupons() { return this.coupons; }
+	 * 
+	 * public void setCoupons(List<CouponEntity> coupons) { this.coupons =
+	 * coupons; }
+	 */
 
-	public void setCoupons(List<CouponEntity> coupons) {
-		this.coupons = coupons;
-	}
-
-	public CouponEntity addCoupon(CouponEntity coupon) {
-		getCoupons().add(coupon);
-		coupon.setProduct(this);
-
-		return coupon;
-	}
-
-	public CouponEntity removeCoupon(CouponEntity coupon) {
-		getCoupons().remove(coupon);
-		coupon.setProduct(null);
-
-		return coupon;
-	}
-
-	public List<OpinionEntity> getOpinions() {
-		return this.opinions;
-	}
-
-	public void setOpinions(List<OpinionEntity> opinions) {
-		this.opinions = opinions;
-	}
-
-	
+	/*
+	 * public CouponEntity addCoupon(CouponEntity coupon) {
+	 * getCoupons().add(coupon); coupon.setProduct(this);
+	 * 
+	 * return coupon; }
+	 * 
+	 * public CouponEntity removeCoupon(CouponEntity coupon) {
+	 * getCoupons().remove(coupon); coupon.setProduct(null);
+	 * 
+	 * return coupon; }
+	 */
+	/*
+	 * public List<OpinionEntity> getOpinions() { return this.opinions; }
+	 * 
+	 * public void setOpinions(List<OpinionEntity> opinions) { this.opinions =
+	 * opinions; }
+	 * 
+	 */
 
 	public RetailerEntity getRetailer() {
 		return this.retailer;

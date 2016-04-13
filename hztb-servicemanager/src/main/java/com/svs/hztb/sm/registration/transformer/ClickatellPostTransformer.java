@@ -17,7 +17,8 @@ import com.svs.hztb.sm.common.transformer.RestfulServiceAbstractTransformer;
 
 @RestfulTransformer(ServiceManagerRestfulEndpoint.CLICKATELL)
 @Component
-public class ClickatellPostTransformer extends RestfulServiceAbstractTransformer<ClickatellRequest, ClickatellResponse> {
+public class ClickatellPostTransformer
+		extends RestfulServiceAbstractTransformer<ClickatellRequest, ClickatellResponse> {
 
 	@Override
 	public ClickatellRequest transformRequest(FlowContext flowContext) {
@@ -35,7 +36,7 @@ public class ClickatellPostTransformer extends RestfulServiceAbstractTransformer
 	@Override
 	public List<DownstreamError> getErrors(RestfulResponse<ClickatellResponse> response) {
 		Optional<ClickatellResponse> clickatellResponse = response.getResponse();
-		if(!response.getErrorPayload().isPresent()) {
+		if (!response.getErrorPayload().isPresent()) {
 			return Arrays.asList(new DownstreamError(1, "need payment"));
 		}
 		return null;

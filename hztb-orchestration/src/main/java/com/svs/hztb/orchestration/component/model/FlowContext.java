@@ -34,6 +34,7 @@ public class FlowContext extends ContextImpl {
 	}
 
 	public void setModelElement(Object element) {
+		LOGGER.debug("Adding model element to the flow context {}", element);
 		if (element instanceof RequestData) {
 			throw new SystemException("Request data elements should be added via the FlowContext constructor");
 		}

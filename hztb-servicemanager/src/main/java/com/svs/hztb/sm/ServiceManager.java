@@ -26,14 +26,16 @@ import com.svs.hztb.orchestration.component.service.StartupService;
 @EnableJpaRepositories(basePackages = { "com.svs.hztb.repository" })
 @ComponentScan({ "com.svs.hztb" })
 @EntityScan(basePackages = "com.svs.hztb.entity")
-@PropertySources({ @PropertySource(value = "classpath:application.properties"), @PropertySource(value = "classpath:restful.client.properties")})
-public class ServiceManager extends SpringBootServletInitializer implements ApplicationListener<ContextRefreshedEvent>, ServletContextAware {
+@PropertySources({ @PropertySource(value = "classpath:application.properties"),
+		@PropertySource(value = "classpath:restful.client.properties") })
+public class ServiceManager extends SpringBootServletInitializer
+		implements ApplicationListener<ContextRefreshedEvent>, ServletContextAware {
 
 	private static Logger LOGGER = LoggerFactory.INSTANCE.getLogger(ServiceManager.class);
-	
+
 	@Autowired
 	private StartupService startupService;
-	
+
 	public static void main(String[] args) {
 		configureLogging();
 		SpringApplication.run(ServiceManager.class, args);
@@ -43,9 +45,10 @@ public class ServiceManager extends SpringBootServletInitializer implements Appl
 	private static void configureLogging() {
 		System.setProperty("log4j.configurationFile", "log4j2.xml");
 		System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
-		//System.setProperty(LoggingSystem.SYSTEM_PROPERTY, Log4J2LoggingSystem.class.getName());
+		// System.setProperty(LoggingSystem.SYSTEM_PROPERTY,
+		// Log4J2LoggingSystem.class.getName());
 	}
-	
+
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(ServiceManager.class);
@@ -54,7 +57,7 @@ public class ServiceManager extends SpringBootServletInitializer implements Appl
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
