@@ -44,17 +44,17 @@ public class FailureLogMessage {
 		if (this.reasonFailureType != null && this.reasonFailureType.length() > REASON_FAILURE_TYPE_MAX) {
 			this.reasonFailureType = this.reasonFailureType.substring(0, REASON_FAILURE_TYPE_MAX);
 		}
-		
+
 		this.reasonFailureText = reasonFailureText;
 		if (this.reasonFailureText != null && this.reasonFailureText.length() > REASON_FAILURE_TEXT_MAX) {
 			this.reasonFailureText = this.reasonFailureText.substring(0, REASON_FAILURE_TEXT_MAX);
 		}
-		
+
 		this.payload = payload;
 	}
-	
+
 	public FailureLogMessage() {
-		
+
 	}
 
 	public String getTimestamp() {
@@ -104,7 +104,7 @@ public class FailureLogMessage {
 	public void setPayload(Object payload) {
 		this.payload = payload;
 	}
-	
+
 	@Override
 	public String toString() {
 		return StringUtil.convertObjectToJSON(this);

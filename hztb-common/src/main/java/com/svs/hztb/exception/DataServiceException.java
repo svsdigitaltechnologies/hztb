@@ -2,9 +2,6 @@ package com.svs.hztb.exception;
 
 public class DataServiceException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2532741174331476019L;
 
 	private String statusCode;
@@ -25,7 +22,7 @@ public class DataServiceException extends Exception {
 		super(cause);
 		this.statusCode = statusCode;
 	}
-	
+
 	public DataServiceException(String message, String statusCode) {
 		super(message);
 		this.statusCode = statusCode;

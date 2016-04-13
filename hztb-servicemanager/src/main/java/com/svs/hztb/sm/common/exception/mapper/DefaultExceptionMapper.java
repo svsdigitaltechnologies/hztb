@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.ErrorStatus;
 import com.svs.hztb.common.model.HztbResponse;
 import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
@@ -22,6 +24,9 @@ import com.svs.hztb.sm.common.model.business.RequestMetaData;
 @ControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class DefaultExceptionMapper {
+	
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(DefaultExceptionMapper.class);
+
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<HztbResponse> toResponse(HttpServletRequest request, Exception exception) {

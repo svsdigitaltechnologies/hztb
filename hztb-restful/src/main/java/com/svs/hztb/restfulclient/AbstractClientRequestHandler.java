@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -19,6 +20,9 @@ import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
+import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
+import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
+import com.svs.hztb.common.model.RequestData;
 import com.svs.hztb.restfulclient.model.RestfulRequest;
 import com.svs.hztb.restfulclient.model.RestfulResponse;
 
@@ -120,8 +124,14 @@ public abstract class AbstractClientRequestHandler implements ClientRequestHandl
 	}
 
 	protected <T, S> void addHeaders(HttpRequestBase requestBase, RestfulRequest<T, S> request) {
-		requestBase.addHeader("Content-Type", request.getEndpoint().getClientType().getMediaType().toString());
-		requestBase.addHeader("Accept", request.getEndpoint().getClientType().getMediaType().toString());
+		ClientType clientType = request.getEndpoint().getClientType();
 
+		Optional<Map<String, String>> headers = request.getRequestData().getHeaders(clientType.getTargetId(),
+				clientType.getMediaType().toString());
+		headers.ifPresent(map -> map.keySet()
+				.forEach(h -> Optional.ofNullable(map.get(h)).ifPresent(value -> requestBase.addHeader(h, value))));
 	}
+
+	protected abstract <T> void validate(RequestData requestData, T response);
+
 }

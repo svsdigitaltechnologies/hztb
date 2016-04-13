@@ -10,4 +10,6 @@ public interface ClientType {
 		
 		MediaType getMediaType();
 		
+		String getTargetId();
+		
 }

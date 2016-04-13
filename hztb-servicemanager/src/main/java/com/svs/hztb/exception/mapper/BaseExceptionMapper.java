@@ -1,23 +1,24 @@
 package com.svs.hztb.exception.mapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
 import com.svs.hztb.common.exception.BaseException;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.ErrorStatus;
 import com.svs.hztb.common.model.HztbResponse;
 import com.svs.hztb.common.model.ResponseHeader;
 
 public class BaseExceptionMapper<T extends BaseException> {
-	private final static Logger logger = LoggerFactory.getLogger(BaseExceptionMapper.class);
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(BaseExceptionMapper.class);
 
 	public BaseExceptionMapper() {
 		super();
 	}
 
 	public ResponseEntity<HztbResponse> toResponse(T exception) {
-		logger.error("Returning appropriate response from platform exception: {}", exception);
+		LOGGER.debug("In BaseExceptionMapper.toResponse()", exception);
 		String httpStatusCode = exception.getStatusCodes().get(0).getLeft().getHttpStatusCode();
 
 		ResponseHeader responseHeader = new ResponseHeader("1212", httpStatusCode);

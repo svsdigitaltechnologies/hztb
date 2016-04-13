@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.svs.hztb.adapter.UserAdapter;
 import com.svs.hztb.api.common.utils.GCMMessageNotificationClient;
 import com.svs.hztb.api.common.utils.HZTBUtil;
+import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
@@ -23,6 +24,7 @@ import com.svs.hztb.common.exception.SystemException;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
+import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
 import com.svs.hztb.common.model.business.User;
 import com.svs.hztb.ds.model.DataServiceRequest;
 import com.svs.hztb.exception.DataServiceException;
@@ -65,11 +67,13 @@ public class UserDataServiceImpl implements UserDataService {
 			} else {
 				user = userAdapter.createUser(dataServiceRequest);
 			}
-
-			FlowContext flowContext = new FlowContext(null);
+			
+			FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
 			StepDefinition stepDefinition = stepDefinitionFactory
-					.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL_GET);
+					.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL_POST);
 			stepDefinition.execute(flowContext);
+			ClickatellResponse clickatellResponse = flowContext.getModelElement(ClickatellResponse.class);
+			LOGGER.debug("Clickatell Response {} ", clickatellResponse.getData().getMessage().get(0).getApiMessageId());
 
 			registrationResponse = populateRegistrationUserResponse(user);
 		} catch (DataServiceException e) {
@@ -99,9 +103,9 @@ public class UserDataServiceImpl implements UserDataService {
 			user = userAdapter.ping(dataServiceRequest);
 			pingResponse = populatePingResponse(user);
 		} catch (DataServiceException dataServiceException) {
-			LOGGER.callOut("Callout Error: {}" , dataServiceException);
-			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+			BusinessException businessException=  BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
+			throw businessException;
 		} catch (Exception exception) {
 			throw new SystemException(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
@@ -140,6 +144,7 @@ public class UserDataServiceImpl implements UserDataService {
 					// update the code to increment the otp attempt failed
 					// count.
 					User updateUser = new User();
+					
 					updateUser.setUserId(userFromDB.getUserId());
 					dataServiceRequest = new DataServiceRequest<User>(updateUser);
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);

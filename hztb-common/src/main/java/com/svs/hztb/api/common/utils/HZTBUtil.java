@@ -3,6 +3,14 @@ package com.svs.hztb.api.common.utils;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * <p>
+ * Util class fo generating OTP, OTP allowed.
+ * </p>
+ * 
+ * @author skairamk
+ *
+ */
 public class HZTBUtil {
 	static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 

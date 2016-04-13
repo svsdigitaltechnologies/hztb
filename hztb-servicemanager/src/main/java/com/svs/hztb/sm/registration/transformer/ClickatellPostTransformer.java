@@ -29,7 +29,7 @@ public class ClickatellPostTransformer extends RestfulServiceAbstractTransformer
 
 	@Override
 	public void transformResponse(FlowContext flowContext, ClickatellResponse response) {
-		System.out.println("In response");
+		flowContext.setModelElement(response);
 	}
 
 	@Override

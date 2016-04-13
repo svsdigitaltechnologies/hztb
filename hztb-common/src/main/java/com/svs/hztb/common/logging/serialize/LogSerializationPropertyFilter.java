@@ -26,12 +26,14 @@ public class LogSerializationPropertyFilter extends SimpleBeanPropertyFilter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider, PropertyWriter writer) throws Exception {
-		Map<String, AbstractLogSerializer> fieldSerializerMap = LogSerializationFactory.getInstance().getFieldSerializerMap(pojo.getClass());
-		if(!CollectionUtils.isEmpty(fieldSerializerMap)) {
+	public void serializeAsField(Object pojo, JsonGenerator jgen, SerializerProvider provider, PropertyWriter writer)
+			throws Exception {
+		Map<String, AbstractLogSerializer> fieldSerializerMap = LogSerializationFactory.getInstance()
+				.getFieldSerializerMap(pojo.getClass());
+		if (!CollectionUtils.isEmpty(fieldSerializerMap)) {
 			String fieldName = writer.getName();
 			JsonSerializer serializer = fieldSerializerMap.get(fieldName);
-			if(serializer != null) {
+			if (serializer != null) {
 				Object value = ((BeanPropertyWriter) writer).get(pojo);
 				if (value != null) {
 					jgen.writeFieldName(writer.getName());
@@ -39,8 +41,8 @@ public class LogSerializationPropertyFilter extends SimpleBeanPropertyFilter {
 				}
 				return;
 			}
- 		}
+		}
 		super.serializeAsField(pojo, jgen, provider, writer);
 	}
-	
+
 }

@@ -9,6 +9,10 @@ import static com.svs.hztb.sm.common.model.ServiceManagerConstants.HTTP_HEADER_A
 import static com.svs.hztb.sm.common.model.ServiceManagerConstants.HTTP_HEADER_ACCEPT_LANGUAGE;
 import static com.svs.hztb.sm.common.model.ServiceManagerConstants.HTTP_HEADER_CACHE_CONTROL;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -93,5 +97,19 @@ public class RequestMetaData implements RequestData {
 		this.timestamp = timestamp;
 	}
 
+	@Override
+	public Optional<Map<String, String>> getHeaders(String targetId, String mediaType) {
+		Map<String, String> headers = new HashMap<>();
+		headers.put(CUSTOM_HTTP_HEADER_REQUEST_ID, requestId);
+		headers.put(CUSTOM_HTTP_HEADER_REQUESTOR_ID, targetId);
+		headers.put(HTTP_HEADER_ACCEPT_LANGUAGE, DEFAULT_ACCEPT_LANGUAGE);
+		headers.put(HTTP_HEADER_ACCEPT, mediaType);
+		if (cacheControl == null) {
+			headers.put(HTTP_HEADER_CACHE_CONTROL, DEFAULT_CACHE_CONTROL);
+		} else {
+			headers.put(HTTP_HEADER_CACHE_CONTROL, cacheControl);
+		}
+		return Optional.of(headers);
+	}
 	
 }

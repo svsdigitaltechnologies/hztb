@@ -26,7 +26,7 @@ public class DefaultLoggerImpl implements Logger {
 	private final org.slf4j.Logger stackTraceLogger;
 	private final org.slf4j.Logger failureLogger;
 
-	private static final String MESSAGE_PREFIX = "[{}]";
+	private static final String MESSAGE_PREFIX = "[{}]"; // [REQUEST_ID]
 	private static final String CALL_OUT_MESSAGE_PREFIX = "CALL OUT : {} " + MESSAGE_PREFIX;
 	private static final String CALL_OUT_DOWNSTREAM_MESSAGE_PREFIX = "CALL OUT : {} " + MESSAGE_PREFIX + ": {} : {} ";
 	private static final String PERFORMANCE_MESSAGE_PREFIX = MESSAGE_PREFIX

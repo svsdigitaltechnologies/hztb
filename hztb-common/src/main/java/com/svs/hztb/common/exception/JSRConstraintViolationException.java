@@ -6,15 +6,17 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ValidationException;
 
+
 public class JSRConstraintViolationException extends ValidationException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9027256812688596475L;
 
 	private final Set<ConstraintViolation<Object>> constraintViolations;
 
+	/**
+	 * @param message
+	 * @param constraintViolations
+	 */
 	public JSRConstraintViolationException(String message,
 			Set<? extends ConstraintViolation<Object>> constraintViolations) {
 		super(message);
@@ -25,6 +27,9 @@ public class JSRConstraintViolationException extends ValidationException {
 		}
 	}
 
+	/**
+	 * @param constraintViolations
+	 */
 	public JSRConstraintViolationException(Set<? extends ConstraintViolation<Object>> constraintViolations) {
 		this(null, constraintViolations);
 	}
