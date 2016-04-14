@@ -29,6 +29,8 @@ public class DefaultExceptionMapper {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<HztbResponse> toResponse(HttpServletRequest request, Exception exception) {
+		
+		LOGGER.error("Unexpected exception occured: {}", exception);
 		RequestData requestData = PlatformThreadLocalDataFactory.getInstance().getRequestData();
 
 		String message = exception.toString();

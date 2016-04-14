@@ -27,7 +27,7 @@ import com.svs.hztb.orchestration.component.service.StartupService;
 @ComponentScan({ "com.svs.hztb" })
 @EntityScan(basePackages = "com.svs.hztb.entity")
 @PropertySources({ @PropertySource(value = "classpath:application.properties"),
-		@PropertySource(value = "classpath:restful.client.properties") })
+		@PropertySource(value = "classpath:restful.client.properties"), @PropertySource(value = "classpath:sm_external_config.properties") })
 public class ServiceManager extends SpringBootServletInitializer
 		implements ApplicationListener<ContextRefreshedEvent>, ServletContextAware {
 

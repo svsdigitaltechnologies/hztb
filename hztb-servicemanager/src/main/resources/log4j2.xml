@@ -2,13 +2,13 @@
 <Configuration status="DEBUG" monitorInterval="10">
 	<Properties>
 		<Property name="HOST_INSTANCE"> $${hostName} -
-			$${bundle:application:hztb.instance.name}
+			$${bundle:sm_external_config:hztb.instance.name}
 		</Property>
 		<Property name="LOG_PATTERN"> %d %p %c{1.} [%t] [$${HOST_INSTANCE}] %m
 			%ex%n</Property>
 		<Property name="FAILURE_LOG_PATTERN">[$${HOST_INSTANCE}] %m %n</Property>
-		<Property name="LOG_DIR">${bundle:application:hztb.logspath}</Property>
-		<Property name="ARCHIVE">${bundle:application:hztb.logsarchivepath}
+		<Property name="LOG_DIR">${bundle:sm_external_config:hztb.logspath}</Property>
+		<Property name="ARCHIVE">${bundle:sm_external_config:hztb.logsarchivepath}
 		</Property>
 
 	</Properties>
