@@ -1,9 +1,16 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the user database table.
@@ -11,56 +18,47 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user", schema = "ebdb")
-@NamedQuery(name="UserEntity.findAll", query="SELECT u FROM UserEntity u")
+@NamedQuery(name = "UserEntity.findAll", query = "SELECT u FROM UserEntity u")
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="user_id")
+	@Column(name = "user_id")
 	private int userId;
 
-	@Column(name="data_pushed_ind")
+	@Column(name = "data_pushed_ind")
 	private String dataPushedInd;
 
-	@Column(name="email_address")
+	@Column(name = "email_address")
 	private String emailAddress;
 
 	private String firstname;
 
-	@Column(name="gcm_reg_id")
+	@Column(name = "gcm_reg_id")
 	private String gcmRegId;
 
-	@Column(name="imei_code")
+	@Column(name = "imei_code")
 	private String imeiCode;
 
 	private String lastname;
 
-	@Column(name="mobile_number")
+	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@Column(name="otp_code")
+	@Column(name = "otp_code")
 	private String otpCode;
 
-	@Column(name="otp_create_time")
+	@Column(name = "otp_create_time")
 	private String otpCreateTime;
 
-	//bi-directional many-to-many association to Group
+	// bi-directional many-to-many association to Group
 	@ManyToMany
-	@JoinTable(
-		name="user_group"
-		, joinColumns={
-			@JoinColumn(name="user_id")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="group_id")
-			}
-		)
+	@JoinTable(name = "user_group", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "group_id") })
 	private List<GroupEntity> groups;
-	
-	@Column(name="invalid_otp_retries")
-	private String invalidOtpRetries;
 
-	
+	@Column(name = "invalid_otp_retries")
+	private String invalidOtpRetries;
 
 	public UserEntity() {
 	}
@@ -160,7 +158,5 @@ public class UserEntity implements Serializable {
 	public void setInvalidOtpRetries(String invalidOtpRetries) {
 		this.invalidOtpRetries = invalidOtpRetries;
 	}
-	
-	
 
 }

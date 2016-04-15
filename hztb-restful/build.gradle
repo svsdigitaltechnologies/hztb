@@ -1,6 +1,8 @@
 dependencies {
 	compile project(':hztb-common'),
 			project(':hztb-security'),
-			'org.springframework:spring-web:4.1.7.RELEASE',
 			'org.apache.httpcomponents:httpclient:4.3.6'
 	}
+	
+				
+	

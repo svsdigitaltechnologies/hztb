@@ -13,8 +13,10 @@ import com.svs.hztb.restfulclient.model.RestfulResponse;
 public class RestfulClientProcessor {
 	@Autowired
 	private ClientConfigurationFactory clientConfigurationFactory;
+
 	public <T, S> RestfulResponse<S> execute(RestfulRequest<T, S> request) throws IOException {
-		ClientRequestHandler clientRequestHandler = clientConfigurationFactory.getClientRequestHandler(request.getEndpoint().getClientType().getName());
+		ClientRequestHandler clientRequestHandler = clientConfigurationFactory
+				.getClientRequestHandler(request.getEndpoint().getClientType().getName());
 		return clientRequestHandler.execute(request);
 	}
 }

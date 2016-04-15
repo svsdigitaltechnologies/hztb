@@ -16,14 +16,15 @@ public interface RestfulServiceTransformer<T, S> extends Transformer {
 
 	void transformResponse(FlowContext flowContext, S response);
 
-	void transformError(FlowContext flowContext, RestfulRequest<T, S> request, RestfulServiceTransformer<T, S> transformer, RestfulResponse<S> response);
-	
-	List<DownstreamError> getErrors(RestfulResponse<S> response); 
-	
+	void transformError(FlowContext flowContext, RestfulRequest<T, S> request,
+			RestfulServiceTransformer<T, S> transformer, RestfulResponse<S> response);
+
+	List<DownstreamError> getErrors(RestfulResponse<S> response);
+
 	boolean isSuccess(RestfulResponse<S> restfulResponse);
-	
+
 	Class<S> getResponseClass();
-	
+
 	DownstreamError getFirstError(RestfulResponse<S> response);
-	
+
 }

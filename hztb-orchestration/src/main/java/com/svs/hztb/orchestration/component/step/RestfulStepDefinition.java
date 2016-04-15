@@ -6,7 +6,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
+import com.svs.hztb.common.util.PerformanceTimer;
 import com.svs.hztb.common.util.StringUtil;
 import com.svs.hztb.orchestration.component.model.FlowContext;
 import com.svs.hztb.orchestration.component.transformer.RestfulServiceTransformer;
@@ -17,6 +20,8 @@ import com.svs.hztb.restfulclient.model.RestfulRequest;
 import com.svs.hztb.restfulclient.model.RestfulResponse;
 
 public class RestfulStepDefinition<T, S> extends AbstractStepDefinition {
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(RestfulStepDefinition.class);
 
 	protected RestfulClientProcessor restfulClientProcessor;
 	protected RestfulServiceTransformer<T, S> transformer;
@@ -31,6 +36,7 @@ public class RestfulStepDefinition<T, S> extends AbstractStepDefinition {
 
 	@Override
 	public void process(FlowContext flowContext) throws Exception {
+		LOGGER.debug("{} started processing ... ", endpoint.name());
 		if (!transformer.proceed(flowContext)) {
 			return;
 		}
@@ -45,16 +51,18 @@ public class RestfulStepDefinition<T, S> extends AbstractStepDefinition {
 			uri = StringUtil.spelReplacePayload(endpoint.getURI(), parameterReplacements);
 			restfulRequest = RestfulRequest.build(flowContext.getRequestData(), uri, endpoint, request,
 					transformer.getResponseClass());
+			LOGGER.debug("Restful Request: {}", restfulRequest);
 
 		} catch (Exception exception) {
 			throw new SystemException(String.format("unable to convert URI %s using spel", endpoint.getURI()),
 					exception, PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
-
+		final PerformanceTimer timer = new PerformanceTimer();
 		RestfulResponse<S> restfulResponse = null;
 		boolean status = false;
 		try {
 			restfulResponse = call(restfulRequest, flowContext);
+			LOGGER.debug("Restful Response: {}", restfulResponse);
 			status = transformer.isSuccess(restfulResponse);
 			if (status) {
 				transformer.transformResponse(flowContext, restfulResponse.getResponse().get());
@@ -62,27 +70,34 @@ public class RestfulStepDefinition<T, S> extends AbstractStepDefinition {
 				transformer.transformError(flowContext, restfulRequest, transformer, restfulResponse);
 			}
 		} catch (IOException ex) {
+			LOGGER.error("Downstream call exception: {}", ex);
+			LOGGER.callOutDownStream("Error occured while making HTTP {} with exception {}",
+					restfulRequest.getEndpoint().getClientType().getName(), restfulRequest.getEndpoint().getURI(),
+					restfulRequest.getEndpoint().getHttpMethod(), ex);
 			throw new SystemException(
 					MessageFormat.format("Error occured while making http {0} with exception {1}",
 							restfulRequest.getEndpoint().getHttpMethod(), ex.getMessage()),
 					ex, PlatformStatusCode.BACKEND_SYSTEM_ERROR);
 		} finally {
-			
+			timer.logPerformance("downstream." + endpoint.getClientType().getName() + "." + endpoint.name()
+					+ (status ? ".success" : "fail"));
+			LOGGER.debug("{} finished processing", endpoint.name());
 		}
 	}
+
 	public RestfulClientProcessor getResfulClientAdapter() {
 		return restfulClientProcessor;
 	}
-	
+
 	protected RestfulResponse<S> call(RestfulRequest<T, S> adapterRequest, FlowContext flowContext) throws IOException {
 		return restfulClientProcessor.execute(adapterRequest);
 	}
-	
+
 	@Override
 	public String toString() {
-		return "TR [transformer =" + transformer +", route=" + endpoint + "]";
+		return "TR [transformer =" + transformer + ", route=" + endpoint + "]";
 	}
-	
+
 	@Override
 	protected String getIdentifier() {
 		return "restful-step::" + transformer.getClass().getSimpleName();

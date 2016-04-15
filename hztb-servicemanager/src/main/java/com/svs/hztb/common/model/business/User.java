@@ -16,6 +16,7 @@ public class User {
 	private String dataPushed;
 	private String emailAddress;
 	private String userId;
+	private String invalidOtpCount;
 
 	public User() {
 
@@ -41,6 +42,14 @@ public class User {
 		this.mobileNumber = userProfileRequest.getMobileNumber();
 		this.name = userProfileRequest.getName();
 		this.emailAddress = userProfileRequest.getEmailAddress();
+	}
+
+	public String getInvalidOtpCount() {
+		return invalidOtpCount;
+	}
+
+	public void setInvalidOtpCount(String invalidOtpCount) {
+		this.invalidOtpCount = invalidOtpCount;
 	}
 
 	public String getUserId() {

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 public class UserProfileRequest {
 	@NotNull
 	private String mobileNumber;
-	
+
 	private String name;
 	private String emailAddress;
 

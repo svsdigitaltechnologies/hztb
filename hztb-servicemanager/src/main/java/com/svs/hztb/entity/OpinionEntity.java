@@ -6,47 +6,44 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 
 /**
  * The persistent class for the opinion database table.
  * 
  */
 @Entity
-@NamedQuery(name="Opinion.findAll", query="SELECT o FROM Opinion o")
+// @NamedQuery(name="Opinion.findAll", query="SELECT o FROM Opinion o")
 public class OpinionEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="opinion_id")
+	@Column(name = "opinion_id")
 	private int opinionId;
 
 	private String photo;
 
-	@Column(name="product_url")
+	@Column(name = "product_url")
 	private String productUrl;
 
-	@Column(name="reported_action")
+	@Column(name = "reported_action")
 	private String reportedAction;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="requested_time")
+	@Column(name = "requested_time")
 	private Date requestedTime;
 
-	
-	@Column(name="channel_id")
+	@Column(name = "channel_id")
 	private String channelId;
 
-	@Column(name="requested_group_id")
+	@Column(name = "requested_group_id")
 	private int groupId;
 
-	@Column(name="requester_user_id")
+	@Column(name = "requester_user_id")
 	private int userId;
 
-	@Column(name="store_id")
+	@Column(name = "store_id")
 	private String storeId;
 
 	public OpinionEntity() {
@@ -123,6 +120,5 @@ public class OpinionEntity implements Serializable {
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
-	
 
 }

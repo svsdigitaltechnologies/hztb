@@ -48,7 +48,8 @@ public class UserController {
 		return buildUpdateUserProfileResponse(userProfileResponse);
 	}
 
-	private ResponseEntity<UserProfileResponse> buildUpdateUserProfileResponse(UserProfileResponse userProfileResponse) {
+	private ResponseEntity<UserProfileResponse> buildUpdateUserProfileResponse(
+			UserProfileResponse userProfileResponse) {
 		return ResponseEntity.status(HttpStatus.SC_OK).body(userProfileResponse);
 	}
 

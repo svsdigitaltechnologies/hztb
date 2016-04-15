@@ -1,6 +1,6 @@
 dependencies {
 	compile project(':hztb-common'),
     	 'org.apache.commons:commons-lang3:3.3.2',
-   			 'org.slf4j:slf4j-simple:1.7.16',
-			'javax.validation:validation-api:1.1.0.Final'
+			'javax.validation:validation-api:1.1.0.Final',
+			'javax.ws.rs:javax.ws.rs-api:2.0'
 			  }

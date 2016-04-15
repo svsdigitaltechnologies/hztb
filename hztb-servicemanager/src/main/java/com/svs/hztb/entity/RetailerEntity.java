@@ -1,35 +1,38 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * The persistent class for the retailer database table.
  * 
  */
 @Entity
-@NamedQuery(name="Retailer.findAll", query="SELECT r FROM Retailer r")
+// @NamedQuery(name="Retailer.findAll", query="SELECT r FROM Retailer r")
 public class RetailerEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="retailer_id")
+	@Column(name = "retailer_id")
 	private int retailerId;
 
-	@Column(name="retailer_desc")
+	@Column(name = "retailer_desc")
 	private String retailerDesc;
 
-	@Column(name="retailer_name")
+	@Column(name = "retailer_name")
 	private String retailerName;
 
-	//bi-directional many-to-one association to Coupon
-	@OneToMany(mappedBy="retailer")
+	// bi-directional many-to-one association to Coupon
+	@OneToMany(mappedBy = "retailer")
 	private List<CouponEntity> coupons;
 
-	//bi-directional many-to-one association to Product
-	@OneToMany(mappedBy="retailer")
+	// bi-directional many-to-one association to Product
+	@OneToMany(mappedBy = "retailer")
 	private List<ProductEntity> products;
 
 	public RetailerEntity() {

@@ -10,19 +10,22 @@ public class RestfulRequest<T, S> {
 	private final RequestData requestData;
 	private final RestfulEndPoint endpoint;
 
-	private RestfulRequest(RequestData requestData, String uri, RestfulEndPoint endpoint, T payload, Class<S> responseClass) {
+	private RestfulRequest(RequestData requestData, String uri, RestfulEndPoint endpoint, T payload,
+			Class<S> responseClass) {
 		this.requestData = requestData;
 		this.uri = uri;
 		this.endpoint = endpoint;
 		this.payload = payload;
 		this.responseClass = responseClass;
 	}
-	
-	public static <T, S> RestfulRequest<T, S> build(RequestData requestData, RestfulEndPoint endPoint, T payload, Class<S> responseClass) {
+
+	public static <T, S> RestfulRequest<T, S> build(RequestData requestData, RestfulEndPoint endPoint, T payload,
+			Class<S> responseClass) {
 		return build(requestData, endPoint.getURI(), endPoint, payload, responseClass);
 	}
-	
-	public static <T, S> RestfulRequest<T, S> build(RequestData requestData, String uri, RestfulEndPoint endPoint, T payload, Class<S> responseClass) {
+
+	public static <T, S> RestfulRequest<T, S> build(RequestData requestData, String uri, RestfulEndPoint endPoint,
+			T payload, Class<S> responseClass) {
 		return new RestfulRequest<>(requestData, uri, endPoint, payload, responseClass);
 	}
 
@@ -45,6 +48,5 @@ public class RestfulRequest<T, S> {
 	public RestfulEndPoint getEndpoint() {
 		return endpoint;
 	}
-	
-	
+
 }

@@ -6,15 +6,33 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 
 public class StringUtil {
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(StringUtil.class);
+
+	private static final ObjectMapper MAPPER = new ObjectMapper();
+
+	static {
+		MAPPER.setSerializationInclusion(Include.NON_NULL);
+		MAPPER.configure(SerializationFeature.INDENT_OUTPUT, false);
+	}
+
 	public static String spelReplacePayload(String payload, Map<String, Object> context) {
 		String result = payload;
 		if (result == null) {
@@ -60,7 +78,29 @@ public class StringUtil {
 			}
 			return value.toString();
 		} catch (Exception exception) {
+			LOGGER.error("Exception while attempting to resolve SPEL expression: {}, {}", spel, exception);
 			throw exception;
 		}
+	}
+
+	public static String convertObjectToJSON(Object object) {
+		try {
+			return MAPPER.writeValueAsString(object);
+		} catch (Exception exception) {
+			LOGGER.error("Error converting to JSON : {}", exception);
+			return StringUtils.EMPTY;
+		}
+	}
+
+	public static String base64Encode(String value) {
+		return base64Encode(getUTF8Bytes(value));
+	}
+
+	public static byte[] getUTF8Bytes(String value) {
+		return value.getBytes(Charsets.UTF_8);
+	}
+
+	public static String base64Encode(byte[] value) {
+		return Base64.encodeBase64String(value);
 	}
 }

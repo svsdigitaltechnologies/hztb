@@ -3,6 +3,14 @@ package com.svs.hztb.api.common.utils;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * <p>
+ * Util class fo generating OTP, OTP allowed.
+ * </p>
+ * 
+ * @author skairamk
+ *
+ */
 public class HZTBUtil {
 	static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -17,9 +25,14 @@ public class HZTBUtil {
 		return aNumber;
 	}
 
-	public static boolean isOtpValidationAllowed(String otpCreationDateTime) {
-
+	public static boolean isOtpValidationAllowed(String otpCreationDateTime, String invalidOtpCount) {
+		
 		boolean isOtpValidationAllowed = false;
+
+		Integer count = Integer.parseInt(invalidOtpCount);
+		if( count > 4) {
+			return isOtpValidationAllowed;
+		}
 
 		Instant otpInstantTime = Instant.parse(otpCreationDateTime);
 		Instant currentInstantTime = Instant.now();
@@ -28,7 +41,9 @@ public class HZTBUtil {
 
 		if ((differenceInMinutes <= 10)) {
 			isOtpValidationAllowed = true;
+			return isOtpValidationAllowed;
 		}
+		
 		return isOtpValidationAllowed;
 	}
 }

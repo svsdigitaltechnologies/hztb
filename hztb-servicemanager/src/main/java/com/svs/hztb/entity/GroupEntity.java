@@ -1,9 +1,14 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the group database table.
@@ -11,25 +16,25 @@ import java.util.List;
  */
 @Entity
 @Table(name = "group", schema = "ebdb")
-@NamedQuery(name="GroupEntity.findAll", query="SELECT g FROM GroupEntity g")
+@NamedQuery(name = "GroupEntity.findAll", query = "SELECT g FROM GroupEntity g")
 public class GroupEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="group_id")
+	@Column(name = "group_id")
 	private int groupId;
 
-	@Column(name="group_desc")
+	@Column(name = "group_desc")
 	private String groupDesc;
 
-	@Column(name="group_name")
+	@Column(name = "group_name")
 	private String groupName;
 
-	@Column(name="group_owner")
+	@Column(name = "group_owner")
 	private int groupOwner;
 
-	//bi-directional many-to-many association to User
-	@ManyToMany(mappedBy="groups")
+	// bi-directional many-to-many association to User
+	@ManyToMany(mappedBy = "groups")
 	private List<UserEntity> users;
 
 	public GroupEntity() {

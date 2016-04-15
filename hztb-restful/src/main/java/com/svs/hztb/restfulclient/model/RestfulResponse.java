@@ -31,16 +31,18 @@ public class RestfulResponse<S> {
 	public Optional<String> getErrorResponse() {
 		return errorResponse;
 	}
-	
+
 	public static <S> RestfulResponse<S> buildResponse(int statusCode, S response) {
 		return new RestfulResponse<>(statusCode, Optional.ofNullable(response), Optional.empty(), Optional.empty());
 	}
-	
+
 	public static <S> RestfulResponse<S> buildErrorResponse(int statusCode, String errorResponse) {
-		return new RestfulResponse<>(statusCode, Optional.empty(), Optional.ofNullable(errorResponse), Optional.empty());
+		return new RestfulResponse<>(statusCode, Optional.empty(), Optional.ofNullable(errorResponse),
+				Optional.empty());
 	}
-	
+
 	public static <S> RestfulResponse<S> buildErrprResponse(int statusCode, Object errorPayload) {
-		return new RestfulResponse<S>(statusCode, Optional.empty(), Optional.empty(), Optional.ofNullable(errorPayload));
+		return new RestfulResponse<S>(statusCode, Optional.empty(), Optional.empty(),
+				Optional.ofNullable(errorPayload));
 	}
 }

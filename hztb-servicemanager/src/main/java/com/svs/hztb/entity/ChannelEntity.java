@@ -1,33 +1,37 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * The persistent class for the channel database table.
  * 
  */
 @Entity
-@NamedQuery(name="Channel.findAll", query="SELECT c FROM Channel c")
+// @NamedQuery(name="Channel.findAll", query="SELECT c FROM Channel c")
 public class ChannelEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="channel_id")
+	@Column(name = "channel_id")
 	private int channelId;
 
-	@Column(name="channel_desc")
+	@Column(name = "channel_desc")
 	private String channelDesc;
 
-	@Column(name="channel_type")
+	@Column(name = "channel_type")
 	private String channelType;
 
-	//bi-directional many-to-one association to Opinion
-	@OneToMany(mappedBy="channel")
-	private List<OpinionEntity> opinions;
+	// bi-directional many-to-one association to Opinion
 
+	/*@OneToMany(mappedBy = "channel")
+	private List<OpinionEntity> opinions;
+*/
 	public ChannelEntity() {
 	}
 
@@ -55,14 +59,11 @@ public class ChannelEntity implements Serializable {
 		this.channelType = channelType;
 	}
 
-	public List<OpinionEntity> getOpinions() {
-		return this.opinions;
-	}
-
-	public void setOpinions(List<OpinionEntity> opinions) {
-		this.opinions = opinions;
-	}
-
-
+	/*
+	 * public List<OpinionEntity> getOpinions() { return this.opinions; }
+	 * 
+	 * public void setOpinions(List<OpinionEntity> opinions) { this.opinions =
+	 * opinions; }
+	 */
 
 }
