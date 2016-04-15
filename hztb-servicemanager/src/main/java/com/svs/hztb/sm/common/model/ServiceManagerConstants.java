@@ -9,5 +9,6 @@ public interface ServiceManagerConstants {
 	public static final String HTTP_HEADER_CACHE_CONTROL = "CACHE-CONTROL";
 
 	public static final String CONTENT_LANUGUAGE = "en-us";
+	public static final String DEFAULT = "default";
 
 }

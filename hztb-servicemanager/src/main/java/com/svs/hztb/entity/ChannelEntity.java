@@ -6,14 +6,17 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the channel database table.
  * 
  */
 @Entity
-// @NamedQuery(name="Channel.findAll", query="SELECT c FROM Channel c")
+@Table(name = "channel", schema = "ebdb")
+ @NamedQuery(name="Channel.findAll", query="SELECT c FROM ChannelEntity c")
 public class ChannelEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
