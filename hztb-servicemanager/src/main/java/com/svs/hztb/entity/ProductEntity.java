@@ -7,13 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the product database table.
  * 
  */
 @Entity
-// @NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
+@Table(name = "Product", schema = "ebdb")
+ @NamedQuery(name="Product.findAll", query="SELECT p FROM ProductEntity p")
 public class ProductEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

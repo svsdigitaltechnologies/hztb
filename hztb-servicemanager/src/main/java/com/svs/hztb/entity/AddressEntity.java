@@ -6,14 +6,17 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the address database table.
  * 
  */
 @Entity
-// @NamedQuery(name="Address.findAll", query="SELECT a FROM Address a")
+@Table(name = "address", schema = "ebdb")
+ @NamedQuery(name="Address.findAll", query="SELECT a FROM AddressEntity a")
 public class AddressEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
