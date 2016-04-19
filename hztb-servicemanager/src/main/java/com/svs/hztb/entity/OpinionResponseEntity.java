@@ -37,15 +37,12 @@ public class OpinionResponseEntity implements Serializable {
 	@Column(name = "response_txt")
 	private String responseTxt;
 
-	// bi-directional many-to-one association to Opinion
-	@ManyToOne
-	@JoinColumn(name = "opinion_id")
-	private OpinionEntity opinion;
+	
+	@Column(name = "opinion_id")
+	private int opinionId;
 
-	// bi-directional many-to-one association to OpinionResponseType
-	@ManyToOne
-	@JoinColumn(name = "response_type")
-	private OpinionResponseTypeEntity opinionResponseType;
+	@Column(name = "response_type")
+	private String opinionResponseType;
 
 	public OpinionResponseEntity() {
 	}
@@ -82,20 +79,25 @@ public class OpinionResponseEntity implements Serializable {
 		this.responseTxt = responseTxt;
 	}
 
-	public OpinionEntity getOpinion() {
-		return this.opinion;
+	public int getOpinionId() {
+		return opinionId;
 	}
 
-	public void setOpinion(OpinionEntity opinion) {
-		this.opinion = opinion;
+	public void setOpinionId(int opinionId) {
+		this.opinionId = opinionId;
 	}
 
-	public OpinionResponseTypeEntity getOpinionResponseType() {
-		return this.opinionResponseType;
+	public String getOpinionResponseType() {
+		return opinionResponseType;
 	}
 
-	public void setOpinionResponseType(OpinionResponseTypeEntity opinionResponseType) {
+	public void setOpinionResponseType(String opinionResponseType) {
 		this.opinionResponseType = opinionResponseType;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	
 }

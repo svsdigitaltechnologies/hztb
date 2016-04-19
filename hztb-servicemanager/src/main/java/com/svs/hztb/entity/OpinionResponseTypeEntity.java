@@ -58,18 +58,6 @@ public class OpinionResponseTypeEntity implements Serializable {
 		this.opinionResponses = opinionResponses;
 	}
 
-	public OpinionResponseEntity addOpinionRespons(OpinionResponseEntity opinionRespons) {
-		getOpinionResponses().add(opinionRespons);
-		opinionRespons.setOpinionResponseType(this);
-
-		return opinionRespons;
-	}
-
-	public OpinionResponseEntity removeOpinionRespons(OpinionResponseEntity opinionRespons) {
-		getOpinionResponses().remove(opinionRespons);
-		opinionRespons.setOpinionResponseType(null);
-
-		return opinionRespons;
-	}
+	
 
 }
