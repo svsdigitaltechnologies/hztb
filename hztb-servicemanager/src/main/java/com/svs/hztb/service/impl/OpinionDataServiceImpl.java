@@ -8,14 +8,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
+import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionRequest;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionResponse;
 import com.svs.hztb.entity.GroupEntity;
 import com.svs.hztb.entity.OpinionEntity;
+import com.svs.hztb.entity.OpinionResponseEntity;
 import com.svs.hztb.entity.UserGroupEntity;
 import com.svs.hztb.entity.UserGroupPK;
 import com.svs.hztb.repository.GroupRepository;
 import com.svs.hztb.repository.OpinionRepository;
+import com.svs.hztb.repository.OpinionResponseRepository;
 import com.svs.hztb.repository.UserGroupEntityRepository;
 import com.svs.hztb.service.OpinionDataService;
 
@@ -29,6 +33,9 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 	
 	@Autowired
 	UserGroupEntityRepository userGroupEntityRepository;
+	
+	@Autowired
+	OpinionResponseRepository opinionResponseRepository;
 	
 
 	@Override
@@ -49,6 +56,27 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		
 		opinionRepository.save(opinionEntity);
 		return new RequestOpinionResponse();
+	}
+	
+	@Override
+	public OpinionOutput saveResponse(OpinionResponseInput opinionResponseInput) {
+		OpinionResponseEntity opinionResponseEntity = createOpinionResponseEntity(opinionResponseInput);
+		opinionResponseRepository.save(opinionResponseEntity);
+		
+		return new OpinionOutput();
+		
+		
+	
+	}
+	
+
+	private OpinionResponseEntity createOpinionResponseEntity(OpinionResponseInput opinionResponseInput) {
+		OpinionResponseEntity opinionResponseEntity = new OpinionResponseEntity();
+		opinionResponseEntity.setOpinionId(opinionResponseInput.getOpinionReqId());
+		opinionResponseEntity.setOpinionResponseType(opinionResponseInput.getResponseCode());
+		opinionResponseEntity.setResponderUserId(opinionResponseInput.getUserId());
+		opinionResponseEntity.setResponseTxt(opinionResponseInput.getResponseTxt());
+		return opinionResponseEntity;
 	}
 
 	private List<UserGroupEntity> createUserGroup(RequestOpinionRequest requestOpinionRequest, GroupEntity group) {
@@ -80,5 +108,7 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupId());
 		return opinionEntity;
 	}
+
+	
 
 }

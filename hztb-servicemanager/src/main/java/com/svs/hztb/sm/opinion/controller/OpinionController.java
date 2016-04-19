@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionRequest;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionResponse;
+import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
+import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
+import com.svs.hztb.api.sm.model.opinion.OpinionResponseOutput;
 import com.svs.hztb.service.OpinionDataService;
 
 @RestController
@@ -38,6 +41,28 @@ public class OpinionController {
 		RequestOpinionResponse requestOpinionResponse = opinionDataService.requestOpinion(requestOpinionRequest);
 		return buildUpdateRequestOpinionResponse(requestOpinionResponse);
 	}
+	
+	
+	
+	@RequestMapping(value = "/opinionResponse", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<OpinionResponseOutput> requestOpinion(
+			@RequestBody @Valid OpinionResponseInput OpinionResponseInput) {
+
+		OpinionOutput opinionOutput = opinionDataService.saveResponse(OpinionResponseInput);
+		
+		return buildRequestOpinionResponse(opinionOutput.getOpinionResponseOutput());
+	}
+
+	
+
+	private ResponseEntity<OpinionResponseOutput> buildRequestOpinionResponse(
+			OpinionResponseOutput opinionResponseOutput) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 	@RequestMapping(value = "/sample", produces = { "application/json" }, method = RequestMethod.GET)
 	public @ResponseBody ResponseEntity<RequestOpinionRequest> sample() {
