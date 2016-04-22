@@ -3,13 +3,18 @@ package com.svs.hztb.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+
+
 
 /**
  * The persistent class for the opinion database table.
@@ -48,6 +53,13 @@ public class OpinionEntity implements Serializable {
 
 	@Column(name = "store_id")
 	private String storeId;
+	
+	//bi-directional many-to-one association to Product
+	
+	
+	
+	@ManyToOne(cascade=CascadeType.MERGE)
+	private ProductEntity product;
 
 	public OpinionEntity() {
 	}
@@ -123,5 +135,15 @@ public class OpinionEntity implements Serializable {
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
+
+	public ProductEntity getProduct() {
+		return product;
+	}
+
+	public void setProduct(ProductEntity product) {
+		this.product = product;
+	}
+	
+	
 
 }

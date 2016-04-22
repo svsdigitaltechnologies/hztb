@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.svs.hztb.api.sm.model.product.Product;
 
-public class RequestOpinionRequest {
+public class RequestOpinionInput {
 	private int requesterUserId;
 	private Product product;
 	private int channelId;
