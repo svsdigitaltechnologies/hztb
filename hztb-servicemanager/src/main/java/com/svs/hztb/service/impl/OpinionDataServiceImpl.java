@@ -13,6 +13,7 @@ import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
 import com.svs.hztb.api.sm.model.opinion.OpinionResponseOutput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionOutput;
+import com.svs.hztb.api.sm.model.product.Product;
 import com.svs.hztb.entity.GroupEntity;
 import com.svs.hztb.entity.OpinionEntity;
 import com.svs.hztb.entity.OpinionResponseEntity;
@@ -125,11 +126,23 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		OpinionEntity opinionEntity = new OpinionEntity();
 		opinionEntity.setUserId(requestOpinionRequest.getRequesterUserId());
 		opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupId());
+		opinionEntity.setProductUrl(requestOpinionRequest.getProductUrl());
 		
-		ProductEntity productEntity = new ProductEntity();
-		productEntity.setCode(123);
+		Product product = requestOpinionRequest.getProduct();
 		
-		opinionEntity.setProduct(productEntity);
+		if(null != product) {
+			ProductEntity productEntity = new ProductEntity();
+			productEntity.setName(product.getName());
+			productEntity.setLongDesc(product.getLongDesc());
+			productEntity.setShortDesc(product.getShortDesc());
+			productEntity.setPrice(product.getPrice());
+			
+			
+			opinionEntity.setProduct(productEntity);
+			
+		}
+		
+		
 		return opinionEntity;
 	}
 

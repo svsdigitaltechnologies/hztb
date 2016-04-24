@@ -9,6 +9,8 @@ public class RequestOpinionInput {
 	private Product product;
 	private int channelId;
 	private String storeGeoCode;
+	private String productUrl;
+	
 	private int requestedGroupId;
 	private List<Integer> requestedUserIds;
 
@@ -59,5 +61,15 @@ public class RequestOpinionInput {
 	public void setRequestedUserIds(List<Integer> requestedUserIds) {
 		this.requestedUserIds = requestedUserIds;
 	}
+
+	public String getProductUrl() {
+		return productUrl;
+	}
+
+	public void setProductUrl(String productUrl) {
+		this.productUrl = productUrl;
+	}
+	
+	
 
 }
