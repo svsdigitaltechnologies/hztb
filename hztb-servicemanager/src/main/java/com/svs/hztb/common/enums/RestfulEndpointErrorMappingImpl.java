@@ -13,12 +13,14 @@ import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 
 public enum RestfulEndpointErrorMappingImpl implements RestfulEndpointErrorMapping {
 
-	DS(entry(1, ServiceManagerStatusCode.DATA_SERVICES_ERROR), entry(2, ServiceManagerStatusCode.USER_NOT_AVAILABLE),
+	DS(entry(1, ServiceManagerStatusCode.DATA_SERVICES_ERROR), 
+			entry(2, ServiceManagerStatusCode.USER_NOT_AVAILABLE),
 			entry(3, ServiceManagerStatusCode.USER_ALREADY_REGISTERED),
-			entry(4, ServiceManagerStatusCode.USER_NOT_AVAILABLE_MOBILE_IMEI)), SM(
-					entry(100, ServiceManagerStatusCode.INVALID_OTP),
-					entry(101, ServiceManagerStatusCode.OTP_NOT_VALID)), CT(
-							entry(1, ServiceManagerStatusCode.NEED_PAYMENT));
+			entry(4, ServiceManagerStatusCode.USER_NOT_AVAILABLE_MOBILE_IMEI)), 
+	SM(entry(100, ServiceManagerStatusCode.INVALID_OTP),
+			entry(101, ServiceManagerStatusCode.OTP_NOT_VALID)), 
+	CT(entry(1, ServiceManagerStatusCode.NEED_PAYMENT)),
+	GCM(entry(201, ServiceManagerStatusCode.INVALID_GCM_REGISTRATION_ID));
 
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserAdapterImpl.class);
 

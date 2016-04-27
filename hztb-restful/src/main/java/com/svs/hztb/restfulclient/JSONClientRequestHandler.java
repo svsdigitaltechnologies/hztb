@@ -17,6 +17,7 @@ import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.RequestData;
 import com.svs.hztb.common.util.PerformanceTimer;
+import com.svs.hztb.restfulclient.config.ConfigurationConstants;
 import com.svs.hztb.restfulclient.model.RestfulRequest;
 import com.svs.hztb.restfulclient.validation.ValidationRequest;
 import com.svs.hztb.restfulclient.validation.ValidatorService;
@@ -81,6 +82,10 @@ public class JSONClientRequestHandler extends AbstractClientRequestHandler {
 		 * Optional.ofNullable(headers.get(h)).ifPresent(value ->
 		 * requestBase.addHeader(h, value)));
 		 */
+		
+		if(headers.containsKey(ConfigurationConstants.AUTHORIZATION_HEADER)) {
+			requestBase.addHeader(ConfigurationConstants.AUTHORIZATION_HEADER, headers.get(ConfigurationConstants.AUTHORIZATION_HEADER));
+		}
 		super.addHeaders(requestBase, request);
 	}
 

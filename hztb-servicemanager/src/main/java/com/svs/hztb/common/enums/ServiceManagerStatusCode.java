@@ -11,10 +11,12 @@ public enum ServiceManagerStatusCode implements StatusCode {
 	USER_NOT_AVAILABLE("10001",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User not available"),
 	USER_ALREADY_REGISTERED("10002",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User already registered"),
 	USER_NOT_AVAILABLE_MOBILE_IMEI("10003",String.valueOf(HttpStatus.BAD_REQUEST.value()), "User not available with mobile number and imei"),
-	INVALID_OTP("20000", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid OTP"),
-	OTP_NOT_VALID("20001", String.valueOf(HttpStatus.BAD_REQUEST.value()), "OTP is either expired or invalid OTP count exceeded"),
+	INVALID_OTP("10004", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid OTP"),
+	OTP_NOT_VALID("10005", String.valueOf(HttpStatus.BAD_REQUEST.value()), "OTP is either expired or invalid OTP count exceeded"),
 	
-	NEED_PAYMENT("30000",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Need Payment");
+	NEED_PAYMENT("20000",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Need Payment"),
+	
+	INVALID_GCM_REGISTRATION_ID("30000",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid GCM device registration id");
 	
 
 

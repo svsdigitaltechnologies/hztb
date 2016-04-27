@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 
 import com.svs.hztb.common.enums.RestfulEndpointErrorMappingImpl;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
+import com.svs.hztb.common.model.HztbResponse;
 import com.svs.hztb.restfulclient.ClientType;
 import com.svs.hztb.restfulclient.RestfulEndPoint;
 import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
@@ -13,8 +14,10 @@ import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 public enum ServiceManagerRestfulEndpoint implements RestfulEndPoint {
 	
 	CLICKATELL_GET(ServiceManagerClientType.CT,"/user/jsonGetResponse",HttpMethod.GET, RestfulEndpointErrorMappingImpl.CT),
-	CLICKATELL_POST(ServiceManagerClientType.CT,"/user/jsonPostResponse",HttpMethod.POST, RestfulEndpointErrorMappingImpl.CT),
-	CLICKATELL(ServiceManagerClientType.CT,"/rest/message",HttpMethod.POST, RestfulEndpointErrorMappingImpl.CT);
+	CLICKATELL_POST(ServiceManagerClientType.CT,"/user/jsonPostResponse",HttpMethod.POST, HztbResponse.class, RestfulEndpointErrorMappingImpl.CT),
+	CLICKATELL(ServiceManagerClientType.CT,"/rest/message",HttpMethod.POST, RestfulEndpointErrorMappingImpl.CT),
+	
+	GCM_SEND(ServiceManagerClientType.GCM, "/gcm/send", HttpMethod.POST, RestfulEndpointErrorMappingImpl.GCM);
 	
 	private final transient ClientType clientType;
 	private final String endpoint;

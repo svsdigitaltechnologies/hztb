@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ErrorStatus implements Serializable {
 
 	private static final long serialVersionUID = -9127867295214624680L;
@@ -13,8 +16,9 @@ public class ErrorStatus implements Serializable {
 	private final Map<String, String> statusCodes = new HashMap<String, String>();
 
 	private final String message;
-
-	public ErrorStatus(String statusCode, String message) {
+	
+	@JsonCreator
+	public ErrorStatus(@JsonProperty("status") String statusCode, @JsonProperty("message") String message) {
 		statusCodes.put(STATUS, statusCode);
 		this.message = message;
 	}

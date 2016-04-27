@@ -1,5 +1,7 @@
 package com.svs.hztb.exception.mapper;
 
+import java.util.Optional;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
@@ -30,8 +32,11 @@ public class BaseExceptionMapper<T extends BaseException> {
 		String httpStatusCode = exception.getStatusCodes().get(0).getLeft().getHttpStatusCode();
 
 		ResponseHeader responseHeader = new ResponseHeader(requestData.getRequestId(), httpStatusCode);
-		exception.getStatusCodes().stream().forEach(pair -> responseHeader.getErrors().add(
-				new ErrorStatus(pair.getLeft().getStatusCode(), String.format("%s", pair.getLeft().getMessage()))));
+		exception.getStatusCodes().stream()
+				.forEach(pair -> responseHeader.getErrors().add(new ErrorStatus(pair.getLeft().getStatusCode(),
+						String.format("%s%s", pair.getLeft().getMessage(),
+								Optional.ofNullable(pair.getRight()).map(p -> " - " + p).orElse(
+										Optional.ofNullable(exception.getMessage()).map(z -> " - " + z).orElse(""))))));
 
 		HztbResponse response = new HztbResponse(responseHeader);
 
