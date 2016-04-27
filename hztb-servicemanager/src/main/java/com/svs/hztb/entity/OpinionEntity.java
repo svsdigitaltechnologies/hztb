@@ -59,9 +59,11 @@ public class OpinionEntity implements Serializable {
 	
 	
 	//@ManyToOne(cascade=CascadeType.MERGE)
-	@ManyToOne(cascade=CascadeType.ALL)
-	private ProductEntity product;
-
+//	@ManyToOne(cascade=CascadeType.ALL)
+//	private ProductEntity product;
+	@Column(name = "product_name")
+	private String product;
+	
 	public OpinionEntity() {
 	}
 
@@ -137,13 +139,15 @@ public class OpinionEntity implements Serializable {
 		this.storeId = storeId;
 	}
 
-	public ProductEntity getProduct() {
+	public String getProduct() {
 		return product;
 	}
 
-	public void setProduct(ProductEntity product) {
+	public void setProduct(String product) {
 		this.product = product;
 	}
+
+
 
 //	public Date getRequestedTime() {
 //		return requestedTime;
