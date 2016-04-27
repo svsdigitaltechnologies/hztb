@@ -1,5 +1,7 @@
 package com.svs.hztb.sm.opinion.controller;
 
+import static com.svs.hztb.sm.common.util.JsonUtil.toJson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionOutput;
 import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
 import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
-import com.svs.hztb.api.sm.model.opinion.OpinionResponseOutput;
+import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.service.OpinionDataService;
-import static com.svs.hztb.sm.common.util.JsonUtil.*;
 
 @RestController
 @RequestMapping("/opinion")

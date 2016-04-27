@@ -30,9 +30,6 @@ public class OpinionResponseEntity implements Serializable {
 	@Column(name = "responder_user_id")
 	private int responderUserId;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "response_time")
-	private Date responseTime;
 
 	@Column(name = "response_txt")
 	private String responseTxt;
@@ -61,14 +58,6 @@ public class OpinionResponseEntity implements Serializable {
 
 	public void setResponderUserId(int responderUserId) {
 		this.responderUserId = responderUserId;
-	}
-
-	public Date getResponseTime() {
-		return this.responseTime;
-	}
-
-	public void setResponseTime(Date responseTime) {
-		this.responseTime = responseTime;
 	}
 
 	public String getResponseTxt() {

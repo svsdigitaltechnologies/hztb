@@ -15,22 +15,21 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "Product", schema = "ebdb")
+@Table(name = "product_info", schema = "ebdb")
  @NamedQuery(name="Product.findAll", query="SELECT p FROM ProductEntity p")
 public class ProductEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	private int code;
-
 	@Column(name = "image_url")
 	private String imageUrl;
 
 	@Column(name = "long_desc")
 	private String longDesc;
 
+	@Id
+	@Column(name = "name")
 	private String name;
 
+	@Column(name = "price")
 	private double price;
 
 	@Column(name = "short_desc")
@@ -52,14 +51,6 @@ public class ProductEntity implements Serializable {
 	private RetailerEntity retailer;
 
 	public ProductEntity() {
-	}
-
-	public int getCode() {
-		return this.code;
-	}
-
-	public void setCode(int code) {
-		this.code = code;
 	}
 
 	public String getImageUrl() {
