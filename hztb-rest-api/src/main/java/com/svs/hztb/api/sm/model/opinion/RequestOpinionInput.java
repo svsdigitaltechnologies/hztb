@@ -4,11 +4,13 @@ import java.util.List;
 
 import com.svs.hztb.api.sm.model.product.Product;
 
-public class RequestOpinionRequest {
+public class RequestOpinionInput {
 	private int requesterUserId;
 	private Product product;
 	private int channelId;
 	private String storeGeoCode;
+	private String productUrl;
+	
 	private int requestedGroupId;
 	private List<Integer> requestedUserIds;
 
@@ -59,5 +61,15 @@ public class RequestOpinionRequest {
 	public void setRequestedUserIds(List<Integer> requestedUserIds) {
 		this.requestedUserIds = requestedUserIds;
 	}
+
+	public String getProductUrl() {
+		return productUrl;
+	}
+
+	public void setProductUrl(String productUrl) {
+		this.productUrl = productUrl;
+	}
+	
+	
 
 }

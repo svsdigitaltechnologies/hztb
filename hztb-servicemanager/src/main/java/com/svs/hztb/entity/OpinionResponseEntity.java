@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -17,9 +18,8 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
-@Table(name = "opinion_response")
-// @NamedQuery(name="OpinionResponse.findAll", query="SELECT o FROM
-// OpinionResponse o")
+@Table(name = "opinion_response", schema = "ebdb")
+ @NamedQuery(name="OpinionResponse.findAll", query="SELECT o FROM OpinionResponseEntity o")
 public class OpinionResponseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -30,22 +30,16 @@ public class OpinionResponseEntity implements Serializable {
 	@Column(name = "responder_user_id")
 	private int responderUserId;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "response_time")
-	private Date responseTime;
 
 	@Column(name = "response_txt")
 	private String responseTxt;
 
-	// bi-directional many-to-one association to Opinion
-	@ManyToOne
-	@JoinColumn(name = "opinion_id")
-	private OpinionEntity opinion;
+	
+	@Column(name = "opinion_id")
+	private int opinionId;
 
-	// bi-directional many-to-one association to OpinionResponseType
-	@ManyToOne
-	@JoinColumn(name = "response_type")
-	private OpinionResponseTypeEntity opinionResponseType;
+	@Column(name = "response_type")
+	private String opinionResponseType;
 
 	public OpinionResponseEntity() {
 	}
@@ -66,14 +60,6 @@ public class OpinionResponseEntity implements Serializable {
 		this.responderUserId = responderUserId;
 	}
 
-	public Date getResponseTime() {
-		return this.responseTime;
-	}
-
-	public void setResponseTime(Date responseTime) {
-		this.responseTime = responseTime;
-	}
-
 	public String getResponseTxt() {
 		return this.responseTxt;
 	}
@@ -82,20 +68,25 @@ public class OpinionResponseEntity implements Serializable {
 		this.responseTxt = responseTxt;
 	}
 
-	public OpinionEntity getOpinion() {
-		return this.opinion;
+	public int getOpinionId() {
+		return opinionId;
 	}
 
-	public void setOpinion(OpinionEntity opinion) {
-		this.opinion = opinion;
+	public void setOpinionId(int opinionId) {
+		this.opinionId = opinionId;
 	}
 
-	public OpinionResponseTypeEntity getOpinionResponseType() {
-		return this.opinionResponseType;
+	public String getOpinionResponseType() {
+		return opinionResponseType;
 	}
 
-	public void setOpinionResponseType(OpinionResponseTypeEntity opinionResponseType) {
+	public void setOpinionResponseType(String opinionResponseType) {
 		this.opinionResponseType = opinionResponseType;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	
 }

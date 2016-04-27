@@ -6,14 +6,17 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the retailer database table.
  * 
  */
 @Entity
-// @NamedQuery(name="Retailer.findAll", query="SELECT r FROM Retailer r")
+@Table(name = "Retailer", schema = "ebdb")
+ @NamedQuery(name="Retailer.findAll", query="SELECT r FROM RetailerEntity r")
 public class RetailerEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

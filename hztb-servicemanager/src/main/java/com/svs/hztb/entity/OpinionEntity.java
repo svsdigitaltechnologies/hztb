@@ -3,18 +3,26 @@ package com.svs.hztb.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+
+
 
 /**
  * The persistent class for the opinion database table.
  * 
  */
 @Entity
-// @NamedQuery(name="Opinion.findAll", query="SELECT o FROM Opinion o")
+@Table(name = "opinion", schema = "ebdb")
+ @NamedQuery(name="Opinion.findAll", query="SELECT o FROM OpinionEntity o")
 public class OpinionEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -30,9 +38,9 @@ public class OpinionEntity implements Serializable {
 	@Column(name = "reported_action")
 	private String reportedAction;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "requested_time")
-	private Date requestedTime;
+//	@Temporal(TemporalType.TIMESTAMP)
+//	@Column(name = "requested_time")
+//	private Date requestedTime;
 
 	@Column(name = "channel_id")
 	private String channelId;
@@ -45,6 +53,14 @@ public class OpinionEntity implements Serializable {
 
 	@Column(name = "store_id")
 	private String storeId;
+	
+	//bi-directional many-to-one association to Product
+	
+	
+	
+	//@ManyToOne(cascade=CascadeType.MERGE)
+	@ManyToOne(cascade=CascadeType.ALL)
+	private ProductEntity product;
 
 	public OpinionEntity() {
 	}
@@ -81,13 +97,13 @@ public class OpinionEntity implements Serializable {
 		this.reportedAction = reportedAction;
 	}
 
-	public Date getRequestedTime() {
-		return this.requestedTime;
-	}
-
-	public void setRequestedTime(Date requestedTime) {
-		this.requestedTime = requestedTime;
-	}
+//	public Date getRequestedTime() {
+//		return this.requestedTime;
+//	}
+//
+//	public void setRequestedTime(Date requestedTime) {
+//		this.requestedTime = requestedTime;
+//	}
 
 	public String getChannelId() {
 		return channelId;
@@ -120,5 +136,23 @@ public class OpinionEntity implements Serializable {
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
+
+	public ProductEntity getProduct() {
+		return product;
+	}
+
+	public void setProduct(ProductEntity product) {
+		this.product = product;
+	}
+
+//	public Date getRequestedTime() {
+//		return requestedTime;
+//	}
+//
+//	public void setRequestedTime(Date requestedTime) {
+//		this.requestedTime = requestedTime;
+//	}
+	
+	
 
 }

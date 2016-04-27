@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -16,7 +18,8 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
-// @NamedQuery(name="Coupon.findAll", query="SELECT c FROM Coupon c")
+@Table(name = "coupon", schema = "ebdb")
+ @NamedQuery(name="Coupon.findAll", query="SELECT c FROM CouponEntity c")
 public class CouponEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

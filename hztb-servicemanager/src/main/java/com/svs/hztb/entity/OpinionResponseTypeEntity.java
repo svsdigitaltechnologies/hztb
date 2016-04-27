@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -14,9 +15,8 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "opinion_response_type")
-// @NamedQuery(name="OpinionResponseType.findAll", query="SELECT o FROM
-// OpinionResponseType o")
+@Table(name = "opinion_response_type", schema = "ebdb")
+ @NamedQuery(name="OpinionResponseType.findAll", query="SELECT o FROM OpinionResponseTypeEntity o")
 public class OpinionResponseTypeEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -58,18 +58,6 @@ public class OpinionResponseTypeEntity implements Serializable {
 		this.opinionResponses = opinionResponses;
 	}
 
-	public OpinionResponseEntity addOpinionRespons(OpinionResponseEntity opinionRespons) {
-		getOpinionResponses().add(opinionRespons);
-		opinionRespons.setOpinionResponseType(this);
-
-		return opinionRespons;
-	}
-
-	public OpinionResponseEntity removeOpinionRespons(OpinionResponseEntity opinionRespons) {
-		getOpinionResponses().remove(opinionRespons);
-		opinionRespons.setOpinionResponseType(null);
-
-		return opinionRespons;
-	}
+	
 
 }

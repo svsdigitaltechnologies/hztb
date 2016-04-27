@@ -1,5 +1,7 @@
 package com.svs.hztb.sm.opinion.controller;
 
+import static com.svs.hztb.sm.common.util.JsonUtil.toJson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionRequest;
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionResponse;
+import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
+import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
+import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.service.OpinionDataService;
 
 @RestController
@@ -32,17 +35,41 @@ public class OpinionController {
 	 */
 	@RequestMapping(value = "/requestOpinion", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<RequestOpinionResponse> requestOpinion(
-			@RequestBody @Valid RequestOpinionRequest requestOpinionRequest) {
+	public @ResponseBody ResponseEntity<String> requestOpinion(
+			@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
+		ResponseEntity<String> response = null;
+		OpinionOutput opinionOutput = opinionDataService.requestOpinion(requestOpinionInput);
+		if(opinionOutput.isError()) {
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorVO()));
+		} else {
+			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getRequestOpinionOutput()));
+		}
+		
+		return response;
+	}
+	
+	
+	
+	@RequestMapping(value = "/opinionResponse", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<String> opinionResponse(
+			@RequestBody @Valid OpinionResponseInput OpinionResponseInput) {
 
-		RequestOpinionResponse requestOpinionResponse = opinionDataService.requestOpinion(requestOpinionRequest);
-		return buildUpdateRequestOpinionResponse(requestOpinionResponse);
+		OpinionOutput opinionOutput = opinionDataService.saveResponse(OpinionResponseInput);
+		ResponseEntity<String> response = null;
+		if(opinionOutput.isError()) {
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorVO()));
+		} else {
+			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getOpinionResponseOutput()));
+		}
+		return response;
 	}
 
-	@RequestMapping(value = "/sample", produces = { "application/json" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<RequestOpinionRequest> sample() {
 
-		RequestOpinionRequest requestOpinionRequest = new RequestOpinionRequest();
+	@RequestMapping(value = "/sample", produces = { "application/json" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<RequestOpinionInput> sample() {
+
+		RequestOpinionInput requestOpinionRequest = new RequestOpinionInput();
 		requestOpinionRequest.setRequesterUserId(12345);
 		requestOpinionRequest.setRequestedGroupId(0001);
 		List<Integer> requestedUserIds = new ArrayList<Integer>();
@@ -54,9 +81,9 @@ public class OpinionController {
 
 	}
 
-	private ResponseEntity<RequestOpinionResponse> buildUpdateRequestOpinionResponse(
-			RequestOpinionResponse requestOpinionResponse) {
-		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionResponse);
-	}
+//	private ResponseEntity<RequestOpinionOutput> buildUpdateRequestOpinionResponse(
+//			RequestOpinionOutput requestOpinionResponse) {
+//		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionResponse);
+//	}
 
 }
