@@ -1,23 +1,13 @@
 package com.svs.hztb.service;
 
-import com.svs.hztb.api.sm.model.ping.PingRequest;
-import com.svs.hztb.api.sm.model.ping.PingResponse;
-import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
-import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
-import com.svs.hztb.api.sm.model.user.UserProfileRequest;
-import com.svs.hztb.api.sm.model.user.UserProfileResponse;
-import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
-import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
+import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
+import com.svs.hztb.common.model.RequestData;
+import com.svs.hztb.common.model.business.User;
 
 public interface GCMService {
 
-	RegistrationResponse register(RegistrationRequest registrationRequest);
+	void sendWelcomeNotification(RequestData requestData, User user);
 
-	PingResponse ping(PingRequest pingRequest);
+	void sendRequestOpinionNotification(RequestData requestData, RequestOpinionInput requestOpinionInput);
 
-	ValidateOTPResponse validateOTP(ValidateOTPRequest validateOTPRequest);
-
-	UserProfileResponse getUserProfile(UserProfileRequest userProfileRequest);
-
-	UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest);
 }

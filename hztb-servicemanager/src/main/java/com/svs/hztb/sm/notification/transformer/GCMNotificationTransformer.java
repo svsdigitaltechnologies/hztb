@@ -1,42 +1,37 @@
 package com.svs.hztb.sm.notification.transformer;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.svs.hztb.api.gcm.model.notification.MessageData;
 import com.svs.hztb.api.gcm.model.notification.MessageRequest;
 import com.svs.hztb.api.gcm.model.notification.MessageResponse;
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.api.sm.model.notification.NotificationRequest;
+import com.svs.hztb.api.sm.model.notification.WelcomeNotificationRequest;
 import com.svs.hztb.orchestration.component.model.FlowContext;
-import com.svs.hztb.orchestration.exception.BusinessException;
 import com.svs.hztb.sm.common.annotation.RestfulTransformer;
 import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 import com.svs.hztb.sm.common.transformer.GCMRestfulAbstractTransformer;
 
-@RestfulTransformer(ServiceManagerRestfulEndpoint.GCM_SEND)
+@RestfulTransformer(ServiceManagerRestfulEndpoint.GCM_SEND_NOTIFICATION)
 @Component
-public class GCMSendNotificationTransformer extends GCMRestfulAbstractTransformer<MessageRequest, MessageResponse> {
+public class GCMNotificationTransformer extends GCMRestfulAbstractTransformer<MessageRequest, MessageResponse> {
+
 
 	@Override
 	public MessageRequest transformRequest(FlowContext flowContext) {
 		MessageRequest messageRequest = new MessageRequest();
-		messageRequest.addRegId("11111");
-		messageRequest.addRegId("22222");
-		messageRequest.addRegId("33333");
+		NotificationRequest notificationRequest = flowContext.getModelElement(NotificationRequest.class);
+		List<String> deviceRegIds = notificationRequest.getDeviceRegIds();
+		deviceRegIds.stream().forEach(p -> messageRequest.addRegId(p));
+
 		MessageData messageData = new MessageData();
-		messageData.setTitle("Hztb opinion request");
-		messageData.setMessage("opinion request");
+		messageData.setTitle(notificationRequest.getTitle());
+		messageData.setMessage(notificationRequest.getMessage());
 		messageRequest.addData(messageData);
 		flowContext.setModelElement(messageRequest);
 		return messageRequest;
-	}
-
-	@Override
-	public void transformResponse(FlowContext flowContext, MessageResponse response) {
-		System.out.println(response);
-		MessageRequest messageRequest = flowContext.getModelElement(MessageRequest.class);
-		if(response.getResults().size() != messageRequest.getRegistration_ids().size()) {
-		}
-		
 	}
 
 	@Override

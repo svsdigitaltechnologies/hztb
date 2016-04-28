@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class HztbResponse {
 	
-	@Valid
-	@NotNull
+	/*@Valid
+	@NotNull*/
 	private ResponseHeader header;
 
 	@JsonCreator

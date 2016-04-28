@@ -26,6 +26,7 @@ subprojects {
   	exclude group: "ch.qos.logback"
   	exclude group: "org.apache.log4j", module: "log4j"
   	exclude group: "org.springframework", module: "spring-web:4.1.7.RELEASE"
+  	
   }
  
   repositories {

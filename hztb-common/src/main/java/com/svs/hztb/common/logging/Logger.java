@@ -33,5 +33,7 @@ public interface Logger {
 	void callOutDownStream(String message, String downstreamSystem, String downstreamMethod, Object... args);
 
 	void logStackTrace(String message, Exception e);
+	
+	void logGCMActivity(String message, Object... args);
 
 }

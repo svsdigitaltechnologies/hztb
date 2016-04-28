@@ -17,8 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellData;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellMessage;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
+import com.svs.hztb.api.sm.model.notification.NotificationRequest;
+import com.svs.hztb.api.sm.model.notification.WelcomeNotificationRequest;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
+import com.svs.hztb.common.enums.NotificationType;
+import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
+import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
@@ -27,6 +32,9 @@ public class PingController {
 
 	@Autowired
 	private UserDataService userDataService;
+	
+	@Autowired
+	private GCMService gcmService;
 
 	/**
 	 * 
@@ -39,6 +47,13 @@ public class PingController {
 	public @ResponseBody ResponseEntity<PingResponse> ping(@RequestBody @Valid PingRequest pingRequest) {
 		PingResponse pingResponse = userDataService.ping(pingRequest);
 		return buildPingResponse(pingResponse);
+	}
+
+	@RequestMapping(value = "/weclomeNotifiation", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<PingResponse> weclomeNotifiation(@RequestBody @Valid WelcomeNotificationRequest welcomeNotificationRequest) {
+/*		gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),welcomeNotificationRequest);
+*/		return buildPingResponse(null);
 	}
 
 	private ResponseEntity<PingResponse> buildPingResponse(PingResponse pingResponse) {

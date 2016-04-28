@@ -7,6 +7,14 @@ war {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+ configurations.all {
+  	resolutionStrategy.cacheChangingModulesFor 0, "seconds"
+  	exclude group: "ch.qos.logback"
+  	exclude group: "org.apache.log4j", module: "log4j"
+  	exclude group: "org.springframework", module: "spring-web:4.1.7.RELEASE"
+  	
+  }
+  
 dependencies {
 	compile project(':hztb-common'),
 	project(':hztb-rest-api'),

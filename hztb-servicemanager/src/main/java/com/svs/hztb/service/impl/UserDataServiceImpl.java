@@ -10,6 +10,7 @@ import com.svs.hztb.adapter.UserAdapter;
 import com.svs.hztb.api.common.utils.GCMMessageNotificationClient;
 import com.svs.hztb.api.common.utils.HZTBUtil;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
+import com.svs.hztb.api.sm.model.notification.WelcomeNotificationRequest;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
@@ -32,6 +33,7 @@ import com.svs.hztb.orchestration.component.model.FlowContext;
 import com.svs.hztb.orchestration.component.step.StepDefinition;
 import com.svs.hztb.orchestration.component.step.StepDefinitionFactory;
 import com.svs.hztb.orchestration.exception.BusinessException;
+import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
 import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 
@@ -48,6 +50,9 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Autowired
 	private StepDefinitionFactory stepDefinitionFactory;
+	
+	@Autowired
+	private GCMService gcmService;
 
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) {
@@ -110,9 +115,8 @@ public class UserDataServiceImpl implements UserDataService {
 			
 			FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
 			StepDefinition stepDefinition = stepDefinitionFactory
-					.createRestfulStep(ServiceManagerRestfulEndpoint.GCM_SEND);
+					.createRestfulStep(ServiceManagerRestfulEndpoint.GCM_SEND_NOTIFICATION);
 			stepDefinition.execute(flowContext);
-
 
 			pingResponse = populatePingResponse(user);
 		} catch (DataServiceException dataServiceException) {
@@ -150,10 +154,11 @@ public class UserDataServiceImpl implements UserDataService {
 					
 					//updating IMEI, device registration id
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
-
-					GCMMessageNotificationClient client = new GCMMessageNotificationClient();
+					
+					gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), userFromDB);
+					/*GCMMessageNotificationClient client = new GCMMessageNotificationClient();
 					String formattedMessage = "Welcome to hztb";
-					client.processPushNotification(userFromDB.getDeviceRegId(), formattedMessage);
+					client.processPushNotification(userFromDB.getDeviceRegId(), formattedMessage);*/
 					isOTPValiationSuccesful = true;
 				} else {
 					//OTP incorrect scenario

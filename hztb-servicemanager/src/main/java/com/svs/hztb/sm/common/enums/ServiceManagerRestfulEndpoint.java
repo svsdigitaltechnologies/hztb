@@ -17,7 +17,8 @@ public enum ServiceManagerRestfulEndpoint implements RestfulEndPoint {
 	CLICKATELL_POST(ServiceManagerClientType.CT,"/user/jsonPostResponse",HttpMethod.POST, HztbResponse.class, RestfulEndpointErrorMappingImpl.CT),
 	CLICKATELL(ServiceManagerClientType.CT,"/rest/message",HttpMethod.POST, RestfulEndpointErrorMappingImpl.CT),
 	
-	GCM_SEND(ServiceManagerClientType.GCM, "/gcm/send", HttpMethod.POST, RestfulEndpointErrorMappingImpl.GCM);
+	GCM_SEND_NOTIFICATION(ServiceManagerClientType.GCM, "/gcm/send", HttpMethod.POST, RestfulEndpointErrorMappingImpl.GCM);
+
 	
 	private final transient ClientType clientType;
 	private final String endpoint;

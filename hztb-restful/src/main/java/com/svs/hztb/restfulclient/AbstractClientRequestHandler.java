@@ -146,10 +146,10 @@ public abstract class AbstractClientRequestHandler implements ClientRequestHandl
 	protected <T, S> void addHeaders(HttpRequestBase requestBase, RestfulRequest<T, S> request) {
 		ClientType clientType = request.getEndpoint().getClientType();
 
-		/*Optional<Map<String, String>> headers = request.getRequestData().getHeaders(clientType.getTargetId(),
+		Optional<Map<String, String>> headers = request.getRequestData().getHeaders(clientType.getTargetId(),
 				clientType.getMediaType().toString());
 		headers.ifPresent(map -> map.keySet()
-				.forEach(h -> Optional.ofNullable(map.get(h)).ifPresent(value -> requestBase.addHeader(h, value))));*/
+				.forEach(h -> Optional.ofNullable(map.get(h)).ifPresent(value -> requestBase.addHeader(h, value))));
 	}
 
 	protected abstract <T> void validate(RequestData requestData, T response);

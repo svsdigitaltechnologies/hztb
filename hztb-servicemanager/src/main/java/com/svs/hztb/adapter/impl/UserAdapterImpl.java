@@ -146,8 +146,9 @@ public class UserAdapterImpl implements UserAdapter {
 
 	@Override
 	public User updateUserDetails(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
+		UserEntity userEntity;
 		try {
-			UserEntity userEntity = userRepository
+			userEntity = userRepository
 					.findOne(Integer.parseInt(dataServiceRequest.getPayload().getUserId()));
 
 			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceRegId())
@@ -172,7 +173,8 @@ public class UserAdapterImpl implements UserAdapter {
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
-		return dataServiceRequest.getPayload();
+		return  populateUserResponse(userEntity);
+
 	}
 
 }

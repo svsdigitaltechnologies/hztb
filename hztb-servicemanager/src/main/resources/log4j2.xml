@@ -7,7 +7,8 @@
 		<Property name="LOG_PATTERN"> %d %p %c{1.} [%t] [$${HOST_INSTANCE}] %m
 			%ex%n</Property>
 		<Property name="FAILURE_LOG_PATTERN">[$${HOST_INSTANCE}] %m %n</Property>
-		<Property name="LOG_DIR">${bundle:sm_external_config:hztb.logspath}</Property>
+		<Property name="LOG_DIR">${bundle:sm_external_config:hztb.logspath}
+		</Property>
 		<Property name="ARCHIVE">${bundle:sm_external_config:hztb.logsarchivepath}
 		</Property>
 
@@ -111,6 +112,19 @@
 
 		</RollingFile>
 
+		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
+		<RollingFile name="GCM" fileName="${LOG_DIR}/gcm.log"
+			filePattern="${ARCHIVE}/gcm-%d{yyyy-MM-dd}.%i.log">
+			<PatternLayout>
+				<Pattern>${LOG_PATTERN}</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggerPolicy />
+				<SizeBasedTriggerPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+
+		</RollingFile>
 
 		<!-- Async Loggers will auto-flush in batches, so switch off immediateFlush -->
 		<RollingFile name="FAILURE" fileName="${LOG_DIR}/failures.log"
@@ -157,6 +171,8 @@
 		<Logger name="stacktraces" level="debug" additivity="false">
 			<AppenderRef ref="STACKTRACES" />
 		</Logger>
-
+		<Logger name="gcm" level="debug" additivity="false">
+			<AppenderRef ref="GCM" />
+		</Logger>
 	</Loggers>
 </Configuration>
