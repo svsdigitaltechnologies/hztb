@@ -112,12 +112,6 @@ public class UserDataServiceImpl implements UserDataService {
 			User user = new User(pingRequest);
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			user = userAdapter.ping(dataServiceRequest);
-			
-			FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
-			StepDefinition stepDefinition = stepDefinitionFactory
-					.createRestfulStep(ServiceManagerRestfulEndpoint.GCM_SEND_NOTIFICATION);
-			stepDefinition.execute(flowContext);
-
 			pingResponse = populatePingResponse(user);
 		} catch (DataServiceException dataServiceException) {
 			BusinessException businessException = BusinessException.build(ServiceManagerClientType.DS,

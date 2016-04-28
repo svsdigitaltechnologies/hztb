@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="DEBUG" monitorInterval="10">
 	<Properties>
-		<Property name="HOST_INSTANCE"> $${hostName} -
-			$${bundle:sm_external_config:hztb.instance.name}
+		<Property name="HOST_INSTANCE"> $${bundle:sm_external_config:hztb.instance.name}
 		</Property>
 		<Property name="LOG_PATTERN"> %d %p %c{1.} [%t] [$${HOST_INSTANCE}] %m
 			%ex%n</Property>
