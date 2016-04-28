@@ -18,6 +18,8 @@ public class DefaultLoggerImpl implements Logger {
 	private static final String CALL_OUT_LOG_NAME = "callout";
 	private static final String STACK_TRACE_LOG_NAME = "stacktraces";
 	private static final String FAILURE_LOG_NAME = "failures";
+	private static final String GCM_LOG_NAME = "gcm";
+	
 
 	private final org.slf4j.Logger logger;
 	private final org.slf4j.Logger performanceLogger;
@@ -25,6 +27,8 @@ public class DefaultLoggerImpl implements Logger {
 	private final org.slf4j.Logger callOutLogger;
 	private final org.slf4j.Logger stackTraceLogger;
 	private final org.slf4j.Logger failureLogger;
+	private final org.slf4j.Logger gcmLogger;
+	
 
 	private static final String MESSAGE_PREFIX = "[{}]"; // [REQUEST_ID]
 	private static final String CALL_OUT_MESSAGE_PREFIX = "CALL OUT : {} " + MESSAGE_PREFIX;
@@ -40,6 +44,7 @@ public class DefaultLoggerImpl implements Logger {
 		this.callOutLogger = LoggerFactory.getLogger(CALL_OUT_LOG_NAME);
 		this.stackTraceLogger = LoggerFactory.getLogger(STACK_TRACE_LOG_NAME);
 		this.failureLogger = LoggerFactory.getLogger(FAILURE_LOG_NAME);
+		this.gcmLogger = LoggerFactory.getLogger(GCM_LOG_NAME);
 	}
 
 	@Override
@@ -214,5 +219,11 @@ public class DefaultLoggerImpl implements Logger {
 			}
 		}
 		return list.toArray();
+	}
+
+	@Override
+	public void logGCMActivity(String message, Object... args) {
+		logMessage(gcmLogger, StandardLevel.DEBUG, MESSAGE_PREFIX + message, convertToArray(buildRequestLogData(), args));
+		
 	}
 }

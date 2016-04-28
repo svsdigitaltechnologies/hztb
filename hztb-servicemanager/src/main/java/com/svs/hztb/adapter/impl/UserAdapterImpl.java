@@ -60,6 +60,7 @@ public class UserAdapterImpl implements UserAdapter {
 			userEntity.setMobileNumber(dataServiceRequest.getPayload().getMobileNumber());
 			userEntity.setOtpCode(dataServiceRequest.getPayload().getOtpCode());
 			userEntity.setOtpCreateTime(dataServiceRequest.getPayload().getOtpCreationDateTime());
+			userEntity.setInvalidOtpRetries(dataServiceRequest.getPayload().getOtpCode());
 			userRepository.save(userEntity);
 			user = populateUserResponse(userEntity);
 		} catch (Exception exception) {
@@ -146,8 +147,9 @@ public class UserAdapterImpl implements UserAdapter {
 
 	@Override
 	public User updateUserDetails(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
+		UserEntity userEntity;
 		try {
-			UserEntity userEntity = userRepository
+			userEntity = userRepository
 					.findOne(Integer.parseInt(dataServiceRequest.getPayload().getUserId()));
 
 			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceRegId())
@@ -165,6 +167,7 @@ public class UserAdapterImpl implements UserAdapter {
 					.ifPresent(p -> userEntity.setOtpCreateTime(p));
 			Optional.ofNullable(dataServiceRequest.getPayload().getInvalidOtpCount())
 					.ifPresent(p -> userEntity.setInvalidOtpRetries(p));
+			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicUrl()).ifPresent(p -> userEntity.setGcmRegId(p));
 
 			userRepository.save(userEntity);
 		} catch (Exception exception) {
@@ -172,7 +175,8 @@ public class UserAdapterImpl implements UserAdapter {
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
-		return dataServiceRequest.getPayload();
+		return  populateUserResponse(userEntity);
+
 	}
 
 }

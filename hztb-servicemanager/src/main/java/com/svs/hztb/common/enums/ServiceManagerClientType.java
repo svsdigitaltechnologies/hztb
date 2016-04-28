@@ -6,9 +6,10 @@ import com.svs.hztb.restfulclient.ClientType;
 import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 
 public enum ServiceManagerClientType implements ClientType {
-	DS(MediaType.ALL, "DS", RestfulEndpointErrorMappingImpl.DS), SM(MediaType.ALL, "SM",
-			RestfulEndpointErrorMappingImpl.SM), CT(MediaType.APPLICATION_JSON, "CT",
-					RestfulEndpointErrorMappingImpl.CT);
+	DS(MediaType.ALL, "DS", RestfulEndpointErrorMappingImpl.DS), 
+	SM(MediaType.ALL, "SM",	RestfulEndpointErrorMappingImpl.SM), 
+	CT(MediaType.APPLICATION_JSON, "CT", RestfulEndpointErrorMappingImpl.CT),
+	GCM(MediaType.APPLICATION_JSON, "GCM", RestfulEndpointErrorMappingImpl.GCM);
 
 	private RestfulEndpointErrorMappingImpl errorMapping;
 	private MediaType mediaType;
