@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellData;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellMessage;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
-import com.svs.hztb.api.sm.model.notification.NotificationRequest;
-import com.svs.hztb.api.sm.model.notification.WelcomeNotificationRequest;
+import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
+import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
-import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
 import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
@@ -32,7 +31,7 @@ public class PingController {
 
 	@Autowired
 	private UserDataService userDataService;
-	
+
 	@Autowired
 	private GCMService gcmService;
 
@@ -49,11 +48,22 @@ public class PingController {
 		return buildPingResponse(pingResponse);
 	}
 
-	@RequestMapping(value = "/weclomeNotifiation", consumes = { "application/json" }, produces = {
+	@RequestMapping(value = "/sendRequestOpinionNotification", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<PingResponse> weclomeNotifiation(@RequestBody @Valid WelcomeNotificationRequest welcomeNotificationRequest) {
-/*		gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),welcomeNotificationRequest);
-*/		return buildPingResponse(null);
+	public @ResponseBody ResponseEntity<PingResponse> sendRequestOpinionNotification(
+			@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
+		gcmService.sendRequestOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
+				requestOpinionInput);
+		return buildPingResponse(null);
+	}
+
+	@RequestMapping(value = "/sendResponseOpinionNotification", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<PingResponse> sendResponseOpinionNotification(
+			@RequestBody @Valid OpinionResponseInput opinionResponseInput) {
+		gcmService.sendResponseOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
+				opinionResponseInput);
+		return buildPingResponse(null);
 	}
 
 	private ResponseEntity<PingResponse> buildPingResponse(PingResponse pingResponse) {

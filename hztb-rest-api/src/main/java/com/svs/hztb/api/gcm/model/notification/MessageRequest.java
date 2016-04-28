@@ -36,8 +36,7 @@ public class MessageRequest {
 	public void addData(MessageData messageData) {
 		if(data == null)
 			data = new HashMap<String,String>();
-		data.put("title", messageData.getTitle());
-		data.put("message", messageData.getMessage());
+		data = messageData.getData();
 	}
 
 }

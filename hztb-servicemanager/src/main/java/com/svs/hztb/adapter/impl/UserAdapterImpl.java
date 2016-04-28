@@ -60,6 +60,7 @@ public class UserAdapterImpl implements UserAdapter {
 			userEntity.setMobileNumber(dataServiceRequest.getPayload().getMobileNumber());
 			userEntity.setOtpCode(dataServiceRequest.getPayload().getOtpCode());
 			userEntity.setOtpCreateTime(dataServiceRequest.getPayload().getOtpCreationDateTime());
+			userEntity.setInvalidOtpRetries(dataServiceRequest.getPayload().getOtpCode());
 			userRepository.save(userEntity);
 			user = populateUserResponse(userEntity);
 		} catch (Exception exception) {

@@ -47,7 +47,7 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Autowired
 	private UserAdapter userAdapter;
-
+ 
 	@Autowired
 	private StepDefinitionFactory stepDefinitionFactory;
 	
@@ -64,13 +64,14 @@ public class UserDataServiceImpl implements UserDataService {
 			User user = new User(registrationRequest);
 			user.setOtpCode(otpCode.toString());
 			user.setOtpCreationDateTime(utcDateTime);
+			user.setInvalidOtpCount(ZERO);
+
 
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User findUser = userAdapter.findUser(dataServiceRequest);
 
 			if (null != findUser) {
 				user.setUserId(findUser.getUserId());
-				user.setInvalidOtpCount(ZERO);
 				dataServiceRequest = new DataServiceRequest<User>(user);
 				user = userAdapter.updateUserDetails(dataServiceRequest);
 			} else {
