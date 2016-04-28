@@ -1,16 +1,19 @@
 package com.svs.hztb.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.svs.hztb.adapter.UserAdapter;
-import com.svs.hztb.api.common.utils.GCMMessageNotificationClient;
 import com.svs.hztb.api.common.utils.HZTBUtil;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
-import com.svs.hztb.api.sm.model.notification.WelcomeNotificationRequest;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
@@ -19,6 +22,8 @@ import com.svs.hztb.api.sm.model.user.UserProfileRequest;
 import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
+import com.svs.hztb.aws.client.AWSClientProcessor;
+import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
 import com.svs.hztb.common.enums.ServiceManagerStatusCode;
 import com.svs.hztb.common.exception.SystemException;
@@ -53,6 +58,9 @@ public class UserDataServiceImpl implements UserDataService {
 	
 	@Autowired
 	private GCMService gcmService;
+	
+	@Autowired
+	private AWSClientProcessor awsClientProcessor;
 
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) {
@@ -234,9 +242,24 @@ public class UserDataServiceImpl implements UserDataService {
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User findUser = userAdapter.getUserDetails(dataServiceRequest);
 			user.setUserId(findUser.getUserId());
+			//skairamkonda remove this code later
+			File fnew=new File("D:/Users/skairamk/personal/photos/family.jpg");
+			BufferedImage originalImage=ImageIO.read(fnew);
+			ByteArrayOutputStream baos=new ByteArrayOutputStream();
+			ImageIO.write(originalImage, "jpg", baos );
+			byte[] imageInByte=baos.toByteArray();
+			
+			user.setProfilePic(imageInByte);
+			//skairamkonda use optional here
+			
+			if(null != user.getProfilePic())
+				user.setProfilePicUrl(awsClientProcessor.execute(user.getProfilePic(), NotificationType.PROFILE.getNotificationId(), user.getUserId()));
+			
 			dataServiceRequest = new DataServiceRequest<User>(user);
 			user = userAdapter.updateUserDetails(dataServiceRequest);
 			userProfileResponse = populateUserResponse(user);
+			
+			
 		} catch (DataServiceException dataServiceException) {
 			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());

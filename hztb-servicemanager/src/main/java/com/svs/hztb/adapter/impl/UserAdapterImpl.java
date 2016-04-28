@@ -167,6 +167,7 @@ public class UserAdapterImpl implements UserAdapter {
 					.ifPresent(p -> userEntity.setOtpCreateTime(p));
 			Optional.ofNullable(dataServiceRequest.getPayload().getInvalidOtpCount())
 					.ifPresent(p -> userEntity.setInvalidOtpRetries(p));
+			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicUrl()).ifPresent(p -> userEntity.setGcmRegId(p));
 
 			userRepository.save(userEntity);
 		} catch (Exception exception) {
