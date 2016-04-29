@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import com.svs.hztb.entity.OpinionResponseEntity;
 
 public interface OpinionResponseRepository extends CrudRepository<OpinionResponseEntity, Integer>{
-//	@Query("SELECT o FROM OpinionResponseEntity o WHERE o.responseTime >= :responseDate")
-//	List<OpinionResponseEntity> findAllOpinionResponse(@Param("userId") int userId, @Param("responseDate") Date responseDate);
+	@Query("SELECT o FROM OpinionResponseEntity o WHERE o.responderUserId = :responderUserId and o.responseTime >= :responseTime")
+	List<OpinionResponseEntity> findByResponderUserIdLastUpdatedTime(@Param("responderUserId") int responderUserId, @Param("responseTime") Date responseTime);		
+
+	List<OpinionResponseEntity> findByResponderUserId(int userId);	
 }

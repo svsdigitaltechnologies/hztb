@@ -48,16 +48,16 @@ public class RefreshController {
 	 * @param RefreshInput
 	 * @return
 	 */
-	@RequestMapping(value = "/allOpinions", consumes = { "application/json" }, produces = {
+	@RequestMapping(value = "/responses", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> getOpinions(
+	public @ResponseBody ResponseEntity<String> getResponses(
 			@RequestBody @Valid RefreshInput refreshInput) {
 		ResponseEntity<String> response = null;
-		RefreshOutput refreshOutput = refreshDataService.getOpinions(refreshInput);
+		RefreshOutput refreshOutput = refreshDataService.getResponses(refreshInput);
 		if(refreshOutput.isError()) {
 			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorVO()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput));
+			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionResponseDataList()));
 		}
 		
 		return response;

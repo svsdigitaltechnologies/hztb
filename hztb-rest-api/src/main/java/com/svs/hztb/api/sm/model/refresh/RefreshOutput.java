@@ -8,6 +8,7 @@ public class RefreshOutput extends BasicOutput {
 	
 	private Error errorVO;
 	private List<OpinionData> opinionDataList;
+	private List<OpinionResponseData> opinionResponseDataList;
 	
 
 	public Error getErrorVO() {
@@ -24,6 +25,14 @@ public class RefreshOutput extends BasicOutput {
 
 	public void setOpinionDataList(List<OpinionData> opinionDataList) {
 		this.opinionDataList = opinionDataList;
+	}
+
+	public List<OpinionResponseData> getOpinionResponseDataList() {
+		return opinionResponseDataList;
+	}
+
+	public void setOpinionResponseDataList(List<OpinionResponseData> opinionResponseDataList) {
+		this.opinionResponseDataList = opinionResponseDataList;
 	}
 	
 	
