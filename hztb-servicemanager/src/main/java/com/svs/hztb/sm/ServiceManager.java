@@ -3,6 +3,7 @@ package com.svs.hztb.sm;
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -23,6 +25,7 @@ import com.svs.hztb.orchestration.component.service.StartupService;
 
 @SpringBootApplication
 @EnableWebMvc
+@EnableAsync
 @EnableJpaRepositories(basePackages = { "com.svs.hztb.repository" })
 @ComponentScan({ "com.svs.hztb" })
 @EntityScan(basePackages = "com.svs.hztb.entity")

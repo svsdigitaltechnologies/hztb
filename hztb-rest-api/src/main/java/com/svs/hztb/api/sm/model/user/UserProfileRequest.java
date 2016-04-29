@@ -8,6 +8,15 @@ public class UserProfileRequest {
 
 	private String name;
 	private String emailAddress;
+	private byte[] profilePic;
+
+	public byte[] getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(byte[] profilePic) {
+		this.profilePic = profilePic;
+	}
 
 	public UserProfileRequest() {
 	}

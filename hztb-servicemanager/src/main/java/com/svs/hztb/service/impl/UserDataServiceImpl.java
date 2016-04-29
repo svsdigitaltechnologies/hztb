@@ -1,13 +1,17 @@
 package com.svs.hztb.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.svs.hztb.adapter.UserAdapter;
-import com.svs.hztb.api.common.utils.GCMMessageNotificationClient;
 import com.svs.hztb.api.common.utils.HZTBUtil;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
@@ -18,6 +22,8 @@ import com.svs.hztb.api.sm.model.user.UserProfileRequest;
 import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
+import com.svs.hztb.aws.client.AWSClientProcessor;
+import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
 import com.svs.hztb.common.enums.ServiceManagerStatusCode;
 import com.svs.hztb.common.exception.SystemException;
@@ -32,6 +38,7 @@ import com.svs.hztb.orchestration.component.model.FlowContext;
 import com.svs.hztb.orchestration.component.step.StepDefinition;
 import com.svs.hztb.orchestration.component.step.StepDefinitionFactory;
 import com.svs.hztb.orchestration.exception.BusinessException;
+import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
 import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 
@@ -45,9 +52,15 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Autowired
 	private UserAdapter userAdapter;
-
+ 
 	@Autowired
 	private StepDefinitionFactory stepDefinitionFactory;
+	
+	@Autowired
+	private GCMService gcmService;
+	
+	@Autowired
+	private AWSClientProcessor awsClientProcessor;
 
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) {
@@ -59,13 +72,14 @@ public class UserDataServiceImpl implements UserDataService {
 			User user = new User(registrationRequest);
 			user.setOtpCode(otpCode.toString());
 			user.setOtpCreationDateTime(utcDateTime);
+			user.setInvalidOtpCount(ZERO);
+
 
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User findUser = userAdapter.findUser(dataServiceRequest);
 
 			if (null != findUser) {
 				user.setUserId(findUser.getUserId());
-				user.setInvalidOtpCount(ZERO);
 				dataServiceRequest = new DataServiceRequest<User>(user);
 				user = userAdapter.updateUserDetails(dataServiceRequest);
 			} else {
@@ -143,10 +157,11 @@ public class UserDataServiceImpl implements UserDataService {
 					
 					//updating IMEI, device registration id
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
-
-					GCMMessageNotificationClient client = new GCMMessageNotificationClient();
+					
+					gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), userFromDB);
+					/*GCMMessageNotificationClient client = new GCMMessageNotificationClient();
 					String formattedMessage = "Welcome to hztb";
-					client.processPushNotification(userFromDB.getDeviceRegId(), formattedMessage);
+					client.processPushNotification(userFromDB.getDeviceRegId(), formattedMessage);*/
 					isOTPValiationSuccesful = true;
 				} else {
 					//OTP incorrect scenario
@@ -227,9 +242,24 @@ public class UserDataServiceImpl implements UserDataService {
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User findUser = userAdapter.getUserDetails(dataServiceRequest);
 			user.setUserId(findUser.getUserId());
+			//skairamkonda remove this code later
+			File fnew=new File("D:/Users/skairamk/personal/photos/family.jpg");
+			BufferedImage originalImage=ImageIO.read(fnew);
+			ByteArrayOutputStream baos=new ByteArrayOutputStream();
+			ImageIO.write(originalImage, "jpg", baos );
+			byte[] imageInByte=baos.toByteArray();
+			
+			user.setProfilePic(imageInByte);
+			//skairamkonda use optional here
+			
+			if(null != user.getProfilePic())
+				user.setProfilePicUrl(awsClientProcessor.execute(user.getProfilePic(), NotificationType.PROFILE.getNotificationId(), user.getUserId()));
+			
 			dataServiceRequest = new DataServiceRequest<User>(user);
 			user = userAdapter.updateUserDetails(dataServiceRequest);
 			userProfileResponse = populateUserResponse(user);
+			
+			
 		} catch (DataServiceException dataServiceException) {
 			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());

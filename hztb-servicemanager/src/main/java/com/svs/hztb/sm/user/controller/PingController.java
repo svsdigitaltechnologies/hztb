@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellData;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellMessage;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
+import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
+import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
+import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
+import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
@@ -27,6 +31,9 @@ public class PingController {
 
 	@Autowired
 	private UserDataService userDataService;
+
+	@Autowired
+	private GCMService gcmService;
 
 	/**
 	 * 
@@ -39,6 +46,24 @@ public class PingController {
 	public @ResponseBody ResponseEntity<PingResponse> ping(@RequestBody @Valid PingRequest pingRequest) {
 		PingResponse pingResponse = userDataService.ping(pingRequest);
 		return buildPingResponse(pingResponse);
+	}
+
+	@RequestMapping(value = "/sendRequestOpinionNotification", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<PingResponse> sendRequestOpinionNotification(
+			@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
+		gcmService.sendRequestOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
+				requestOpinionInput);
+		return buildPingResponse(null);
+	}
+
+	@RequestMapping(value = "/sendResponseOpinionNotification", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<PingResponse> sendResponseOpinionNotification(
+			@RequestBody @Valid OpinionResponseInput opinionResponseInput) {
+		gcmService.sendResponseOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
+				opinionResponseInput);
+		return buildPingResponse(null);
 	}
 
 	private ResponseEntity<PingResponse> buildPingResponse(PingResponse pingResponse) {

@@ -8,6 +8,15 @@ public class UserProfileResponse {
 	private String otpCreationDateTime;
 	private String deviceRegId;
 	private String emailAddress;
+	private String profilePictureURL;
+	
+	public String getProfilePictureURL() {
+		return profilePictureURL;
+	}
+
+	public void setProfilePictureURL(String profilePictureURL) {
+		this.profilePictureURL = profilePictureURL;
+	}
 
 	public UserProfileResponse() {
 	}

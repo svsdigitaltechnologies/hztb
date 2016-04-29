@@ -1,10 +1,19 @@
 package com.svs.hztb.common.model;
 
-public class HztbResponse {
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class HztbResponse {
+	
+	/*@Valid
+	@NotNull*/
 	private ResponseHeader header;
 
-	public HztbResponse(ResponseHeader header) {
+	@JsonCreator
+	public HztbResponse(@JsonProperty("header") ResponseHeader header) {
 		this.header = header;
 	}
 

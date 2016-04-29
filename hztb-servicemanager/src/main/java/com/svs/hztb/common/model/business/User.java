@@ -17,6 +17,8 @@ public class User {
 	private String emailAddress;
 	private String userId;
 	private String invalidOtpCount;
+	private byte[] profilePic;
+	private String profilePicUrl;
 
 	public User() {
 
@@ -42,6 +44,24 @@ public class User {
 		this.mobileNumber = userProfileRequest.getMobileNumber();
 		this.name = userProfileRequest.getName();
 		this.emailAddress = userProfileRequest.getEmailAddress();
+		this.profilePic = userProfileRequest.getProfilePic();
+	}
+
+	
+	public byte[] getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(byte[] profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public String getProfilePicUrl() {
+		return profilePicUrl;
+	}
+
+	public void setProfilePicUrl(String profilePicUrl) {
+		this.profilePicUrl = profilePicUrl;
 	}
 
 	public String getInvalidOtpCount() {
