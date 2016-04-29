@@ -28,12 +28,32 @@ public class RefreshController {
 	 * @param RefreshInput
 	 * @return
 	 */
-	@RequestMapping(value = "/refresh", consumes = { "application/json" }, produces = {
+	@RequestMapping(value = "/opinions", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> refresh(
+	public @ResponseBody ResponseEntity<String> getAllOpinions(
 			@RequestBody @Valid RefreshInput refreshInput) {
 		ResponseEntity<String> response = null;
-		RefreshOutput refreshOutput = refreshDataService.refresh(refreshInput);
+		RefreshOutput refreshOutput = refreshDataService.getOpinions(refreshInput);
+		if(refreshOutput.isError()) {
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorVO()));
+		} else {
+			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionDataList()));
+		}
+		
+		return response;
+	}
+	
+	/**
+	 * 
+	 * @param RefreshInput
+	 * @return
+	 */
+	@RequestMapping(value = "/allOpinions", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<String> getOpinions(
+			@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response = null;
+		RefreshOutput refreshOutput = refreshDataService.getOpinions(refreshInput);
 		if(refreshOutput.isError()) {
 			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorVO()));
 		} else {

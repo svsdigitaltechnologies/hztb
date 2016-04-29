@@ -3,6 +3,8 @@ package com.svs.hztb.sm.opinion.controller;
 import static com.svs.hztb.sm.common.util.JsonUtil.toJson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -77,6 +79,7 @@ public class OpinionController {
 		requestedUserIds.add(00234);
 		requestOpinionRequest.setRequestedUserIds(requestedUserIds);
 		// requestOpinionRequest.setProduct(product);
+		requestOpinionRequest.setDate(new Date());
 		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionRequest);
 
 	}

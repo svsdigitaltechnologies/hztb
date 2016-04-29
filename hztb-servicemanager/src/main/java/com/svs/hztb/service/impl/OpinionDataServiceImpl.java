@@ -48,7 +48,8 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 	@Override
 	public OpinionOutput requestOpinion(RequestOpinionInput requestOpinionRequest) {
 		// validations
-
+		
+		
 		OpinionEntity opinionEntity = createOpinionEntity(requestOpinionRequest);
 	
 		if(0 == requestOpinionRequest.getRequestedGroupId()) {
