@@ -38,9 +38,9 @@ public class OpinionEntity implements Serializable {
 	@Column(name = "reported_action")
 	private String reportedAction;
 
-//	@Temporal(TemporalType.TIMESTAMP)
-//	@Column(name = "requested_time")
-//	private Date requestedTime;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "requested_time" , insertable = false)
+	private Date requestedTime;
 
 	@Column(name = "channel_id")
 	private String channelId;
@@ -59,9 +59,11 @@ public class OpinionEntity implements Serializable {
 	
 	
 	//@ManyToOne(cascade=CascadeType.MERGE)
-	@ManyToOne(cascade=CascadeType.ALL)
-	private ProductEntity product;
-
+//	@ManyToOne(cascade=CascadeType.ALL)
+//	private ProductEntity product;
+	@Column(name = "product_name")
+	private String product;
+	
 	public OpinionEntity() {
 	}
 
@@ -97,13 +99,13 @@ public class OpinionEntity implements Serializable {
 		this.reportedAction = reportedAction;
 	}
 
-//	public Date getRequestedTime() {
-//		return this.requestedTime;
-//	}
-//
-//	public void setRequestedTime(Date requestedTime) {
-//		this.requestedTime = requestedTime;
-//	}
+	public Date getRequestedTime() {
+		return this.requestedTime;
+	}
+
+	public void setRequestedTime(Date requestedTime) {
+		this.requestedTime = requestedTime;
+	}
 
 	public String getChannelId() {
 		return channelId;
@@ -137,22 +139,13 @@ public class OpinionEntity implements Serializable {
 		this.storeId = storeId;
 	}
 
-	public ProductEntity getProduct() {
+	public String getProduct() {
 		return product;
 	}
 
-	public void setProduct(ProductEntity product) {
+	public void setProduct(String product) {
 		this.product = product;
 	}
 
-//	public Date getRequestedTime() {
-//		return requestedTime;
-//	}
-//
-//	public void setRequestedTime(Date requestedTime) {
-//		this.requestedTime = requestedTime;
-//	}
-	
-	
 
 }

@@ -162,7 +162,7 @@ public class GCMServiceImpl implements GCMService {
 		
 		notificationRequest.addDeviceRegId(requestedUserEntity.getGcmRegId());
 		Product product = new Product();
-		product.setName(opinionEntity.getProduct().getName());
+		product.setName(opinionEntity.getProduct());
 		notificationRequest.setTitle(title);
 		notificationRequest.setMessage("HowzThisBuddy " + opinionResponseMessage);
 		notificationRequest.setNotificationType(NotificationType.RESPONSE.getNotificationId());
