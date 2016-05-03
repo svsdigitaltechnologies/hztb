@@ -8,4 +8,6 @@ public interface OpinionDataService {
 	OpinionOutput requestOpinion(RequestOpinionInput opinionRequestrequest);
 
 	OpinionOutput saveResponse(OpinionResponseInput opinionResponseInput);
+	
+	
 }

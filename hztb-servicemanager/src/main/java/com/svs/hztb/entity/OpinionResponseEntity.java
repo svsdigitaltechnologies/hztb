@@ -41,6 +41,10 @@ public class OpinionResponseEntity implements Serializable {
 	@Column(name = "response_type")
 	private String opinionResponseType;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="response_time", insertable = false)
+	private Date responseTime;
+	
 	public OpinionResponseEntity() {
 	}
 
@@ -86,6 +90,14 @@ public class OpinionResponseEntity implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Date getResponseTime() {
+		return responseTime;
+	}
+
+	public void setResponseTime(Date responseTime) {
+		this.responseTime = responseTime;
 	}
 
 	

@@ -23,6 +23,7 @@ import com.svs.hztb.entity.UserGroupPK;
 import com.svs.hztb.repository.GroupRepository;
 import com.svs.hztb.repository.OpinionRepository;
 import com.svs.hztb.repository.OpinionResponseRepository;
+import com.svs.hztb.repository.ProductRepository;
 import com.svs.hztb.repository.UserGroupEntityRepository;
 import com.svs.hztb.service.OpinionDataService;
 
@@ -40,11 +41,15 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 	@Autowired
 	OpinionResponseRepository opinionResponseRepository;
 	
+	@Autowired
+	ProductRepository productRepository;
+	
 
 	@Override
 	public OpinionOutput requestOpinion(RequestOpinionInput requestOpinionRequest) {
 		// validations
-
+		
+		
 		OpinionEntity opinionEntity = createOpinionEntity(requestOpinionRequest);
 	
 		if(0 == requestOpinionRequest.getRequestedGroupId()) {
@@ -55,7 +60,9 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 			
 			List<UserGroupEntity> userGroupList = createUserGroup(requestOpinionRequest, group);
 			userGroupEntityRepository.save(userGroupList);
-		} 
+		} else {
+			opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupId());
+		}
 		
 		opinionRepository.save(opinionEntity);
 		
@@ -131,14 +138,19 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		Product product = requestOpinionRequest.getProduct();
 		
 		if(null != product) {
-			ProductEntity productEntity = new ProductEntity();
-			productEntity.setName(product.getName());
-			productEntity.setLongDesc(product.getLongDesc());
-			productEntity.setShortDesc(product.getShortDesc());
-			productEntity.setPrice(product.getPrice());
 			
+			//If product is not saved save it
+			if(!productRepository.exists(product.getName()))
+			{
+				ProductEntity productEntity = new ProductEntity();
+				productEntity.setName(product.getName());
+				productEntity.setLongDesc(product.getLongDesc());
+				productEntity.setShortDesc(product.getShortDesc());
+				productEntity.setPrice(product.getPrice());
+				productRepository.save(productEntity);
+			}
 			
-			opinionEntity.setProduct(productEntity);
+			opinionEntity.setProduct(product.getName());
 			
 		}
 		
