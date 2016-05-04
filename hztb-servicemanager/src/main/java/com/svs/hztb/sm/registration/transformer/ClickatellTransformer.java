@@ -49,7 +49,8 @@ public class ClickatellTransformer
 	@Override
 	public List<DownstreamError> getErrors(RestfulResponse<ClickatellResponse> response) {
 		if (!response.getErrorPayload().isPresent()) {
-			return Arrays.asList(new DownstreamError(response.getStatusCode(), response.getErrorResponse().get()));
+			return Arrays.asList(new DownstreamError(Integer.parseInt(response.getResponse().get().getData().getMessage().get(0).getError().getCode()), response.getResponse().get().getData().getMessage().get(0).getError().getDescription()));
+			
 		}
 		ClickatellErrorResponse errorResponse = (ClickatellErrorResponse) response.getErrorPayload().get();
 		List<DownstreamError> errors = new ArrayList<>();

@@ -19,7 +19,8 @@ public enum RestfulEndpointErrorMappingImpl implements RestfulEndpointErrorMappi
 			entry(4, ServiceManagerStatusCode.USER_NOT_AVAILABLE_MOBILE_IMEI)), 
 	SM(entry(100, ServiceManagerStatusCode.INVALID_OTP),
 			entry(101, ServiceManagerStatusCode.OTP_NOT_VALID)), 
-	CT(entry(165, ServiceManagerStatusCode.INVALID_VERSION_NUMBER)),
+	CT(entry(165, ServiceManagerStatusCode.INVALID_VERSION_NUMBER),
+			(entry(301, ServiceManagerStatusCode.NO_CREDIT_LEFT))),
 	GCM(entry(201, ServiceManagerStatusCode.INVALID_GCM_REGISTRATION_ID));
 
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserAdapterImpl.class);

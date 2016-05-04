@@ -5,7 +5,15 @@ public class ClickatellMessage {
 	private String accepted;
 	private String to;
 	private String apiMessageId;
+	private ClickatellError error;
+
 	
+	public ClickatellError getError() {
+		return error;
+	}
+	public void setError(ClickatellError error) {
+		this.error = error;
+	}
 	public String getAccepted() {
 		return accepted;
 	}

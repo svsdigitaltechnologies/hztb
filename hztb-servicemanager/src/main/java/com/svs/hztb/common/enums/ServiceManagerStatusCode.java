@@ -16,7 +16,7 @@ public enum ServiceManagerStatusCode implements StatusCode {
 	
 	NEED_PAYMENT("20000",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Need Payment"),
 	INVALID_VERSION_NUMBER("20001",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid or no version header specified"),
-
+	NO_CREDIT_LEFT("20002",String.valueOf(HttpStatus.BAD_REQUEST.value()), "No Credit Left"),
 	
 	INVALID_GCM_REGISTRATION_ID("30000",String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid GCM device registration id");
 	
