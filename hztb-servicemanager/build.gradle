@@ -14,7 +14,13 @@ targetCompatibility = 1.8
   	exclude group: "org.springframework", module: "spring-web:4.1.7.RELEASE"
   	
   }
-  
+
+dependencyManagement {
+    imports {
+        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.10.47'
+    }
+}
+
 dependencies {
 	compile project(':hztb-common'),
 	project(':hztb-rest-api'),
@@ -28,7 +34,8 @@ dependencies {
 		"org.apache.httpcomponents:httpclient:4.3.6",
 		"javax.validation:validation-api:1.1.0.Final",
 		"com.fasterxml.jackson.core:jackson-databind",
-		'commons-io:commons-io:2.4'		
+		'commons-io:commons-io:2.4',
+		'com.amazonaws:aws-java-sdk-s3'
 		providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 		
 }
