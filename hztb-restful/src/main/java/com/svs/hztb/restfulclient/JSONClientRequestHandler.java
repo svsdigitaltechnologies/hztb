@@ -86,6 +86,10 @@ public class JSONClientRequestHandler extends AbstractClientRequestHandler {
 		if(headers.containsKey(ConfigurationConstants.AUTHORIZATION_HEADER)) {
 			requestBase.addHeader(ConfigurationConstants.AUTHORIZATION_HEADER, headers.get(ConfigurationConstants.AUTHORIZATION_HEADER));
 		}
+		
+		if(headers.containsKey(ConfigurationConstants.X_VERSION_HEADER)) {
+			requestBase.addHeader(ConfigurationConstants.X_VERSION_HEADER, headers.get(ConfigurationConstants.X_VERSION_HEADER));
+		}
 		super.addHeaders(requestBase, request);
 	}
 

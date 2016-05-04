@@ -7,32 +7,42 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import com.svs.hztb.api.gcm.model.notification.MessageRequest;
+import com.svs.hztb.api.gcm.model.notification.MessageResponse;
+import com.svs.hztb.api.gcm.model.notification.MessageResult;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellRequest;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.DownstreamError;
 import com.svs.hztb.common.model.HztbResponse;
+import com.svs.hztb.common.model.business.User;
 import com.svs.hztb.orchestration.component.model.FlowContext;
 import com.svs.hztb.restfulclient.model.RestfulResponse;
 import com.svs.hztb.sm.common.annotation.RestfulTransformer;
 import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
-import com.svs.hztb.sm.common.transformer.RestfulServiceAbstractTransformer;
+import com.svs.hztb.sm.common.transformer.ClickatellRestfulAbstractTransformer;
 
-@RestfulTransformer(ServiceManagerRestfulEndpoint.CLICKATELL)
+@RestfulTransformer(ServiceManagerRestfulEndpoint.CLICKATELL_POST)
 @Component
-public class ClickatellPostTransformer
-		extends RestfulServiceAbstractTransformer<ClickatellRequest, ClickatellResponse> {
+public class ClickatellPosttTransformer extends ClickatellRestfulAbstractTransformer<ClickatellRequest, ClickatellResponse> {
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(ClickatellPosttTransformer.class);
 
 	@Override
 	public ClickatellRequest transformRequest(FlowContext flowContext) {
+		User user = flowContext.getModelElement(User.class);
 		ClickatellRequest clickatellRequest = new ClickatellRequest();
-		clickatellRequest.setTo("18479874489");
-		clickatellRequest.setText("123456");
+		clickatellRequest.setTo(user.getMobileNumber());
+		clickatellRequest.setText(user.getOtpCode());
 		return clickatellRequest;
 	}
 
 	@Override
 	public void transformResponse(FlowContext flowContext, ClickatellResponse response) {
+		LOGGER.debug("Clickatell Response {}", response);
 		flowContext.setModelElement(response);
+		LOGGER.debug("OTP sent to mobile number {} and apiMessageId is {}", response.getData().getMessage().get(0).getTo(), response.getData().getMessage().get(0).getApiMessageId());
 	}
 
 	@Override
@@ -42,7 +52,8 @@ public class ClickatellPostTransformer
 		}
 		HztbResponse errorResponse = (HztbResponse) response.getErrorPayload().get();
 		List<DownstreamError> errors = new ArrayList<>();
-		errorResponse.getHeader().getErrors().stream().forEach(e -> errors.add(new DownstreamError(Integer.parseInt(e.getStatus()), e.getMessage())));
+		errorResponse.getHeader().getErrors().stream()
+				.forEach(e -> errors.add(new DownstreamError(Integer.parseInt(e.getStatus()), e.getMessage())));
 		return errors;
 	}
 

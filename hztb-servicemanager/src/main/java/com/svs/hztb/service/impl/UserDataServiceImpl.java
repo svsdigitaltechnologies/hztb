@@ -85,10 +85,13 @@ public class UserDataServiceImpl implements UserDataService {
 			} else {
 				user = userAdapter.createUser(dataServiceRequest);
 			}
-
+			
+			
 			FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
+			flowContext.setModelElement(user);
+			
 			StepDefinition stepDefinition = stepDefinitionFactory
-					.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL_POST);
+					.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL);
 			stepDefinition.execute(flowContext);
 
 			ClickatellResponse clickatellResponse = flowContext.getModelElement(ClickatellResponse.class);

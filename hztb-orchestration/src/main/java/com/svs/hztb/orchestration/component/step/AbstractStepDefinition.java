@@ -8,6 +8,7 @@ import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
 import com.svs.hztb.common.util.PerformanceTimer;
 import com.svs.hztb.orchestration.component.model.FlowContext;
+import com.svs.hztb.orchestration.exception.BusinessException;
 
 public abstract class AbstractStepDefinition implements StepDefinition {
 
@@ -26,7 +27,11 @@ public abstract class AbstractStepDefinition implements StepDefinition {
 		PerformanceTimer timer = new PerformanceTimer();
 		try {
 			process(flowContext);
-		} catch (Exception exception) {
+		} catch (BusinessException exception) {
+			LOGGER.error("Business Exception occured while processing the step {} ", this.getClass());
+			throw exception;
+		} 
+		catch (Exception exception) {
 			LOGGER.error("Exception occured while processing the step {} ", this.getClass());
 			throw new SystemException(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
