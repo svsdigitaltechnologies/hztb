@@ -1,11 +1,6 @@
 package com.svs.hztb.service.impl;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.Optional;
-
-import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,17 +81,18 @@ public class UserDataServiceImpl implements UserDataService {
 				user = userAdapter.createUser(dataServiceRequest);
 			}
 			
-			
-			FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
-			flowContext.setModelElement(user);
-			
-			StepDefinition stepDefinition = stepDefinitionFactory
-					.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL);
-			stepDefinition.execute(flowContext);
+			if(user.getMobileNumber().startsWith("1")) {
+				FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
+				flowContext.setModelElement(user);
+				
+				StepDefinition stepDefinition = stepDefinitionFactory
+						.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL);
+				stepDefinition.execute(flowContext);
 
-			ClickatellResponse clickatellResponse = flowContext.getModelElement(ClickatellResponse.class);
-			LOGGER.debug("Clickatell Response {} ", clickatellResponse.getData().getMessage().get(0).getApiMessageId());
-
+				ClickatellResponse clickatellResponse = flowContext.getModelElement(ClickatellResponse.class);
+				LOGGER.debug("Clickatell Response {} ", clickatellResponse.getData().getMessage().get(0).getApiMessageId());
+			}
+			
 			registrationResponse = populateRegistrationUserResponse(user);
 		} catch (DataServiceException dataServiceException) { 
 			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
@@ -246,13 +242,13 @@ public class UserDataServiceImpl implements UserDataService {
 			User findUser = userAdapter.getUserDetails(dataServiceRequest);
 			user.setUserId(findUser.getUserId());
 			//skairamkonda remove this code later
-			File fnew=new File("D:/Users/skairamk/personal/photos/family.jpg");
+			/*File fnew=new File("D:/Users/skairamk/personal/photos/family.jpg");
 			BufferedImage originalImage=ImageIO.read(fnew);
 			ByteArrayOutputStream baos=new ByteArrayOutputStream();
 			ImageIO.write(originalImage, "jpg", baos );
-			byte[] imageInByte=baos.toByteArray();
+			byte[] imageInByte=baos.toByteArray();*/
 			
-			user.setProfilePic(imageInByte);
+			user.setProfilePic(userProfileRequest.getProfilePic());
 			//skairamkonda use optional here
 			
 			if(null != user.getProfilePic())
