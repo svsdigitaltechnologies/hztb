@@ -30,7 +30,7 @@ public class HZTBUtil {
 		boolean isOtpValidationAllowed = false;
 
 		Integer count = Integer.parseInt(invalidOtpCount);
-		if( count > 4) {
+		if( count > 3) {
 			return isOtpValidationAllowed;
 		}
 

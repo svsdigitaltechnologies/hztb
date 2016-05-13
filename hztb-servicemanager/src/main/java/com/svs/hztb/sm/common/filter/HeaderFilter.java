@@ -15,8 +15,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.svs.hztb.common.logging.Logger;
-import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
 import com.svs.hztb.common.model.RequestData;
 import com.svs.hztb.common.util.PerformanceTimer;

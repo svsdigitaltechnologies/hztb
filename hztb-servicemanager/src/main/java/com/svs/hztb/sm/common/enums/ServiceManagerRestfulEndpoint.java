@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpMethod;
 
+import com.svs.hztb.api.sm.model.clickatell.ClickatellErrorResponse;
 import com.svs.hztb.common.enums.RestfulEndpointErrorMappingImpl;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
 import com.svs.hztb.common.model.HztbResponse;
@@ -15,7 +16,7 @@ public enum ServiceManagerRestfulEndpoint implements RestfulEndPoint {
 	
 	CLICKATELL_GET(ServiceManagerClientType.CT,"/user/jsonGetResponse",HttpMethod.GET, RestfulEndpointErrorMappingImpl.CT),
 	CLICKATELL_POST(ServiceManagerClientType.CT,"/user/jsonPostResponse",HttpMethod.POST, HztbResponse.class, RestfulEndpointErrorMappingImpl.CT),
-	CLICKATELL(ServiceManagerClientType.CT,"/rest/message",HttpMethod.POST, RestfulEndpointErrorMappingImpl.CT),
+	CLICKATELL(ServiceManagerClientType.CT,"/rest/message",HttpMethod.POST, ClickatellErrorResponse.class, RestfulEndpointErrorMappingImpl.CT),
 	
 	GCM_SEND_NOTIFICATION(ServiceManagerClientType.GCM, "/gcm/send", HttpMethod.POST, RestfulEndpointErrorMappingImpl.GCM);
 
