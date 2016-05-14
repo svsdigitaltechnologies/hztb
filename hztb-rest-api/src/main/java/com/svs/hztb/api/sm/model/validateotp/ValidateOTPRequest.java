@@ -25,12 +25,25 @@ public class ValidateOTPRequest {
 	@NotNull
 	private String deviceRegId;
 
+	@NotNull
+	@Size(min = 1, max = 64)
+	@Pattern(regexp = HZTBRegularExpressions.ALPHA_NUMERIC_REGEX)
+	private String deviceId;
+	
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public String getOtpCode() {

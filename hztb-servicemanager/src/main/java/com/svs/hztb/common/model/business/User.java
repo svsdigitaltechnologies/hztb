@@ -19,6 +19,7 @@ public class User {
 	private String invalidOtpCount;
 	private byte[] profilePic;
 	private String profilePicUrl;
+	private String deviceId;
 
 	public User() {
 
@@ -38,6 +39,7 @@ public class User {
 		this.otpCode = validateOTPRequest.getOtpCode();
 		this.imei = validateOTPRequest.getImei();
 		this.deviceRegId = validateOTPRequest.getDeviceRegId();
+		this.deviceId = validateOTPRequest.getDeviceId();
 	}
 
 	public User(UserProfileRequest userProfileRequest) {
@@ -47,7 +49,14 @@ public class User {
 		this.profilePic = userProfileRequest.getProfilePic();
 	}
 
-	
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
 	public byte[] getProfilePic() {
 		return profilePic;
 	}
