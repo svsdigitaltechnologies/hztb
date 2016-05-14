@@ -52,7 +52,8 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		
 		OpinionEntity opinionEntity = createOpinionEntity(requestOpinionRequest);
 	
-		if(0 == requestOpinionRequest.getRequestedGroupId()) {
+		if(requestOpinionRequest.getRequestedGroupIds() == null ||
+				requestOpinionRequest.getRequestedGroupIds().size() <= 0) {
 			//Create a group and Save requested userIds
 			GroupEntity group= createGroup(requestOpinionRequest);
 			groupRepository.saveAndFlush(group);
@@ -60,8 +61,17 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 			
 			List<UserGroupEntity> userGroupList = createUserGroup(requestOpinionRequest, group);
 			userGroupEntityRepository.save(userGroupList);
-		} else {
-			opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupId());
+		} else if (requestOpinionRequest.getRequestedGroupIds().size() == 1){
+			
+			opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupIds().get(0));
+		} else{
+			//Create a group and Save requested userIds
+			GroupEntity group= createGroup(requestOpinionRequest);
+			groupRepository.saveAndFlush(group);
+			opinionEntity.setGroupId(group.getGroupId());
+			
+			List<UserGroupEntity> userGroupList = combineGroups(requestOpinionRequest, group);
+			userGroupEntityRepository.save(userGroupList);
 		}
 		
 		opinionRepository.save(opinionEntity);
@@ -108,7 +118,7 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 
 	private List<UserGroupEntity> createUserGroup(RequestOpinionInput requestOpinionRequest, GroupEntity group) {
 		List<UserGroupEntity> userGroupEntityList =  new ArrayList<UserGroupEntity>();
-		for(int userId: requestOpinionRequest.getRequestedUserIds()){
+		for(int userId: requestOpinionRequest.getRequestedUserIds()) {
 			UserGroupEntity userGroupEntity = new UserGroupEntity();
 			UserGroupPK userGroupPK = new UserGroupPK();
 			userGroupPK.setGroupId(group.getGroupId());
@@ -120,11 +130,35 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		return userGroupEntityList;
 		
 	}
+	/**
+	 * This method combines two or three groups into a single group
+	 * @param requestOpinionRequest
+	 * @param group
+	 * @return List<UserGroupEntity>
+	 */
+	private List<UserGroupEntity> combineGroups(RequestOpinionInput requestOpinionRequest, GroupEntity group) {
+		List<UserGroupEntity> userGroupEntityList =  new ArrayList<UserGroupEntity>();
+		for(int groupId: requestOpinionRequest.getRequestedGroupIds()) {
+			List<UserGroupEntity> userGroupEntities =  userGroupEntityRepository.findByGroupId(groupId);
+			for(UserGroupEntity userGroup: userGroupEntities) {
+				UserGroupEntity userGroupEntity = new UserGroupEntity();
+				UserGroupPK userGroupPK = new UserGroupPK();
+				userGroupPK.setGroupId(group.getGroupId());
+				userGroupPK.setUserId(userGroup.getId().getUserId());
+				userGroupEntity.setId(userGroupPK);
+				userGroupEntityList.add(userGroupEntity);
+			}
+			
+		}
+		return userGroupEntityList;
+		
+	}
 
 	private GroupEntity createGroup(RequestOpinionInput requestOpinionRequest) {
 		GroupEntity groupEntity = new GroupEntity();
-		groupEntity.setGroupDesc(DEFAULT);
-		groupEntity.setGroupName(DEFAULT);
+		String groupName = requestOpinionRequest.getGroupName() != null?DEFAULT:requestOpinionRequest.getGroupName(); 
+		//groupEntity.setGroupDesc(DEFAULT);
+		groupEntity.setGroupName(groupName);
 		groupEntity.setGroupOwner(requestOpinionRequest.getRequesterUserId());
 		return groupEntity;
 	}
@@ -132,7 +166,8 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 	private OpinionEntity createOpinionEntity(RequestOpinionInput requestOpinionRequest) {
 		OpinionEntity opinionEntity = new OpinionEntity();
 		opinionEntity.setUserId(requestOpinionRequest.getRequesterUserId());
-		opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupId());
+	 
+		opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupIds().get(0));
 		opinionEntity.setProductUrl(requestOpinionRequest.getProductUrl());
 		
 		Product product = requestOpinionRequest.getProduct();

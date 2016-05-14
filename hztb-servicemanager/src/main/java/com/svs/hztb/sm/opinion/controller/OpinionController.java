@@ -73,7 +73,7 @@ public class OpinionController {
 
 		RequestOpinionInput requestOpinionRequest = new RequestOpinionInput();
 		requestOpinionRequest.setRequesterUserId(12345);
-		requestOpinionRequest.setRequestedGroupId(0001);
+		//requestOpinionRequest.setRequestedGroupId(0001);
 		List<Integer> requestedUserIds = new ArrayList<Integer>();
 		requestedUserIds.add(00123);
 		requestedUserIds.add(00234);
