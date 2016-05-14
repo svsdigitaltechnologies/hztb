@@ -15,8 +15,10 @@ public class RequestOpinionInput {
 	//Added for sample, delete this
 	private Date date;
 	
-	private int requestedGroupId;
+	//private int requestedGroupId;
+	private String groupName;
 	private List<Integer> requestedUserIds;
+	private List<Integer> requestedGroupIds; 
 
 	public int getRequesterUserId() {
 		return requesterUserId;
@@ -50,13 +52,7 @@ public class RequestOpinionInput {
 		this.storeGeoCode = storeGeoCode;
 	}
 
-	public int getRequestedGroupId() {
-		return requestedGroupId;
-	}
-
-	public void setRequestedGroupId(int requestedGroupId) {
-		this.requestedGroupId = requestedGroupId;
-	}
+	
 
 	public List<Integer> getRequestedUserIds() {
 		return requestedUserIds;
@@ -81,6 +77,22 @@ public class RequestOpinionInput {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public List<Integer> getRequestedGroupIds() {
+		return requestedGroupIds;
+	}
+
+	public void setRequestedGroupIds(List<Integer> requestedGroupIds) {
+		this.requestedGroupIds = requestedGroupIds;
 	}
 
 
