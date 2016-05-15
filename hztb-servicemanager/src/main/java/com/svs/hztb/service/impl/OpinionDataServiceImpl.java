@@ -1,6 +1,6 @@
 package com.svs.hztb.service.impl;
 
-import static com.svs.hztb.sm.common.model.ServiceManagerConstants.DEFAULT;
+import static com.svs.hztb.sm.common.model.ServiceManagerConstants.DEFAULT_GROUP_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +156,7 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 
 	private GroupEntity createGroup(RequestOpinionInput requestOpinionRequest) {
 		GroupEntity groupEntity = new GroupEntity();
-		String groupName = requestOpinionRequest.getGroupName() != null?DEFAULT:requestOpinionRequest.getGroupName(); 
+		String groupName = requestOpinionRequest.getGroupName() != null?DEFAULT_GROUP_NAME:requestOpinionRequest.getGroupName(); 
 		//groupEntity.setGroupDesc(DEFAULT);
 		groupEntity.setGroupName(groupName);
 		groupEntity.setGroupOwner(requestOpinionRequest.getRequesterUserId());

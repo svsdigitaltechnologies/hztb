@@ -42,7 +42,7 @@ public class OpinionController {
 		ResponseEntity<String> response = null;
 		OpinionOutput opinionOutput = opinionDataService.requestOpinion(requestOpinionInput);
 		if(opinionOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorVO()));
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorOutput()));
 		} else {
 			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getRequestOpinionOutput()));
 		}
@@ -60,7 +60,7 @@ public class OpinionController {
 		OpinionOutput opinionOutput = opinionDataService.saveResponse(OpinionResponseInput);
 		ResponseEntity<String> response = null;
 		if(opinionOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorVO()));
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorOutput()));
 		} else {
 			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getOpinionResponseOutput()));
 		}

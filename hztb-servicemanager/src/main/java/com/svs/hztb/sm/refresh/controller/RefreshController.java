@@ -35,7 +35,7 @@ public class RefreshController {
 		ResponseEntity<String> response = null;
 		RefreshOutput refreshOutput = refreshDataService.getOpinions(refreshInput);
 		if(refreshOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorVO()));
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
 		} else {
 			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionDataList()));
 		}
@@ -55,7 +55,7 @@ public class RefreshController {
 		ResponseEntity<String> response = null;
 		RefreshOutput refreshOutput = refreshDataService.getResponses(refreshInput);
 		if(refreshOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorVO()));
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
 		} else {
 			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionResponseDataList()));
 		}
