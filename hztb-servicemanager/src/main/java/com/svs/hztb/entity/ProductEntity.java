@@ -15,7 +15,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "product_info", schema = "ebdb")
+@Table(name = "product", schema = "ebdb")
  @NamedQuery(name="Product.findAll", query="SELECT p FROM ProductEntity p")
 public class ProductEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

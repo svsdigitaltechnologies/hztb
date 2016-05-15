@@ -167,7 +167,6 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		OpinionEntity opinionEntity = new OpinionEntity();
 		opinionEntity.setUserId(requestOpinionRequest.getRequesterUserId());
 	 
-		opinionEntity.setGroupId(requestOpinionRequest.getRequestedGroupIds().get(0));
 		opinionEntity.setProductUrl(requestOpinionRequest.getProductUrl());
 		
 		Product product = requestOpinionRequest.getProduct();
