@@ -1,11 +1,13 @@
 package com.svs.hztb.api.sm.model.opinion;
 
 import com.svs.hztb.api.sm.model.BasicOutput;
+import com.svs.hztb.api.sm.model.ErrorOutput;
 
 public class OpinionOutput extends BasicOutput {
+	
 	private OpinionResponseOutput opinionResponseOutput;
 	private RequestOpinionOutput requestOpinionOutput;
-	private Error errorVO;
+	private ErrorOutput errorOutput;
 
 	public RequestOpinionOutput getRequestOpinionOutput() {
 		return requestOpinionOutput;
@@ -23,17 +25,12 @@ public class OpinionOutput extends BasicOutput {
 		this.opinionResponseOutput = opinionResponseOutput;
 	}
 
-	public Error getErrorVO() {
-		return errorVO;
+	public ErrorOutput getErrorOutput() {
+		return errorOutput;
 	}
 
-	public void setErrorVO(Error errorVO) {
-		this.errorVO = errorVO;
+	public void setErrorOutput(ErrorOutput errorOutput) {
+		this.errorOutput = errorOutput;
 	}
 
-	
-	
-	
-	
-	
 }

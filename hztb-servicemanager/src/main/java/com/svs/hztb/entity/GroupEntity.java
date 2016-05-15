@@ -37,9 +37,9 @@ public class GroupEntity implements Serializable {
 	@Column(name = "group_owner")
 	private int groupOwner;
 
-	// bi-directional many-to-many association to User
-	@ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
-	private List<UserEntity> users;
+//	// bi-directional many-to-many association to User
+//	@ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
+//	private List<UserEntity> users;
 
 	public GroupEntity() {
 	}
@@ -76,12 +76,12 @@ public class GroupEntity implements Serializable {
 		this.groupOwner = groupOwner;
 	}
 
-	public List<UserEntity> getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(List<UserEntity> users) {
-		this.users = users;
-	}
+//	public List<UserEntity> getUsers() {
+//		return this.users;
+//	}
+//
+//	public void setUsers(List<UserEntity> users) {
+//		this.users = users;
+//	}
 
 }

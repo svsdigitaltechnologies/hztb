@@ -13,5 +13,10 @@ public class FunctionUtils {
 		}
 		return result;
 	}
-
+	public static <T, R> R convert(T source,
+			Function<T,R> f) {
+			R result = null;						
+			result =  f.apply(source);
+			return result;
+	}
 }

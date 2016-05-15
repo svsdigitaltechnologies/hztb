@@ -3,20 +3,20 @@ package com.svs.hztb.api.sm.model.refresh;
 import java.util.List;
 
 import com.svs.hztb.api.sm.model.BasicOutput;
+import com.svs.hztb.api.sm.model.ErrorOutput;
 
 public class RefreshOutput extends BasicOutput {
 	
-	private Error errorVO;
+	private ErrorOutput errorOutput;
 	private List<OpinionData> opinionDataList;
 	private List<OpinionResponseData> opinionResponseDataList;
 	
-
-	public Error getErrorVO() {
-		return errorVO;
+	public ErrorOutput getErrorOutput() {
+		return errorOutput;
 	}
 
-	public void setErrorVO(Error errorVO) {
-		this.errorVO = errorVO;
+	public void setErrorOutput(ErrorOutput errorOutput) {
+		this.errorOutput = errorOutput;
 	}
 
 	public List<OpinionData> getOpinionDataList() {
