@@ -1,6 +1,6 @@
 package com.svs.hztb.api.sm.model;
 
-public class Error {
+public class ErrorOutput {
 	private String errorCode;
 	private String errorDescription;
 	private String errorType;
