@@ -154,12 +154,12 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		
 	}
 
-	private GroupEntity createGroup(RequestOpinionInput requestOpinionRequest) {
+	private GroupEntity createGroup(RequestOpinionInput requestOpinionInput) {
 		GroupEntity groupEntity = new GroupEntity();
-		String groupName = requestOpinionRequest.getGroupName() != null?DEFAULT_GROUP_NAME:requestOpinionRequest.getGroupName(); 
+		String groupName = requestOpinionInput.getGroupName() == null?DEFAULT_GROUP_NAME:requestOpinionInput.getGroupName(); 
 		//groupEntity.setGroupDesc(DEFAULT);
 		groupEntity.setGroupName(groupName);
-		groupEntity.setGroupOwner(requestOpinionRequest.getRequesterUserId());
+		groupEntity.setGroupOwner(requestOpinionInput.getRequesterUserId());
 		return groupEntity;
 	}
 
