@@ -1,10 +1,13 @@
 package com.svs.hztb.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.svs.hztb.entity.GroupEntity;
+import com.svs.hztb.entity.OpinionEntity;
 
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 //	@Modifying
@@ -14,6 +17,7 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 	@Query("update GroupEntity g set g.groupName = ?1 where g.groupId = ?2 and g.groupOwner=?3")
 	Integer setGroupNameFor(String groupName, int groupId, 
 			int groupOwner);
-	
+	@Query("SELECT g FROM GroupEntity g WHERE g.groupOwner = ?1 and g.groupName != ?2")
+	List<GroupEntity> findByGroupOwner(int userId, String skipName);	
 	
 }

@@ -19,44 +19,60 @@ import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.service.GroupDataService;
 import com.svs.hztb.service.OpinionDataService;
+
 @RestController
 @RequestMapping("/group")
 public class GroupController {
-	//Method to list all groups as owner userId: groupId,name,desc{members}
-	//List all groups as member: userId:groupId,name,desc
-	//Edit the group: groupId,owner: Add/remove members, name change
-	//remove the group:groupId,ownerId
+	// Method to list all groups as owner userId: groupId,name,desc{members}
+	// List all groups as member: userId:groupId,name,desc
+	// Edit the group: groupId,owner: Add/remove members, name change
+	// remove the group:groupId,ownerId
 	@Autowired
 	private GroupDataService groupDataService;
 
-
 	@RequestMapping(value = "/createGroup", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> createGroup(
-			@RequestBody @Valid GroupInput groupInput) {
+	public @ResponseBody ResponseEntity<String> createGroup(@RequestBody @Valid GroupInput groupInput) {
 		ResponseEntity<String> response = null;
 		GroupOutput groupOutput = groupDataService.createGroup(groupInput);
-		if(groupOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(groupOutput.getErrorOutput()));
+		if (groupOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(groupOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getStatus()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getStatus()));
 		}
-		
+
 		return response;
 	}
+
 	@RequestMapping(value = "/removeGroup", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> removeGroup(
-			@RequestBody @Valid GroupInput groupInput) {
+	public @ResponseBody ResponseEntity<String> removeGroup(@RequestBody @Valid GroupInput groupInput) {
 		ResponseEntity<String> response = null;
 		GroupOutput groupOutput = groupDataService.removeGroup(groupInput);
-		if(groupOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(groupOutput.getErrorOutput()));
+		if (groupOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(groupOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getStatus()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getStatus()));
 		}
-		
+
 		return response;
 	}
-	
+
+	@RequestMapping(value = "/listGroups", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<String> listGroups(@RequestBody @Valid GroupInput groupInput) {
+		ResponseEntity<String> response = null;
+		GroupOutput groupOutput = groupDataService.listGroups(groupInput);
+		if (groupOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(groupOutput.getErrorOutput()));
+		} else {
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getGroupDetailList()));
+		}
+
+		return response;
+	}
+
 }

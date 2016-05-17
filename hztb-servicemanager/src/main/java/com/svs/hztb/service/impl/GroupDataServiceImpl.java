@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.svs.hztb.api.sm.model.group.GroupDetail;
 import com.svs.hztb.api.sm.model.group.GroupInput;
 import com.svs.hztb.api.sm.model.group.GroupOutput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
@@ -78,12 +79,35 @@ public class GroupDataServiceImpl implements GroupDataService {
 			
 	}
 	
+	@Override
+	public GroupOutput listGroups(GroupInput groupInput) {
+		
+		List<GroupDetail> groupDetailList = new ArrayList<GroupDetail>();
+		List<GroupEntity> groupEntityList = groupRepository.findByGroupOwner(groupInput.getUserId(), DEFAULT_GROUP_NAME);
+		for(GroupEntity groupEntity: groupEntityList) {
+			GroupDetail groupDetail = new GroupDetail();
+			groupDetail.setGroupId(groupEntity.getGroupId());
+			groupDetail.setGroupName(groupEntity.getGroupName());
+			List<UserGroupEntity> userGroupList = userGroupEntityRepository.findByGroupId(groupEntity.getGroupId());
+			for(UserGroupEntity userGroupEntity :userGroupList) {
+				groupDetail.getGroupMembers().add(userGroupEntity.getId().getUserId());
+			}
+			groupDetailList.add(groupDetail);
+		}
+		GroupOutput groupOutput = buildGroupOutput();
+		groupOutput.setGroupDetailList(groupDetailList);
+		return groupOutput;
+		
+	}
+	
+	
 	private GroupOutput buildGroupOutput() {
 		GroupOutput groupOutput = new GroupOutput();
 		groupOutput.setError(false);
 		groupOutput.setStatus(Status.SUCCESS);
 		return groupOutput;
 	}
+
 	
 
 }
