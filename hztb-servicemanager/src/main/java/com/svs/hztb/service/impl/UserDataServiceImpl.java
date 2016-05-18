@@ -158,9 +158,6 @@ public class UserDataServiceImpl implements UserDataService {
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
 					
 					gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), userFromDB);
-					/*GCMMessageNotificationClient client = new GCMMessageNotificationClient();
-					String formattedMessage = "Welcome to hztb";
-					client.processPushNotification(userFromDB.getDeviceRegId(), formattedMessage);*/
 					isOTPValiationSuccesful = true;
 				} else {
 					//OTP incorrect scenario
@@ -193,6 +190,7 @@ public class UserDataServiceImpl implements UserDataService {
 		ValidateOTPResponse validateOTPResponse = new ValidateOTPResponse();
 		validateOTPResponse.setMobileNumber(user.getMobileNumber());
 		validateOTPResponse.setIsValidateOTPSuccesful(isOTPValiationSuccesful);
+		validateOTPResponse.setUserId(user.getUserId());
 		return validateOTPResponse;
 	}
 

@@ -60,11 +60,23 @@ public class UserEntity implements Serializable {
 	@Column(name = "invalid_otp_retries")
 	private String invalidOtpRetries;
 
+	@Column(name = "device_id")
+	private String deviceId;
+
 	public UserEntity() {
 	}
 
 	public int getUserId() {
 		return this.userId;
+	}
+
+	
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public void setUserId(int userId) {
