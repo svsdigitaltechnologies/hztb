@@ -1,10 +1,15 @@
 package com.svs.hztb.api.sm.model.refresh;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class OpinionData {
 	private int opinionId;
 	//private int requestedUserId;
 	private int requestedGroupId;
 	private String productName;
+	private Map<String, Integer> responseCounts = new HashMap<String, Integer>();
+	
 	public int getOpinionId() {
 		return opinionId;
 	}
@@ -28,6 +33,12 @@ public class OpinionData {
 	}
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+	public Map<String, Integer> getResponseCounts() {
+		return responseCounts;
+	}
+	public void setResponseCounts(Map<String, Integer> responseCounts) {
+		this.responseCounts = responseCounts;
 	}
 	
 	

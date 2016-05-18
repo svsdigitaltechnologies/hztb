@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,7 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 			opinionResponseEntities = opinionResponseRepository.findByResponderUserIdLastUpdatedTime(refreshInput.getUserId(), getDate(refreshInput.getLastUpdatedTime()));
 		}
 		List<OpinionResponseData> opinionResponseDataList =  FunctionUtils.convert(opinionResponseEntities, new OpinionResponseEntityToDataConverter());
+		
 		refreshOutput.setOpinionResponseDataList(opinionResponseDataList);
 		return refreshOutput;
 	}
@@ -61,6 +64,14 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 			opinionEntities = opinionRepository.findByUserIdLastUpdatedTime(refreshInput.getUserId(), getDate(refreshInput.getLastUpdatedTime()));
 		}
 		List<OpinionData> opinionDataList =  FunctionUtils.convert(opinionEntities, new OpinionEntitityToDataConverter());
+		for(OpinionData opinionData : opinionDataList) {
+			List<OpinionResponseEntity> responseEntities =  opinionResponseRepository.findByOpinionId(opinionData.getOpinionId());
+			Map<String, List<OpinionResponseEntity>> responseEntitiesMap = 
+					responseEntities.stream().collect(Collectors.groupingBy(OpinionResponseEntity::getOpinionResponseType));
+			for(String key : responseEntitiesMap.keySet()) {
+				opinionData.getResponseCounts().put(key, responseEntitiesMap.get(key).size());
+			}
+		}
 		refreshOutput.setOpinionDataList(opinionDataList);
 		return refreshOutput;
 	}
