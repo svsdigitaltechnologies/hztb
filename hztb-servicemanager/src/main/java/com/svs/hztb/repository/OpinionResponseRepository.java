@@ -14,4 +14,6 @@ public interface OpinionResponseRepository extends CrudRepository<OpinionRespons
 	List<OpinionResponseEntity> findByResponderUserIdLastUpdatedTime(@Param("responderUserId") int responderUserId, @Param("responseTime") Date responseTime);		
 
 	List<OpinionResponseEntity> findByResponderUserId(int userId);	
+	List<OpinionResponseEntity> findByOpinionId(int opinionId);	
+
 }
