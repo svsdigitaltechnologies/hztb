@@ -5,7 +5,8 @@ import com.svs.hztb.api.sm.model.refresh.RefreshOutput;
 
 public interface RefreshDataService {
 
-	RefreshOutput getResponses(RefreshInput refreshInput);
+	RefreshOutput getResponsesByUser(RefreshInput refreshInput);
+	RefreshOutput getResponsesByOpinion(RefreshInput refreshInput);
 	RefreshOutput getOpinions(RefreshInput refreshInput);
 
 }
