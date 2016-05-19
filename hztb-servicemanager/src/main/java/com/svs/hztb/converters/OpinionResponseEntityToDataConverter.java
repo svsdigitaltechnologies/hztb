@@ -12,8 +12,9 @@ Function<OpinionResponseEntity, OpinionResponseData>{
 		OpinionResponseData opinionResponseData = new OpinionResponseData();
 		opinionResponseData.setOpinionId(opinionResponseEntity.getOpinionId());
 		opinionResponseData.setResponseType(opinionResponseEntity.getOpinionResponseType());
-		opinionResponseData.setResponseTime(opinionResponseEntity.getResponseTime());
+		//opinionResponseData.setResponseTime(opinionResponseEntity.getResponseTime());
 		opinionResponseData.setResponseText(opinionResponseEntity.getResponseTxt());
+		opinionResponseData.setResponderUserId(opinionResponseEntity.getResponderUserId());
 		return opinionResponseData;
 	}
 }

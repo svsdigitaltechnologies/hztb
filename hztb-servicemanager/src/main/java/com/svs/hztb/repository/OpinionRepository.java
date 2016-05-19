@@ -13,6 +13,8 @@ public interface OpinionRepository extends CrudRepository<OpinionEntity, Integer
 	@Query("SELECT o FROM OpinionEntity o WHERE o.requestedTime >= :opinionRequestTime and o.userId = :userId")
 	List<OpinionEntity> findByUserIdLastUpdatedTime(@Param("userId") int userId, @Param("opinionRequestTime") Date requestedTime);		
 
-	List<OpinionEntity> findByUserId(int userId);		
+	List<OpinionEntity> findByUserId(int userId);	
+	OpinionEntity findByOpinionId(int opinionId);		
+
 
 }
