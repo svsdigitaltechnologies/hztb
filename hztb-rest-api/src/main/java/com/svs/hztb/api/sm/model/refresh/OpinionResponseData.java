@@ -6,7 +6,8 @@ public class OpinionResponseData {
 	private int opinionId;
 	private String responseText;
 	private String responseType;
-	private Date responseTime;
+	//private Date responseTime;
+	private int responderUserId;
 	public int getOpinionId() {
 		return opinionId;
 	}
@@ -25,12 +26,19 @@ public class OpinionResponseData {
 	public void setResponseType(String responseType) {
 		this.responseType = responseType;
 	}
-	public Date getResponseTime() {
-		return responseTime;
+//	public Date getResponseTime() {
+//		return responseTime;
+//	}
+//	public void setResponseTime(Date responseTime) {
+//		this.responseTime = responseTime;
+//	}
+	public int getResponderUserId() {
+		return responderUserId;
 	}
-	public void setResponseTime(Date responseTime) {
-		this.responseTime = responseTime;
+	public void setResponderUserId(int responderUserId) {
+		this.responderUserId = responderUserId;
 	}
+	
 	
 	
 	
