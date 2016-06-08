@@ -1,5 +1,7 @@
 package com.svs.hztb.sm.user.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.user.UserProfileRequest;
+import com.svs.hztb.api.sm.model.user.UserProfileRequests;
 import com.svs.hztb.api.sm.model.user.UserProfileResponse;
+import com.svs.hztb.api.sm.model.user.UserProfileResponses;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
@@ -51,6 +55,19 @@ public class UserController {
 	private ResponseEntity<UserProfileResponse> buildUpdateUserProfileResponse(
 			UserProfileResponse userProfileResponse) {
 		return ResponseEntity.status(HttpStatus.SC_OK).body(userProfileResponse);
+	}
+
+	@RequestMapping(value = "/registeredUsers", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<UserProfileResponses> registeredUsers(
+			@RequestBody @Valid UserProfileRequests userProfileRequests) {
+		UserProfileResponses userProfileResponses = userDataService.registeredUsers(userProfileRequests);
+		return buildRegisteredUsersResponse(userProfileResponses);
+	}
+
+	private ResponseEntity<UserProfileResponses> buildRegisteredUsersResponse(
+			UserProfileResponses userProfileResponses) {
+		return ResponseEntity.status(HttpStatus.SC_OK).body(userProfileResponses);
 	}
 
 }

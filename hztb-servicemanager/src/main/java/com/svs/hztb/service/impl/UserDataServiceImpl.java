@@ -1,5 +1,7 @@
 package com.svs.hztb.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import com.svs.hztb.api.sm.model.ping.PingResponse;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
 import com.svs.hztb.api.sm.model.user.UserProfileRequest;
+import com.svs.hztb.api.sm.model.user.UserProfileRequests;
 import com.svs.hztb.api.sm.model.user.UserProfileResponse;
+import com.svs.hztb.api.sm.model.user.UserProfileResponses;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
 import com.svs.hztb.aws.client.AWSClientProcessor;
@@ -47,13 +51,13 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Autowired
 	private UserAdapter userAdapter;
- 
+
 	@Autowired
 	private StepDefinitionFactory stepDefinitionFactory;
-	
+
 	@Autowired
 	private GCMService gcmService;
-	
+
 	@Autowired
 	private AWSClientProcessor awsClientProcessor;
 
@@ -69,7 +73,6 @@ public class UserDataServiceImpl implements UserDataService {
 			user.setOtpCreationDateTime(utcDateTime);
 			user.setInvalidOtpCount(ZERO);
 
-
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User findUser = userAdapter.findUser(dataServiceRequest);
 
@@ -80,21 +83,23 @@ public class UserDataServiceImpl implements UserDataService {
 			} else {
 				user = userAdapter.createUser(dataServiceRequest);
 			}
-			
-			if(user.getMobileNumber().startsWith("1")) {
-				FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
+
+			if (user.getMobileNumber().startsWith("1")) {
+				FlowContext flowContext = new FlowContext(
+						PlatformThreadLocalDataFactory.getInstance().getRequestData());
 				flowContext.setModelElement(user);
-				
+
 				StepDefinition stepDefinition = stepDefinitionFactory
 						.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL);
 				stepDefinition.execute(flowContext);
 
 				ClickatellResponse clickatellResponse = flowContext.getModelElement(ClickatellResponse.class);
-				LOGGER.debug("Clickatell Response {} ", clickatellResponse.getData().getMessage().get(0).getApiMessageId());
+				LOGGER.debug("Clickatell Response {} ",
+						clickatellResponse.getData().getMessage().get(0).getApiMessageId());
 			}
-			
+
 			registrationResponse = populateRegistrationUserResponse(user);
-		} catch (DataServiceException dataServiceException) { 
+		} catch (DataServiceException dataServiceException) {
 			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
 		} catch (BusinessException businessException) {
@@ -142,7 +147,7 @@ public class UserDataServiceImpl implements UserDataService {
 	public ValidateOTPResponse validateOTP(ValidateOTPRequest validateOTPRequest) {
 		ValidateOTPResponse validateOTPResponse = null;
 		Boolean isOTPValiationSuccesful = false;
-		
+
 		try {
 			User user = new User(validateOTPRequest);
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
@@ -153,14 +158,15 @@ public class UserDataServiceImpl implements UserDataService {
 			if (isOTPValidationAllowed) {
 				if (validateOTPRequest.getOtpCode().equals(userFromDB.getOtpCode())) {
 					dataServiceRequest.getPayload().setUserId(userFromDB.getUserId());
-					
-					//updating IMEI, device registration id
+
+					// updating IMEI, device registration id
 					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
-					
-					gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), userFromDB);
+
+					gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
+							userFromDB);
 					isOTPValiationSuccesful = true;
 				} else {
-					//OTP incorrect scenario
+					// OTP incorrect scenario
 					User updateUser = new User();
 					updateUser.setUserId(userFromDB.getUserId());
 					Integer invalidOtpEntries = Integer.parseInt(userFromDB.getInvalidOtpCount());
@@ -239,24 +245,17 @@ public class UserDataServiceImpl implements UserDataService {
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<User>(user);
 			User findUser = userAdapter.getUserDetails(dataServiceRequest);
 			user.setUserId(findUser.getUserId());
-			//skairamkonda remove this code later
-			/*File fnew=new File("D:/Users/skairamk/personal/photos/family.jpg");
-			BufferedImage originalImage=ImageIO.read(fnew);
-			ByteArrayOutputStream baos=new ByteArrayOutputStream();
-			ImageIO.write(originalImage, "jpg", baos );
-			byte[] imageInByte=baos.toByteArray();*/
-			
 			user.setProfilePic(userProfileRequest.getProfilePic());
-			//skairamkonda use optional here
-			
-			if(null != user.getProfilePic())
-				user.setProfilePicUrl(awsClientProcessor.execute(user.getProfilePic(), NotificationType.PROFILE.getNotificationId(), user.getUserId()));
-			
+			// skairamkonda use optional here
+
+			if (null != user.getProfilePic())
+				user.setProfilePicUrl(awsClientProcessor.execute(user.getProfilePic(),
+						NotificationType.PROFILE.getNotificationId(), user.getUserId()));
+
 			dataServiceRequest = new DataServiceRequest<User>(user);
 			user = userAdapter.updateUserDetails(dataServiceRequest);
 			userProfileResponse = populateUserResponse(user);
-			
-			
+
 		} catch (DataServiceException dataServiceException) {
 			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
@@ -266,6 +265,44 @@ public class UserDataServiceImpl implements UserDataService {
 			throw new SystemException(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
+		return userProfileResponse;
+	}
+
+	@Override
+	public UserProfileResponses registeredUsers(UserProfileRequests userProfileRequests) {
+		List<User> usersList = null;
+		UserProfileResponses userProfileResponses = null;
+
+		try {
+			List<String> mobileNumbers = new ArrayList<>();
+			userProfileRequests.getUserProfileRequests().stream().forEach(p -> mobileNumbers.add(p.getMobileNumber()));
+
+			DataServiceRequest<List<String>> dataServiceRequest = new DataServiceRequest<List<String>>(mobileNumbers);
+			usersList = userAdapter.registeredUsers(dataServiceRequest);
+			userProfileResponses = populateUserResponses(usersList);
+
+		} catch (DataServiceException dataServiceException) {
+			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+					dataServiceException.getStatusCode());
+		} catch (BusinessException businessException) {
+			throw businessException;
+		} catch (Exception exception) {
+			throw new SystemException(exception.getMessage(), exception,
+					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
+		}
+		return userProfileResponses;
+	}
+
+	private UserProfileResponses populateUserResponses(List<User> usersList) {
+		UserProfileResponses userProfileResponses = new UserProfileResponses();
+		usersList.stream().forEach(p -> userProfileResponses.addUserProfileResponse(populateRegisteredUserResponse(p)));
+		return userProfileResponses;
+	}
+	
+	private UserProfileResponse populateRegisteredUserResponse(User user) {
+		UserProfileResponse userProfileResponse = new UserProfileResponse();
+		Optional.ofNullable(user.getMobileNumber()).ifPresent(p -> userProfileResponse.setMobileNumber(p));
+		Optional.ofNullable(user.getProfilePicUrl()).ifPresent(p -> userProfileResponse.setProfilePictureURL(p));
 		return userProfileResponse;
 	}
 

@@ -1,11 +1,15 @@
 package com.svs.hztb.adapter.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.svs.hztb.adapter.UserAdapter;
+import com.svs.hztb.api.sm.model.user.UserProfileRequest;
+import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.business.User;
@@ -167,7 +171,7 @@ public class UserAdapterImpl implements UserAdapter {
 					.ifPresent(p -> userEntity.setOtpCreateTime(p));
 			Optional.ofNullable(dataServiceRequest.getPayload().getInvalidOtpCount())
 					.ifPresent(p -> userEntity.setInvalidOtpRetries(p));
-			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicUrl()).ifPresent(p -> userEntity.setGcmRegId(p));
+			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicUrl()).ifPresent(p -> userEntity.setPicUrl(p));
 			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceId()).ifPresent(p -> userEntity.setDeviceId(p));
 
 			userRepository.save(userEntity);
@@ -180,4 +184,25 @@ public class UserAdapterImpl implements UserAdapter {
 
 	}
 
+	@Override
+	public List<User> registeredUsers(
+			DataServiceRequest<List<String>> dataServiceRequest) throws DataServiceException {
+		
+		List<UserEntity> userEntities;
+		try {
+			userEntities = userRepository.findByMobileNumberIn(dataServiceRequest.getPayload());
+			
+		} catch (Exception exception) {
+			LOGGER.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
+					exception);
+			throw new DataServiceException(exception.getMessage(), "1");
+		}
+		return populateUserResponses(userEntities);
+	}
+
+	private List<User> populateUserResponses(List<UserEntity> userEntities) {
+		List<User> usersList = new ArrayList<>();
+		userEntities.stream().forEach(p -> usersList.add(populateUserResponse(p)));
+		return usersList;
+	}
 }

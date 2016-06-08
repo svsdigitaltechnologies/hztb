@@ -1,5 +1,8 @@
 package com.svs.hztb.api.sm.model.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
 	private String mobileNumber;
 	private String name;

@@ -25,8 +25,8 @@ public class ValidateOTPRequest {
 	@NotNull
 	private String deviceRegId;
 
-	@NotNull
-	@Size(min = 1, max = 64)
+	//@NotNull
+	//@Size(min = 1, max = 64)
 	@Pattern(regexp = HZTBRegularExpressions.ALPHA_NUMERIC_REGEX)
 	private String deviceId;
 	

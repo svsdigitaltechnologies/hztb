@@ -50,6 +50,10 @@ public class UserEntity implements Serializable {
 
 	@Column(name = "otp_create_time")
 	private String otpCreateTime;
+	
+	@Column(name = "pic_url")
+	private String picUrl;
+	
 
 	// bi-directional many-to-many association to Group
 	@ManyToMany
@@ -65,6 +69,16 @@ public class UserEntity implements Serializable {
 
 	public UserEntity() {
 	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+
 
 	public int getUserId() {
 		return this.userId;
