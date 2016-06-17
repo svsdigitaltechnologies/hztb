@@ -8,5 +8,7 @@ public interface RefreshDataService {
 	RefreshOutput getResponsesByUser(RefreshInput refreshInput);
 	RefreshOutput getResponsesByOpinion(RefreshInput refreshInput);
 	RefreshOutput getOpinions(RefreshInput refreshInput);
+	RefreshOutput getAllResponsesCounts(RefreshInput refreshInput);
+	RefreshOutput getOpinionsGivenPending(RefreshInput refreshInput);
 
 }
