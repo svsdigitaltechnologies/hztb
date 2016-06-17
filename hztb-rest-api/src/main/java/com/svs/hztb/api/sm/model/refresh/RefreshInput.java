@@ -2,6 +2,7 @@ package com.svs.hztb.api.sm.model.refresh;
 
 public class RefreshInput {
 	private int userId;
+	private int responderUserId;
 	private int opinionId;
 	private String lastUpdatedTime;
 	public int getUserId() {
@@ -21,6 +22,12 @@ public class RefreshInput {
 	}
 	public void setOpinionId(int opinionId) {
 		this.opinionId = opinionId;
+	}
+	public int getResponderUserId() {
+		return responderUserId;
+	}
+	public void setResponderUserId(int responderUserId) {
+		this.responderUserId = responderUserId;
 	}
 	
 	

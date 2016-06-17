@@ -83,4 +83,45 @@ public class RefreshController {
 		
 		return response;
 	}
+	
+	/**
+	 * This method returns reponses given by specific user
+	 * @param RefreshInput
+	 * @return ResponseBody
+	 */
+	@RequestMapping(value = "/allResponsesCounts", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<String> allResponsesCounts(
+			@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response = null;
+		RefreshOutput refreshOutput = refreshDataService.getAllResponsesCounts(refreshInput);
+		if(refreshOutput.isError()) {
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
+		} else {
+			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionCountsList()));
+		}
+		
+		return response;
+	}
+	
+	/**
+	 * This method returns reponses given by specific user
+	 * @param RefreshInput
+	 * @return ResponseBody
+	 */
+	@RequestMapping(value = "/givenPendingInfo", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<String> getOpinionsGivenPending(
+			@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response = null;
+		RefreshOutput refreshOutput = refreshDataService.getOpinionsGivenPending(refreshInput);
+		if(refreshOutput.isError()) {
+			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
+		} else {
+			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getResponseGivenPendingInfo()));
+		}
+		
+		return response;
+	}
+	
 	}
