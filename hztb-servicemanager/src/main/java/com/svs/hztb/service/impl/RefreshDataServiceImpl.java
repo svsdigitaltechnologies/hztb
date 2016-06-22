@@ -109,6 +109,10 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 		}
 		List<OpinionData> opinionDataList =  FunctionUtils.convert(opinionEntities, new OpinionEntitityToDataConverter());
 		for(OpinionData opinionData : opinionDataList) {
+			ProductEntity productEntity = productRepository.findOne(opinionData.getProductName());
+			Product product =  new ProductEntityToDataConverter().apply(productEntity);
+			
+			opinionData.setProduct(product);
 			List<OpinionResponseEntity> responseEntities =  opinionResponseRepository.findByOpinionId(opinionData.getOpinionId());
 			Map<String, List<OpinionResponseEntity>> responseEntitiesMap = 
 					responseEntities.stream().collect(Collectors.groupingBy(OpinionResponseEntity::getOpinionResponseType));
