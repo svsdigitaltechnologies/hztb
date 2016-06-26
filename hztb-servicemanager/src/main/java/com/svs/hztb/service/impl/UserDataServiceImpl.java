@@ -234,6 +234,7 @@ public class UserDataServiceImpl implements UserDataService {
 		Optional.ofNullable(user.getOtpCode()).ifPresent(p -> userProfileResponse.setOtpCode(p));
 		Optional.ofNullable(user.getOtpCreationDateTime())
 				.ifPresent(p -> userProfileResponse.setOtpCreationDateTime(p));
+		Optional.ofNullable(user.getProfilePicUrl()).ifPresent(p -> userProfileResponse.setProfilePictureURL(p));
 		return userProfileResponse;
 	}
 
@@ -295,7 +296,7 @@ public class UserDataServiceImpl implements UserDataService {
 
 	private UserProfileResponses populateUserResponses(List<User> usersList) {
 		UserProfileResponses userProfileResponses = new UserProfileResponses();
-		usersList.stream().forEach(p -> userProfileResponses.addUserProfileResponse(populateRegisteredUserResponse(p)));
+		usersList.stream().forEach(p -> userProfileResponses.addUserProfileResponse(populateUserResponse(p)));
 		return userProfileResponses;
 	}
 	
