@@ -11,11 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.svs.hztb.api.sm.model.notification.NotificationRequest;
-import com.svs.hztb.api.sm.model.notification.RequestOpinionNotification;
-import com.svs.hztb.api.sm.model.notification.WelcomeNotificationRequest;
 import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
-import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.product.Product;
 import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.exception.SystemException;
@@ -35,7 +32,6 @@ import com.svs.hztb.repository.OpinionRepository;
 import com.svs.hztb.repository.ProductRepository;
 import com.svs.hztb.repository.UserRepository;
 import com.svs.hztb.service.GCMService;
-import com.svs.hztb.service.UserDataService;
 import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 
 @Service

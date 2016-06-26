@@ -146,6 +146,7 @@ public class UserAdapterImpl implements UserAdapter {
 		Optional.ofNullable(userEntity.getOtpCreateTime()).ifPresent(p -> user.setOtpCreationDateTime(p));
 		Optional.ofNullable(userEntity.getUserId()).ifPresent(p -> user.setUserId(p.toString()));
 		Optional.ofNullable(userEntity.getInvalidOtpRetries()).ifPresent(p -> user.setInvalidOtpCount(p));
+		Optional.ofNullable(userEntity.getPicUrl()).ifPresent(p -> user.setProfilePicUrl(p));
 		return user;
 	}
 
