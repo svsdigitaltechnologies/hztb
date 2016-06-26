@@ -19,4 +19,5 @@ public interface UserAdapter {
 	User updateUserDetails(DataServiceRequest<User> dataServiceRequest) throws DataServiceException;
 
 	List<User> registeredUsers(DataServiceRequest<List<String>> mobileNumbers) throws DataServiceException;
+	
 }
