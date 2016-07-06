@@ -12,6 +12,15 @@ public class UserProfileResponse {
 	private String deviceRegId;
 	private String emailAddress;
 	private String profilePictureURL;
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	private String userId;
 	
 	public String getProfilePictureURL() {
 		return profilePictureURL;

@@ -31,7 +31,6 @@ allprojects {
 	apply plugin: "eclipse"
 	apply plugin: "idea"
 	apply plugin: "maven"
-	apply plugin: "sonar-runner"
 	
 	project.group = "com.svs.hztb"
 	
