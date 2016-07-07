@@ -31,12 +31,16 @@ apply plugin: "org.sonarqube"
 
 ext {
 	hztbVersion="1.0.0"
+	jacocoVersion = "0.7.6.201602180812"
+	
 }
+
 
 allprojects {
 	apply plugin: "eclipse"
 	apply plugin: "idea"
 	apply plugin: "maven"
+	apply plugin: 'jacoco'
 	
 	
 	project.group = "com.svs.hztb"
