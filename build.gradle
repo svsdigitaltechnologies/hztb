@@ -25,6 +25,8 @@ buildscript {
 
 ext {
 	hztbVersion="1.0.0"
+	jacocoVersion = "0.7.6.201602180812"
+	
 }
 
 allprojects {
@@ -58,6 +60,12 @@ subprojects {
   }
 
   dependencies {
+  		compile group: 'junit', name: 'junit', version: '4.4'
+  		compile("org.mockito:mockito-all:1.10.19")
+		compile group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.6.4'
+  		
+  		  		
+  
      testCompile "junit:junit:4+"
   }
 }
