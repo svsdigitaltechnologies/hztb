@@ -14,12 +14,16 @@ import com.svs.hztb.api.sm.model.group.GroupInput;
 import com.svs.hztb.api.sm.model.group.GroupOutput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.api.sm.model.opinion.Status;
+import com.svs.hztb.api.sm.model.user.UserData;
 import com.svs.hztb.converters.GroupInputToEntityConverter;
+import com.svs.hztb.converters.UserEntityToDataConverter;
 import com.svs.hztb.entity.GroupEntity;
+import com.svs.hztb.entity.UserEntity;
 import com.svs.hztb.entity.UserGroupEntity;
 import com.svs.hztb.entity.UserGroupPK;
 import com.svs.hztb.repository.GroupRepository;
 import com.svs.hztb.repository.UserGroupEntityRepository;
+import com.svs.hztb.repository.UserRepository;
 import com.svs.hztb.service.GroupDataService;
 import com.svs.hztb.sm.common.util.FunctionUtils;
 
@@ -32,6 +36,10 @@ public class GroupDataServiceImpl implements GroupDataService {
 	
 	@Autowired
 	UserGroupEntityRepository userGroupEntityRepository;
+	
+	@Autowired
+	UserRepository userRepository;
+	
 	@Override
 	public GroupOutput removeGroup(GroupInput groupInput) {
 		
@@ -53,6 +61,7 @@ public class GroupDataServiceImpl implements GroupDataService {
 			//Create group
 			GroupEntity groupEntity = FunctionUtils.convert(groupInput, new GroupInputToEntityConverter());
 			groupRepository.saveAndFlush(groupEntity);
+		//	groupRepository.findByGroupName(groupEntity.getGroupName());
 		
 			//Add group members
 			List<UserGroupEntity> userGroupList = createUserGroup(groupInput.getAddMembers(), groupEntity);
@@ -90,7 +99,9 @@ public class GroupDataServiceImpl implements GroupDataService {
 			groupDetail.setGroupName(groupEntity.getGroupName());
 			List<UserGroupEntity> userGroupList = userGroupEntityRepository.findByGroupId(groupEntity.getGroupId());
 			for(UserGroupEntity userGroupEntity :userGroupList) {
-				groupDetail.getGroupMembers().add(userGroupEntity.getId().getUserId());
+				UserEntity userEntity = userRepository.findOne(userGroupEntity.getId().getUserId());
+				UserData userData = FunctionUtils.convert(userEntity, new UserEntityToDataConverter());
+				groupDetail.getGroupMembers().add(userData);
 			}
 			groupDetailList.add(groupDetail);
 		}
