@@ -127,6 +127,37 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 	public RefreshOutput getAllResponsesCounts(RefreshInput refreshInput) {
 		//Get all opinions of the users//
 		RefreshOutput refreshOutput = new RefreshOutput();
+		Map<Integer, OpinionCountData> givenCounts = new HashMap<Integer, OpinionCountData>();
+		
+		List<UserGroupEntity> userGroupList = userGroupRepository.findByUserId(refreshInput.getUserId());
+		for(UserGroupEntity userGroupEntity:userGroupList) {
+			List<OpinionEntity> opinionEntities = opinionRepository.findByGroupId(userGroupEntity.getId().getGroupId()); 
+			for(OpinionEntity opinionEntity: opinionEntities) {
+				List<OpinionResponseEntity> opinionResposeList = opinionResponseRepository.findByOpinionIdResponderUserId
+						(opinionEntity.getOpinionId(), refreshInput.getUserId());
+		
+				OpinionCountData opinionCountData = givenCounts.get(opinionEntity.getUserId());
+				if(null == opinionCountData) {					
+					opinionCountData = new OpinionCountData();
+					opinionCountData.setUserId(opinionEntity.getUserId());
+					
+				}
+				if(opinionResposeList.size() > 0) {
+					opinionCountData.setGivenCount(opinionCountData.getGivenCount() + 1);
+				} else {
+					opinionCountData.setPendingCount(opinionCountData.getPendingCount() + 1);
+				}
+				givenCounts.put(opinionEntity.getUserId(), opinionCountData);   
+			}
+	    }						
+		refreshOutput.setOpinionCountsList(givenCounts.values()); 
+		return refreshOutput;			
+	}
+
+	
+	public RefreshOutput getAllResponsesCounts1(RefreshInput refreshInput) {
+		//Get all opinions of the users//
+		RefreshOutput refreshOutput = new RefreshOutput();
 		
 		List<OpinionEntity> opinionEntities = opinionRepository.findByUserId(refreshInput.getUserId());
 		Map<Integer, OpinionCountData> givenCounts = new HashMap<Integer, OpinionCountData>();

@@ -12,4 +12,6 @@ public interface UserGroupEntityRepository extends CrudRepository<UserGroupEntit
 	@Query("SELECT u FROM UserGroupEntity u WHERE u.id.groupId = :groupId")
 	List<UserGroupEntity> findByGroupId(@Param("groupId") int groupId);
 
+	@Query("SELECT u FROM UserGroupEntity u WHERE u.id.userId = :userId")
+	List<UserGroupEntity> findByUserId(@Param("userId") int userId);
 }
