@@ -14,7 +14,9 @@ public interface OpinionRepository extends CrudRepository<OpinionEntity, Integer
 	List<OpinionEntity> findByUserIdLastUpdatedTime(@Param("userId") int userId, @Param("opinionRequestTime") Date requestedTime);		
 
 	List<OpinionEntity> findByUserId(int userId);	
-	OpinionEntity findByOpinionId(int opinionId);		
+	OpinionEntity findByOpinionId(int opinionId);	
+	List<OpinionEntity> findByGroupId(int groupId);	
+	
 
 
 }
