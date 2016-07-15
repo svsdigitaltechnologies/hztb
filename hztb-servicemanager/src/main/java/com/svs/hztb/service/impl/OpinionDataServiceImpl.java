@@ -91,7 +91,6 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		}
 		gcmService.sendRequestOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), requestedUserIds, opinionEntity.getUserId());
 		return buildRequestOpinionOutput();
-		
 	}
 	
 	private OpinionOutput buildRequestOpinionOutput() {
