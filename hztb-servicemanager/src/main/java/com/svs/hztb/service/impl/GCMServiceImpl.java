@@ -107,20 +107,16 @@ public class GCMServiceImpl implements GCMService {
 
 	@Override
 	@Async
-	public void sendRequestOpinionNotification(RequestData requestData, RequestOpinionInput requestOpinionInput) {
+	public void sendRequestOpinionNotification(RequestData requestData, List<Integer> toUserIds, Integer fromUserId) {
 
 		LOGGER.debug("Async Call {}", "sendRequestOpinionNotification");
 
 		NotificationRequest notificationRequest = new NotificationRequest();
 		
-		ProductEntity productEntity = productRepository.findOne(requestOpinionInput.getProduct().getName());
-		List<UserEntity> userEntities = (List<UserEntity>) userRepository.findAll(requestOpinionInput.getRequestedUserIds());
-		UserEntity requestedUserEntity = userRepository.findOne(requestOpinionInput.getRequesterUserId());
+		List<UserEntity> userEntities = (List<UserEntity>) userRepository.findAll(toUserIds);
+		UserEntity requestedUserEntity = userRepository.findOne(fromUserId);
 		
 		userEntities.stream().forEach(p -> notificationRequest.addDeviceRegId(p.getGcmRegId()));
-		Product product = new Product();
-		product.setName(productEntity.getName());
-		notificationRequest.setProduct(product);
 		
 		notificationRequest.setTitle(title);
 		notificationRequest.setMessage("HowzThisBuddy " + opinionRequestMessage);

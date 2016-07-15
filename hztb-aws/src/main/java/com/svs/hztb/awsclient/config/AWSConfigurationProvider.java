@@ -6,6 +6,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 
@@ -15,16 +16,16 @@ public class AWSConfigurationProvider {
 	private AWSCredentials awsCredentials;
 	private AmazonS3 amazonS3Client;
 
-	@Value("${aws.accesskey}")
+/*	@Value("${aws.accesskey}")
 	private String awsAccessKeyId;
 
 	@Value("${aws.secretkey}")
-	private String awsSecretKey;
+	private String awsSecretKey;*/
 
 	@Autowired
 	public AWSConfigurationProvider(Environment env) {
 		this.env = env;
-		awsCredentials = new AWSCredentials() {
+		/*awsCredentials = new AWSCredentials() {
 
 			@Override
 			public String getAWSSecretKey() {
@@ -35,8 +36,8 @@ public class AWSConfigurationProvider {
 			public String getAWSAccessKeyId() {
 				return awsAccessKeyId;
 			}
-		};
-		amazonS3Client = new AmazonS3Client(awsCredentials);
+		};*/
+		amazonS3Client = new AmazonS3Client(new InstanceProfileCredentialsProvider());
 	}
 
 	public AmazonS3 getAmazonS3Client() {

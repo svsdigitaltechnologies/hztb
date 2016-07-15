@@ -14,10 +14,14 @@ import com.svs.hztb.api.sm.model.opinion.OpinionResponseOutput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionOutput;
 import com.svs.hztb.api.sm.model.product.Product;
+import com.svs.hztb.api.sm.model.user.UserData;
+import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
+import com.svs.hztb.converters.UserEntityToDataConverter;
 import com.svs.hztb.entity.GroupEntity;
 import com.svs.hztb.entity.OpinionEntity;
 import com.svs.hztb.entity.OpinionResponseEntity;
 import com.svs.hztb.entity.ProductEntity;
+import com.svs.hztb.entity.UserEntity;
 import com.svs.hztb.entity.UserGroupEntity;
 import com.svs.hztb.entity.UserGroupPK;
 import com.svs.hztb.repository.GroupRepository;
@@ -25,7 +29,9 @@ import com.svs.hztb.repository.OpinionRepository;
 import com.svs.hztb.repository.OpinionResponseRepository;
 import com.svs.hztb.repository.ProductRepository;
 import com.svs.hztb.repository.UserGroupEntityRepository;
+import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.OpinionDataService;
+import com.svs.hztb.sm.common.util.FunctionUtils;
 
 @Service
 public class OpinionDataServiceImpl implements OpinionDataService {
@@ -44,6 +50,8 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 	@Autowired
 	ProductRepository productRepository;
 	
+	@Autowired
+	GCMService gcmService;
 
 	@Override
 	public OpinionOutput requestOpinion(RequestOpinionInput requestOpinionRequest) {
@@ -76,6 +84,13 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		
 		opinionRepository.save(opinionEntity);
 		
+		List<Integer> requestedUserIds = new ArrayList<>();
+		List<UserGroupEntity> userEntitiesList = userGroupEntityRepository.findByGroupId(opinionEntity.getGroupId());
+		for(UserGroupEntity userGroupEntity :userEntitiesList) {
+			requestedUserIds.add(userGroupEntity.getId().getUserId());
+		}
+		
+		gcmService.sendRequestOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), requestedUserIds, opinionEntity.getUserId());
 		return buildRequestOpinionOutput();
 	}
 	
@@ -92,6 +107,7 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 	public OpinionOutput saveResponse(OpinionResponseInput opinionResponseInput) {
 		OpinionResponseEntity opinionResponseEntity = createOpinionResponseEntity(opinionResponseInput);
 		opinionResponseRepository.save(opinionResponseEntity);
+		gcmService.sendResponseOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), opinionResponseInput);
 		
 		return buildOpinionOutputForSaveResponse();
 		

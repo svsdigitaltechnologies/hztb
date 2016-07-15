@@ -48,14 +48,14 @@ public class PingController {
 		return buildPingResponse(pingResponse);
 	}
 
-	@RequestMapping(value = "/sendRequestOpinionNotification", consumes = { "application/json" }, produces = {
+/*	@RequestMapping(value = "/sendRequestOpinionNotification", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	public @ResponseBody ResponseEntity<PingResponse> sendRequestOpinionNotification(
 			@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
 		gcmService.sendRequestOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
 				requestOpinionInput);
 		return buildPingResponse(null);
-	}
+	}*/
 
 	@RequestMapping(value = "/sendResponseOpinionNotification", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
