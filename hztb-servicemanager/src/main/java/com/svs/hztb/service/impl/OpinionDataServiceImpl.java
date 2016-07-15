@@ -110,9 +110,6 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		gcmService.sendResponseOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), opinionResponseInput);
 		
 		return buildOpinionOutputForSaveResponse();
-		
-		
-	
 	}
 	
 	private OpinionOutput buildOpinionOutputForSaveResponse() {
