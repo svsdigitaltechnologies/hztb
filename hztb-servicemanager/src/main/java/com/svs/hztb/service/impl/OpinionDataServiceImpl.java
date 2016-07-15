@@ -89,7 +89,6 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		for(UserGroupEntity userGroupEntity :userEntitiesList) {
 			requestedUserIds.add(userGroupEntity.getId().getUserId());
 		}
-		
 		gcmService.sendRequestOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), requestedUserIds, opinionEntity.getUserId());
 		return buildRequestOpinionOutput();
 	}
