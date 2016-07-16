@@ -31,4 +31,5 @@ public class GroupOutput extends BasicOutput {
 			this.groupDetailList = groupDetailList;
 		}
 		
+		
 }
