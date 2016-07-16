@@ -81,7 +81,6 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 			List<UserGroupEntity> userGroupList = combineGroups(requestOpinionRequest, group);
 			userGroupEntityRepository.save(userGroupList);
 		}
-		
 		opinionRepository.save(opinionEntity);
 		
 		List<Integer> requestedUserIds = new ArrayList<>();
