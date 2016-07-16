@@ -13,8 +13,6 @@ public class GroupOutput extends BasicOutput {
 		private List<GroupDetail> groupDetailList = new ArrayList<GroupDetail>();
 		
 		public Status getStatus() {
-			int i =0;
-			
 			return status;
 		}
 		public void setStatus(Status status) {
