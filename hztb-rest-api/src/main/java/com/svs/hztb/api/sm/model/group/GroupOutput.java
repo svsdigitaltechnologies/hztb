@@ -29,7 +29,7 @@ public class GroupOutput extends BasicOutput {
 		}
 		public void setGroupDetailList(List<GroupDetail> groupDetailList) {
 			this.groupDetailList = groupDetailList;
+
 		}
-		
 		
 }
