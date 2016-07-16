@@ -17,6 +17,7 @@ import com.svs.hztb.api.sm.model.group.GroupInput;
 import com.svs.hztb.api.sm.model.group.GroupOutput;
 import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
+import com.svs.hztb.api.sm.model.opinion.Status;
 import com.svs.hztb.service.GroupDataService;
 import com.svs.hztb.service.OpinionDataService;
 
@@ -39,7 +40,8 @@ public class GroupController {
 			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
 					.body(toJson(groupOutput.getErrorOutput()));
 		} else {
-			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getStatus()));
+			String status = "SUCCESS";
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput));
 		}
 
 		return response;
@@ -54,7 +56,7 @@ public class GroupController {
 			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
 					.body(toJson(groupOutput.getErrorOutput()));
 		} else {
-			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getStatus()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput));
 		}
 
 		return response;
