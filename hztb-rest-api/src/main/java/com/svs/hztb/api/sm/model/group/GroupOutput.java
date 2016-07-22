@@ -11,8 +11,9 @@ public class GroupOutput extends BasicOutput {
 	    private Status status;
 		private ErrorOutput errorOutput;
 		private List<GroupDetail> groupDetailList = new ArrayList<GroupDetail>();
-		
 		public Status getStatus() {
+			int i=1;
+			
 			return status;
 		}
 		public void setStatus(Status status) {
@@ -28,6 +29,7 @@ public class GroupOutput extends BasicOutput {
 			return groupDetailList;
 		}
 		public void setGroupDetailList(List<GroupDetail> groupDetailList) {
+
 			this.groupDetailList = groupDetailList;
 		}
 }
