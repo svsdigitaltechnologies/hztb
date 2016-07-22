@@ -11,7 +11,6 @@ public class GroupOutput extends BasicOutput {
 	    private Status status;
 		private ErrorOutput errorOutput;
 		private List<GroupDetail> groupDetailList = new ArrayList<GroupDetail>();
-		
 		public Status getStatus() {
 			
 			int i=1;
