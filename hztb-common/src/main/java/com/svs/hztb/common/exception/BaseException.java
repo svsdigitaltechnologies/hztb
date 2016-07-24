@@ -12,13 +12,14 @@ import com.svs.hztb.common.model.StatusCode;
  * <p>
  * Base exception for business and system exceptions
  * </p>
+ * 
  * @author skairamk
  *
  */
 public abstract class BaseException extends RuntimeException {
-	
+
 	private static final long serialVersionUID = -1141502736836346370L;
-	protected final List<Pair<StatusCode, String>> statusCodes = new ArrayList<>();
+	private final List<Pair<StatusCode, String>> statusCodes = new ArrayList<>();
 
 	public BaseException(String message) {
 		super(message);

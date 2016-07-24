@@ -16,37 +16,37 @@ import com.svs.hztb.restfulclient.ClientType;
 import com.svs.hztb.restfulclient.RestfulEndPoint;
 import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 
-public class BusinessException extends BaseException {
+public class BusinessError extends BaseException {
 
 	/**
 	 * 
 	 */
 
-	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(BusinessException.class);
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(BusinessError.class);
 
 	private static final long serialVersionUID = -677418850964124526L;
 
-	public BusinessException(StatusCode statusCode) {
+	public BusinessError(StatusCode statusCode) {
 		super("Business error occured", statusCode);
 	}
 
-	public BusinessException(String message, List<Pair<StatusCode, String>> statusCodes) {
+	public BusinessError(String message, List<Pair<StatusCode, String>> statusCodes) {
 		super(message, statusCodes);
 	}
 
-	public BusinessException(String message, StatusCode statusCode) {
+	public BusinessError(String message, StatusCode statusCode) {
 		super(message, statusCode);
 	}
 
-	public BusinessException(String message, Throwable cause) {
+	public BusinessError(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public BusinessException(String message, Throwable cause, StatusCode statusCode) {
+	public BusinessError(String message, Throwable cause, StatusCode statusCode) {
 		super(message, cause, statusCode);
 	}
 
-	public BusinessException(String message) {
+	public BusinessError(String message) {
 		super(message);
 	}
 
@@ -57,12 +57,12 @@ public class BusinessException extends BaseException {
 			if (result.length() > 0) {
 				result.append(",");
 			}
-			Optional.ofNullable(pair.getRight()).ifPresent(m -> result.append(m));
+			Optional.ofNullable(pair.getRight()).ifPresent(result::append);
 		}
 		return result.toString();
 	}
 
-	public static BusinessException build(ClientType clientType, String message, String errorCode) {
+	public static BusinessError build(ClientType clientType, String message, String errorCode) {
 		RestfulEndpointErrorMapping errorMapping = clientType.getErrorMapping();
 
 		List<Pair<StatusCode, String>> statusCodes = new ArrayList<>();
@@ -75,10 +75,10 @@ public class BusinessException extends BaseException {
 				statusCodes.add(Pair.of(statusCode, message));
 			}
 		}
-		return new BusinessException(listMessages(statusCodes), statusCodes);
+		return new BusinessError(listMessages(statusCodes), statusCodes);
 	}
 
-	public static BusinessException build(RestfulEndPoint endpoint, List<DownstreamError> errors) {
+	public static BusinessError build(RestfulEndPoint endpoint, List<DownstreamError> errors) {
 		RestfulEndpointErrorMapping errorMapping = endpoint.getErrorMapping();
 
 		if (errorMapping != null) {
@@ -86,7 +86,8 @@ public class BusinessException extends BaseException {
 		}
 		List<Pair<StatusCode, String>> statusCodes = new ArrayList<>();
 		for (DownstreamError downstreamError : errors) {
-			LOGGER.debug("Downstream service error, code: {}, message: {}", downstreamError.getCode(), downstreamError.getMessage());
+			LOGGER.debug("Downstream service error, code: {}, message: {}", downstreamError.getCode(),
+					downstreamError.getMessage());
 			if (errorMapping != null) {
 				StatusCode statusCode = errorMapping.getStatusCode(downstreamError.getCode());
 
@@ -97,6 +98,6 @@ public class BusinessException extends BaseException {
 				}
 			}
 		}
-		return new BusinessException(listMessages(statusCodes), statusCodes);
+		return new BusinessError(listMessages(statusCodes), statusCodes);
 	}
 }

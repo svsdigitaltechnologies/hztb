@@ -18,15 +18,19 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 
-public class StringUtil {
+public final class StringUtil {
 
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(StringUtil.class);
 
 	private static final ObjectMapper MAPPER = new ObjectMapper();
+
+	private StringUtil() {
+
+	}
 
 	static {
 		MAPPER.setSerializationInclusion(Include.NON_NULL);
@@ -44,7 +48,7 @@ public class StringUtil {
 				String adjustedSpel = spel.replace("[", "['").replace("]", "']");
 				String replacement = getValueFromContext(adjustedSpel, context);
 				if (replacement == null) {
-					throw new SystemException(String.format("Failed tp convert SPEL paramert %s", spel));
+					throw new SystemError(String.format("Failed tp convert SPEL paramert %s", spel));
 				}
 				result = result.replace("{" + spel + "}", replacement);
 			}

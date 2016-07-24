@@ -18,8 +18,9 @@ public class ResponseHeader extends Header {
 	private List<ErrorStatus> errors;
 
 	public ResponseHeader() {
-		
+		// nothing
 	}
+
 	public ResponseHeader(String requestId, String status) {
 		super(requestId);
 		this.status = status;

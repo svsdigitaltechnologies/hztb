@@ -15,7 +15,7 @@ import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
 import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.api.sm.model.product.Product;
 import com.svs.hztb.common.enums.NotificationType;
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
@@ -99,7 +99,7 @@ public class GCMServiceImpl implements GCMService {
 		try {
 			stepDefinition.execute(flowContext);
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		LOGGER.debug("Async call completed {} ", "sendWelcomeNotification");
@@ -136,7 +136,7 @@ public class GCMServiceImpl implements GCMService {
 		try {
 			stepDefinition.execute(flowContext);
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		LOGGER.debug("Async call completed {} ", "sendRequestOpinionNotification");
@@ -173,7 +173,7 @@ public class GCMServiceImpl implements GCMService {
 		try {
 			stepDefinition.execute(flowContext);
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		LOGGER.debug("Async call completed {} ", "sendResponseOpinionNotification");

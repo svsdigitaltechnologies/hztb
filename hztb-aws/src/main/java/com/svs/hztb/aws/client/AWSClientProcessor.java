@@ -29,7 +29,7 @@ public class AWSClientProcessor {
 	@Value("${aws.s3url}")
 	private String awss3Url;
 
-	private final String SLASH = "/";
+	private static final String SLASH = "/";
 
 	public String execute(byte[] bytes, String type, String name) {
 
@@ -40,14 +40,12 @@ public class AWSClientProcessor {
 
 		String fileName = null;
 
-		switch (type) {
-		case "Profile":
+		if ("Profile".equals(type)) {
 			fileName = profileBucketName + SLASH + name + ".jpg";
-			break;
-		case "Product":
+		} else if ("Product".equals(type)) {
 			fileName = productBucketName + SLASH + name + ".jpg";
-			break;
 		}
+
 		awsConfigurationProvider.getAmazonS3Client().putObject(new PutObjectRequest(hztbBucketName, fileName, bis, omd)
 				.withCannedAcl(CannedAccessControlList.PublicRead));
 

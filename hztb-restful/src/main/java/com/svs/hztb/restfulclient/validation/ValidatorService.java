@@ -9,7 +9,7 @@ import javax.validation.ValidatorFactory;
 
 import org.springframework.stereotype.Component;
 
-import com.svs.hztb.common.exception.JSRConstraintViolationException;
+import com.svs.hztb.common.exception.JSRConstraintViolationError;
 
 @Component
 public class ValidatorService {
@@ -24,7 +24,7 @@ public class ValidatorService {
 	public void validate(ValidationRequest<Object> validationRequest) {
 		Set<ConstraintViolation<Object>> violations = validator.validate(validationRequest.getPayload());
 		if (violations != null && !violations.isEmpty()) {
-			throw new JSRConstraintViolationException(String.format("Validation errors for class: %s",
+			throw new JSRConstraintViolationError(String.format("Validation errors for class: %s",
 					validationRequest.getPayload().getClass().getSimpleName()), violations);
 		}
 	}

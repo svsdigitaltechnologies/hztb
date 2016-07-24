@@ -11,8 +11,12 @@ import java.time.Instant;
  * @author skairamk
  *
  */
-public class HZTBUtil {
+public final class HZTBUtil {
 	static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
+
+	private HZTBUtil() {
+
+	}
 
 	public static String getUTCDate() {
 		Instant t1 = Instant.now();
@@ -20,17 +24,17 @@ public class HZTBUtil {
 	}
 
 	public static Long generateSixDigitNumber() {
-		Long aNumber = 0l;
+		Long aNumber;
 		aNumber = (long) ((Math.random() * 900000) + 100000);
 		return aNumber;
 	}
 
 	public static boolean isOtpValidationAllowed(String otpCreationDateTime, String invalidOtpCount) {
-		
+
 		boolean isOtpValidationAllowed = false;
 
 		Integer count = Integer.parseInt(invalidOtpCount);
-		if( count > 3) {
+		if (count > 3) {
 			return isOtpValidationAllowed;
 		}
 
@@ -39,11 +43,11 @@ public class HZTBUtil {
 
 		long differenceInMinutes = Duration.between(otpInstantTime, currentInstantTime).toMinutes();
 
-		if ((differenceInMinutes <= 10)) {
+		if (differenceInMinutes <= 10) {
 			isOtpValidationAllowed = true;
 			return isOtpValidationAllowed;
 		}
-		
+
 		return isOtpValidationAllowed;
 	}
 }

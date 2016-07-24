@@ -5,9 +5,10 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
+@FunctionalInterface
 public interface RequestData {
 	public String getRequestId();
-	
+
 	default Optional<Map<String, String>> getHeaders(String targetId, String mediaType) {
 		final String HTTP_TARGET_ID = "TARGET_ID";
 		final String HTTP_ACCEPT = "ACCEPT";

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
 import com.svs.hztb.common.enums.ServiceManagerStatusCode;
-import com.svs.hztb.orchestration.exception.BusinessException;
+import com.svs.hztb.orchestration.exception.BusinessError;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
@@ -39,7 +39,7 @@ public class ValidateOTPController {
 			@RequestBody @Valid ValidateOTPRequest validateOTPRequest) {
 		ValidateOTPResponse validateOTPResponse = userDataService.validateOTP(validateOTPRequest);
 		if (!validateOTPResponse.getIsValidateOTPSuccesful()) {
-			throw new BusinessException(ServiceManagerStatusCode.INVALID_OTP.getMessage(),
+			throw new BusinessError(ServiceManagerStatusCode.INVALID_OTP.getMessage(),
 					ServiceManagerStatusCode.INVALID_OTP);
 		}
 		return buildvalidateOTPResponse(validateOTPResponse);

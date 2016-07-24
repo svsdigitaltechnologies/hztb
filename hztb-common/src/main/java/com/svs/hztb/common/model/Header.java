@@ -9,7 +9,7 @@ public class Header implements Serializable {
 	private String requestId;
 
 	public Header() {
-
+		// nothing
 	}
 
 	public Header(String requestId) {

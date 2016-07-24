@@ -2,13 +2,13 @@ package com.svs.hztb.orchestration.component.step;
 
 import java.util.Optional;
 
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
 import com.svs.hztb.common.util.PerformanceTimer;
 import com.svs.hztb.orchestration.component.model.FlowContext;
-import com.svs.hztb.orchestration.exception.BusinessException;
+import com.svs.hztb.orchestration.exception.BusinessError;
 
 public abstract class AbstractStepDefinition implements StepDefinition {
 
@@ -27,13 +27,13 @@ public abstract class AbstractStepDefinition implements StepDefinition {
 		PerformanceTimer timer = new PerformanceTimer();
 		try {
 			process(flowContext);
-		} catch (BusinessException exception) {
+		} catch (BusinessError exception) {
 			LOGGER.error("Business Exception occured while processing the step {} ", this.getClass());
 			throw exception;
 		} 
 		catch (Exception exception) {
 			LOGGER.error("Exception occured while processing the step {} ", this.getClass());
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		} finally {
 			timer.logPerformance(String.format("%s%s", "step.", getIdentifier()));

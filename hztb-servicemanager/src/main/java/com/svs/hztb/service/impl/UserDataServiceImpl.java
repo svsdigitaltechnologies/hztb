@@ -25,7 +25,7 @@ import com.svs.hztb.aws.client.AWSClientProcessor;
 import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
 import com.svs.hztb.common.enums.ServiceManagerStatusCode;
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
@@ -36,7 +36,7 @@ import com.svs.hztb.exception.DataServiceException;
 import com.svs.hztb.orchestration.component.model.FlowContext;
 import com.svs.hztb.orchestration.component.step.StepDefinition;
 import com.svs.hztb.orchestration.component.step.StepDefinitionFactory;
-import com.svs.hztb.orchestration.exception.BusinessException;
+import com.svs.hztb.orchestration.exception.BusinessError;
 import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
 import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
@@ -105,12 +105,12 @@ public class UserDataServiceImpl implements UserDataService {
 			registrationResponse = populateRegistrationUserResponse(user);
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during register : {}", dataServiceException);
-			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
-		} catch (BusinessException businessException) {
+		} catch (BusinessError businessException) {
 			throw businessException;
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		return registrationResponse;
@@ -133,10 +133,10 @@ public class UserDataServiceImpl implements UserDataService {
 			pingResponse = populatePingResponse(user);
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during ping : {}", dataServiceException);
-			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		return pingResponse;
@@ -181,18 +181,18 @@ public class UserDataServiceImpl implements UserDataService {
 					userAdapter.updateUserDetails(dataServiceRequest);
 				}
 			} else {
-				throw new BusinessException(ServiceManagerStatusCode.OTP_NOT_VALID.getMessage(),
+				throw new BusinessError(ServiceManagerStatusCode.OTP_NOT_VALID.getMessage(),
 						ServiceManagerStatusCode.OTP_NOT_VALID);
 			}
 			validateOTPResponse = populateValidateOTPResponse(user, isOTPValiationSuccesful);
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during validateOTP : {}", dataServiceException);
-			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
-		} catch (BusinessException businessException) {
+		} catch (BusinessError businessException) {
 			throw businessException;
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		return validateOTPResponse;
@@ -216,12 +216,12 @@ public class UserDataServiceImpl implements UserDataService {
 			userProfileResponse = populateUserResponse(user);
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during getUserProfile : {}", dataServiceException);
-			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
-		} catch (BusinessException businessException) {
+		} catch (BusinessError businessException) {
 			throw businessException;
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		return userProfileResponse;
@@ -263,12 +263,12 @@ public class UserDataServiceImpl implements UserDataService {
 
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during updateUserProfile : {}", dataServiceException);
-			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
-		} catch (BusinessException businessException) {
+		} catch (BusinessError businessException) {
 			throw businessException;
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		return userProfileResponse;
@@ -289,12 +289,12 @@ public class UserDataServiceImpl implements UserDataService {
 
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during registeredUser : {}", dataServiceException);
-			throw BusinessException.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
 					dataServiceException.getStatusCode());
-		} catch (BusinessException businessException) {
+		} catch (BusinessError businessException) {
 			throw businessException;
 		} catch (Exception exception) {
-			throw new SystemException(exception.getMessage(), exception,
+			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		return userProfileResponses;
