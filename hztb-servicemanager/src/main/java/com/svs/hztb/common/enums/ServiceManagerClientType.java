@@ -5,11 +5,15 @@ import org.springframework.http.MediaType;
 import com.svs.hztb.restfulclient.ClientType;
 import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 
+/**
+ * Enum - defines the various client type's
+ */
+
 public enum ServiceManagerClientType implements ClientType {
-	DS(MediaType.ALL, "DS", RestfulEndpointErrorMappingImpl.DS), 
-	SM(MediaType.ALL, "SM",	RestfulEndpointErrorMappingImpl.SM), 
-	CT(MediaType.APPLICATION_JSON, "CT", RestfulEndpointErrorMappingImpl.CT),
-	GCM(MediaType.APPLICATION_JSON, "GCM", RestfulEndpointErrorMappingImpl.GCM);
+	DS(MediaType.ALL, "DS", RestfulEndpointErrorMappingImpl.DS), SM(MediaType.ALL, "SM",
+			RestfulEndpointErrorMappingImpl.SM), CT(MediaType.APPLICATION_JSON, "CT",
+					RestfulEndpointErrorMappingImpl.CT), GCM(MediaType.APPLICATION_JSON, "GCM",
+							RestfulEndpointErrorMappingImpl.GCM);
 
 	private RestfulEndpointErrorMappingImpl errorMapping;
 	private MediaType mediaType;

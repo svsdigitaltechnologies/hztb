@@ -53,6 +53,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
 	private void logRequest(final RequestWrapper requestWrapper) {
 		try {
+			LOGGER.debug("Requested URI: " + requestWrapper.getRequestURL());
 			LOGGER.debug("Logging incoming HTTP request");
 			String contents = requestWrapper.getContents();
 			LOGGER.debug(REQUEST_BODY_MESSAGE_TEMPLATE, contents);
