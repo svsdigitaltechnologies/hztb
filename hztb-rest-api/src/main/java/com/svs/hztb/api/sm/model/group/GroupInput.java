@@ -54,6 +54,7 @@ public class GroupInput {
 		return newGroupName;
 	}
 	public void setNewGroupName(String newGroupName) {
+		int i =0;
 		this.newGroupName = newGroupName;
 	}
 	
