@@ -11,17 +11,20 @@ import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.StatusCode;
 import com.svs.hztb.restfulclient.RestfulEndpointErrorMapping;
 
+/**
+ * Enum - degines all the error codes for the sub systems.
+ */
+
 public enum RestfulEndpointErrorMappingImpl implements RestfulEndpointErrorMapping {
 
-	DS(entry(1, ServiceManagerStatusCode.DATA_SERVICES_ERROR), 
-			entry(2, ServiceManagerStatusCode.USER_NOT_AVAILABLE),
+	DS(entry(1, ServiceManagerStatusCode.DATA_SERVICES_ERROR), entry(2, ServiceManagerStatusCode.USER_NOT_AVAILABLE),
 			entry(3, ServiceManagerStatusCode.USER_ALREADY_REGISTERED),
-			entry(4, ServiceManagerStatusCode.USER_NOT_AVAILABLE_MOBILE_IMEI)), 
-	SM(entry(100, ServiceManagerStatusCode.INVALID_OTP),
-			entry(101, ServiceManagerStatusCode.OTP_NOT_VALID)), 
-	CT(entry(165, ServiceManagerStatusCode.INVALID_VERSION_NUMBER),
-			(entry(301, ServiceManagerStatusCode.NO_CREDIT_LEFT))),
-	GCM(entry(201, ServiceManagerStatusCode.INVALID_GCM_REGISTRATION_ID));
+			entry(4, ServiceManagerStatusCode.USER_NOT_AVAILABLE_MOBILE_IMEI)), SM(
+					entry(100, ServiceManagerStatusCode.INVALID_OTP),
+					entry(101, ServiceManagerStatusCode.OTP_NOT_VALID)), CT(
+							entry(165, ServiceManagerStatusCode.INVALID_VERSION_NUMBER),
+							entry(301, ServiceManagerStatusCode.NO_CREDIT_LEFT)), GCM(
+									entry(201, ServiceManagerStatusCode.INVALID_GCM_REGISTRATION_ID));
 
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserAdapterImpl.class);
 
@@ -34,7 +37,7 @@ public enum RestfulEndpointErrorMappingImpl implements RestfulEndpointErrorMappi
 	}
 
 	private static Pair<Integer, StatusCode> entry(Integer code, StatusCode statusCode) {
-		return Pair.<Integer, StatusCode> of(code, statusCode);
+		return Pair.<Integer, StatusCode>of(code, statusCode);
 	}
 
 	@Override

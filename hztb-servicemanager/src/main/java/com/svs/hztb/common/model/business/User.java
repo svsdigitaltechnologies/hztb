@@ -5,6 +5,10 @@ import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.user.UserProfileRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 
+/**
+ * This class is an business object for user data
+ */
+
 public class User {
 
 	private String mobileNumber;
@@ -22,7 +26,7 @@ public class User {
 	private String deviceId;
 
 	public User() {
-
+		// Intentianally left blank.
 	}
 
 	public User(RegistrationRequest registrationRequest) {

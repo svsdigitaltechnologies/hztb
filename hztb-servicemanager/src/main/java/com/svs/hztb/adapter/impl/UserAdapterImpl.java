@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.svs.hztb.adapter.UserAdapter;
-import com.svs.hztb.api.sm.model.user.UserProfileRequest;
-import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.business.User;
@@ -18,6 +16,10 @@ import com.svs.hztb.entity.UserEntity;
 import com.svs.hztb.exception.DataServiceException;
 import com.svs.hztb.repository.UserRepository;
 
+/**
+ * This class is an implementation for user adapter interface. It invokes the db
+ * operations using the user repository
+ */
 @Service
 public class UserAdapterImpl implements UserAdapter {
 
@@ -51,7 +53,7 @@ public class UserAdapterImpl implements UserAdapter {
 	}
 
 	/**
-	 * This method is used to register a user with hztb.
+	 * This method is used to register a user.
 	 * 
 	 * @throws DataServiceException
 	 */
@@ -110,6 +112,11 @@ public class UserAdapterImpl implements UserAdapter {
 		return user;
 	}
 
+	/**
+	 * This method is used to get user details.
+	 * 
+	 * @throws DataServiceException
+	 */
 	@Override
 	public User getUserDetails(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
 		User user = null;
@@ -136,65 +143,74 @@ public class UserAdapterImpl implements UserAdapter {
 
 	private User populateUserResponse(UserEntity userEntity) {
 		User user = new User();
-		Optional.ofNullable(userEntity.getMobileNumber()).ifPresent(p -> user.setMobileNumber(p));
-		Optional.ofNullable(userEntity.getDataPushedInd()).ifPresent(p -> user.setDataPushed(p));
-		Optional.ofNullable(userEntity.getEmailAddress()).ifPresent(p -> user.setEmailAddress(p));
-		Optional.ofNullable(userEntity.getFirstname()).ifPresent(p -> user.setName(p));
-		Optional.ofNullable(userEntity.getGcmRegId()).ifPresent(p -> user.setDeviceRegId(p));
-		Optional.ofNullable(userEntity.getImeiCode()).ifPresent(p -> user.setImei(p));
-		Optional.ofNullable(userEntity.getOtpCode()).ifPresent(p -> user.setOtpCode(p));
-		Optional.ofNullable(userEntity.getOtpCreateTime()).ifPresent(p -> user.setOtpCreationDateTime(p));
+		Optional.ofNullable(userEntity.getMobileNumber()).ifPresent(user::setMobileNumber);
+		Optional.ofNullable(userEntity.getDataPushedInd()).ifPresent(user::setDataPushed);
+		Optional.ofNullable(userEntity.getEmailAddress()).ifPresent(user::setEmailAddress);
+		Optional.ofNullable(userEntity.getFirstname()).ifPresent(user::setName);
+		Optional.ofNullable(userEntity.getGcmRegId()).ifPresent(user::setDeviceRegId);
+		Optional.ofNullable(userEntity.getImeiCode()).ifPresent(user::setImei);
+		Optional.ofNullable(userEntity.getOtpCode()).ifPresent(user::setOtpCode);
+		Optional.ofNullable(userEntity.getOtpCreateTime()).ifPresent(user::setOtpCreationDateTime);
 		Optional.ofNullable(userEntity.getUserId()).ifPresent(p -> user.setUserId(p.toString()));
-		Optional.ofNullable(userEntity.getInvalidOtpRetries()).ifPresent(p -> user.setInvalidOtpCount(p));
-		Optional.ofNullable(userEntity.getPicUrl()).ifPresent(p -> user.setProfilePicUrl(p));
+		Optional.ofNullable(userEntity.getInvalidOtpRetries()).ifPresent(user::setInvalidOtpCount);
+		Optional.ofNullable(userEntity.getPicUrl()).ifPresent(user::setProfilePicUrl);
 		return user;
 	}
 
+	/**
+	 * This method is used to update user details.
+	 * 
+	 * @throws DataServiceException
+	 */
 	@Override
 	public User updateUserDetails(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
 		UserEntity userEntity;
 		try {
-			userEntity = userRepository
-					.findOne(Integer.parseInt(dataServiceRequest.getPayload().getUserId()));
+			userEntity = userRepository.findOne(Integer.parseInt(dataServiceRequest.getPayload().getUserId()));
 
-			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceRegId())
-					.ifPresent(p -> userEntity.setGcmRegId(p));
+			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceRegId()).ifPresent(userEntity::setGcmRegId);
 			Optional.ofNullable(dataServiceRequest.getPayload().getEmailAddress())
-					.ifPresent(p -> userEntity.setEmailAddress(p));
-			Optional.ofNullable(dataServiceRequest.getPayload().getImei()).ifPresent(p -> userEntity.setImeiCode(p));
+					.ifPresent(userEntity::setEmailAddress);
+			Optional.ofNullable(dataServiceRequest.getPayload().getImei()).ifPresent(userEntity::setImeiCode);
 			Optional.ofNullable(dataServiceRequest.getPayload().getMobileNumber())
-					.ifPresent(p -> userEntity.setMobileNumber(p));
-			Optional.ofNullable(dataServiceRequest.getPayload().getName()).ifPresent(p -> userEntity.setFirstname(p));
+					.ifPresent(userEntity::setMobileNumber);
+			Optional.ofNullable(dataServiceRequest.getPayload().getName()).ifPresent(userEntity::setFirstname);
 			Optional.ofNullable(dataServiceRequest.getPayload().getUserId())
 					.ifPresent(p -> userEntity.setUserId(Integer.parseInt(p)));
-			Optional.ofNullable(dataServiceRequest.getPayload().getOtpCode()).ifPresent(p -> userEntity.setOtpCode(p));
+			Optional.ofNullable(dataServiceRequest.getPayload().getOtpCode()).ifPresent(userEntity::setOtpCode);
 			Optional.ofNullable(dataServiceRequest.getPayload().getOtpCreationDateTime())
-					.ifPresent(p -> userEntity.setOtpCreateTime(p));
+					.ifPresent(userEntity::setOtpCreateTime);
 			Optional.ofNullable(dataServiceRequest.getPayload().getInvalidOtpCount())
-					.ifPresent(p -> userEntity.setInvalidOtpRetries(p));
-			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicUrl()).ifPresent(p -> userEntity.setPicUrl(p));
-			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceId()).ifPresent(p -> userEntity.setDeviceId(p));
+					.ifPresent(userEntity::setInvalidOtpRetries);
+			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicUrl()).ifPresent(userEntity::setPicUrl);
+			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceId()).ifPresent(userEntity::setDeviceId);
 
 			userRepository.save(userEntity);
 		} catch (Exception exception) {
-			LOGGER.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
+			LOGGER.error(
+					"Data Services - Unexpected exception occured during updateUserDetails. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
-		return  populateUserResponse(userEntity);
+		return populateUserResponse(userEntity);
 
 	}
 
+	/**
+	 * This method is used to retrieve the registered users.
+	 * 
+	 * @throws DataServiceException
+	 */
 	@Override
-	public List<User> registeredUsers(
-			DataServiceRequest<List<String>> dataServiceRequest) throws DataServiceException {
-		
+	public List<User> registeredUsers(DataServiceRequest<List<String>> dataServiceRequest) throws DataServiceException {
+
 		List<UserEntity> userEntities;
 		try {
 			userEntities = userRepository.findByMobileNumberIn(dataServiceRequest.getPayload());
-			
+
 		} catch (Exception exception) {
-			LOGGER.error("Data Services - Unexpected exception occured during ping. the detailed exception is: {} ",
+			LOGGER.error(
+					"Data Services - Unexpected exception occured during registeredUsers. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
