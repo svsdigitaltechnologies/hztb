@@ -10,10 +10,9 @@ import com.svs.hztb.api.sm.model.opinion.Status;
 public class GroupOutput extends BasicOutput {
 	private Status status;
 	private ErrorOutput errorOutput;
-	private List<GroupDetail> groupDetailList = new ArrayList<GroupDetail>();
+	private List<GroupDetail> groupDetailList = new ArrayList<>();
 
 	public Status getStatus() {
-		int i = 1;
 		return status;
 	}
 
