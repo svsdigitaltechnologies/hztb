@@ -3,7 +3,6 @@ package com.svs.hztb.sm.opinion.controller;
 import static com.svs.hztb.sm.common.util.JsonUtil.toJson;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,56 +36,47 @@ public class OpinionController {
 	 */
 	@RequestMapping(value = "/requestOpinion", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> requestOpinion(
-			@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> requestOpinion(@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
+		ResponseEntity<String> response;
 		OpinionOutput opinionOutput = opinionDataService.requestOpinion(requestOpinionInput);
-		if(opinionOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorOutput()));
+		if (opinionOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(opinionOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getRequestOpinionOutput()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getRequestOpinionOutput()));
 		}
-		
 		return response;
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/opinionResponse", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> opinionResponse(
-			@RequestBody @Valid OpinionResponseInput OpinionResponseInput) {
-
-		OpinionOutput opinionOutput = opinionDataService.saveResponse(OpinionResponseInput);
-		ResponseEntity<String> response = null;
-		if(opinionOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(opinionOutput.getErrorOutput()));
+	@ResponseBody
+	public ResponseEntity<String> opinionResponse(@RequestBody @Valid OpinionResponseInput opinionResponseInput) {
+		OpinionOutput opinionOutput = opinionDataService.saveResponse(opinionResponseInput);
+		ResponseEntity<String> response;
+		if (opinionOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(opinionOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getOpinionResponseOutput()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(opinionOutput.getOpinionResponseOutput()));
 		}
 		return response;
 	}
 
-
 	@RequestMapping(value = "/sample", produces = { "application/json" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<RequestOpinionInput> sample() {
+	@ResponseBody
+	public ResponseEntity<RequestOpinionInput> sample() {
 
 		RequestOpinionInput requestOpinionRequest = new RequestOpinionInput();
 		requestOpinionRequest.setRequesterUserId(12345);
-		//requestOpinionRequest.setRequestedGroupId(0001);
-		List<Integer> requestedUserIds = new ArrayList<Integer>();
+		List<Integer> requestedUserIds = new ArrayList<>();
 		requestedUserIds.add(00123);
 		requestedUserIds.add(00234);
 		requestOpinionRequest.setRequestedUserIds(requestedUserIds);
-		// requestOpinionRequest.setProduct(product);
 		requestOpinionRequest.setDate(new Date());
 		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionRequest);
 
 	}
-
-//	private ResponseEntity<RequestOpinionOutput> buildUpdateRequestOpinionResponse(
-//			RequestOpinionOutput requestOpinionResponse) {
-//		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionResponse);
-//	}
 
 }

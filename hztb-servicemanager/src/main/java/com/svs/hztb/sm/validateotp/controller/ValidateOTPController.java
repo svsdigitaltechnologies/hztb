@@ -26,8 +26,8 @@ public class ValidateOTPController {
 
 	/**
 	 * 
-	 * @param registrationRequest
-	 * @return registrationResponse
+	 * @param validateOTPRequest
+	 * @return ValidateOTPResponse
 	 * 
 	 *         This method is used to register a new user to the application 1.
 	 *         Generates a new OTP code and inserts/updates a record in user
@@ -35,8 +35,8 @@ public class ValidateOTPController {
 	 */
 	@RequestMapping(value = "/validateOTP", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ValidateOTPResponse> validateOTP(
-			@RequestBody @Valid ValidateOTPRequest validateOTPRequest) {
+	@ResponseBody
+	public ResponseEntity<ValidateOTPResponse> validateOTP(@RequestBody @Valid ValidateOTPRequest validateOTPRequest) {
 		ValidateOTPResponse validateOTPResponse = userDataService.validateOTP(validateOTPRequest);
 		if (!validateOTPResponse.getIsValidateOTPSuccesful()) {
 			throw new BusinessError(ServiceManagerStatusCode.INVALID_OTP.getMessage(),

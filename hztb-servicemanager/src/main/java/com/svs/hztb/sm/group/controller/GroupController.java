@@ -15,32 +15,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.group.GroupInput;
 import com.svs.hztb.api.sm.model.group.GroupOutput;
-import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
-import com.svs.hztb.api.sm.model.opinion.Status;
 import com.svs.hztb.service.GroupDataService;
-import com.svs.hztb.service.OpinionDataService;
+
+/**
+ * This class is an Rest api class for group add/remove/list service methods
+ * Method to list all groups as owner userId: groupId,name,desc{members} List
+ * all groups as member: userId:groupId,name,desc Edit the group: groupId,owner:
+ * Add/remove members, name change remove the group:groupId,ownerId
+ */
 
 @RestController
 @RequestMapping("/group")
 public class GroupController {
-	// Method to list all groups as owner userId: groupId,name,desc{members}
-	// List all groups as member: userId:groupId,name,desc
-	// Edit the group: groupId,owner: Add/remove members, name change
-	// remove the group:groupId,ownerId
+
 	@Autowired
 	private GroupDataService groupDataService;
 
 	@RequestMapping(value = "/createGroup", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> createGroup(@RequestBody @Valid GroupInput groupInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> createGroup(@RequestBody @Valid GroupInput groupInput) {
+		ResponseEntity<String> response;
 		GroupOutput groupOutput = groupDataService.createGroup(groupInput);
 		if (groupOutput.isError()) {
 			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
 					.body(toJson(groupOutput.getErrorOutput()));
 		} else {
-			String status = "SUCCESS";
 			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput));
 		}
 
@@ -49,8 +49,9 @@ public class GroupController {
 
 	@RequestMapping(value = "/removeGroup", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> removeGroup(@RequestBody @Valid GroupInput groupInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> removeGroup(@RequestBody @Valid GroupInput groupInput) {
+		ResponseEntity<String> response;
 		GroupOutput groupOutput = groupDataService.removeGroup(groupInput);
 		if (groupOutput.isError()) {
 			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
@@ -64,8 +65,9 @@ public class GroupController {
 
 	@RequestMapping(value = "/listGroups", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> listGroups(@RequestBody @Valid GroupInput groupInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> listGroups(@RequestBody @Valid GroupInput groupInput) {
+		ResponseEntity<String> response;
 		GroupOutput groupOutput = groupDataService.listGroups(groupInput);
 		if (groupOutput.isError()) {
 			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
@@ -73,8 +75,6 @@ public class GroupController {
 		} else {
 			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(groupOutput.getGroupDetailList()));
 		}
-
 		return response;
 	}
-
 }

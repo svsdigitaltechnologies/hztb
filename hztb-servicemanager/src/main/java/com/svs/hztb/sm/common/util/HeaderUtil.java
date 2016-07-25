@@ -19,6 +19,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.svs.hztb.common.exception.SystemError;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
 import com.svs.hztb.common.model.RequestData;
 import com.svs.hztb.common.model.StatusCode;
@@ -28,6 +30,7 @@ import com.svs.hztb.sm.common.model.business.RequestMetaData;
 
 @Component
 public class HeaderUtil {
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(HeaderUtil.class);
 
 	public void checkMandatory(RequestData requestData, String... customHttpHeaderName) {
 		List<Pair<StatusCode, String>> errors = new ArrayList<>();
@@ -55,6 +58,7 @@ public class HeaderUtil {
 					try {
 						field.set(requestData, headerValue);
 					} catch (IllegalAccessException | IllegalArgumentException e) {
+						LOGGER.error("error occured while populateRequestDataFromHeader {}", e);
 						throw new SystemError(String.format(
 								"Failed to reflectively populate request data with header values for field %s",
 								field.getName()));
@@ -98,6 +102,8 @@ public class HeaderUtil {
 						String.format("The header field %s is mandatory", headerParamName));
 			}
 		} catch (IllegalAccessException | IllegalArgumentException e) {
+			LOGGER.error("error occured while getError {}", e);
+
 			throw new SystemError(
 					"Custom mandatory check for mandatory header fields failed because the field is NOT accessible",
 					PlatformStatusCode.MANDATORY_DOCUMENT_FIELD_MISSING);

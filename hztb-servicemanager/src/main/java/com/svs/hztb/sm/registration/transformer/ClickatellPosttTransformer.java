@@ -3,13 +3,9 @@ package com.svs.hztb.sm.registration.transformer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import com.svs.hztb.api.gcm.model.notification.MessageRequest;
-import com.svs.hztb.api.gcm.model.notification.MessageResponse;
-import com.svs.hztb.api.gcm.model.notification.MessageResult;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellRequest;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
 import com.svs.hztb.common.logging.Logger;
@@ -25,7 +21,8 @@ import com.svs.hztb.sm.common.transformer.ClickatellRestfulAbstractTransformer;
 
 @RestfulTransformer(ServiceManagerRestfulEndpoint.CLICKATELL_POST)
 @Component
-public class ClickatellPosttTransformer extends ClickatellRestfulAbstractTransformer<ClickatellRequest, ClickatellResponse> {
+public class ClickatellPosttTransformer
+		extends ClickatellRestfulAbstractTransformer<ClickatellRequest, ClickatellResponse> {
 
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(ClickatellPosttTransformer.class);
 
@@ -42,7 +39,9 @@ public class ClickatellPosttTransformer extends ClickatellRestfulAbstractTransfo
 	public void transformResponse(FlowContext flowContext, ClickatellResponse response) {
 		LOGGER.debug("Clickatell Response {}", response);
 		flowContext.setModelElement(response);
-		LOGGER.debug("OTP sent to mobile number {} and apiMessageId is {}", response.getData().getMessage().get(0).getTo(), response.getData().getMessage().get(0).getApiMessageId());
+		LOGGER.debug("OTP sent to mobile number {} and apiMessageId is {}",
+				response.getData().getMessage().get(0).getTo(),
+				response.getData().getMessage().get(0).getApiMessageId());
 	}
 
 	@Override
