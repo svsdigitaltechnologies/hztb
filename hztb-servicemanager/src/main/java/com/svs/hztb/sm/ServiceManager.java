@@ -59,7 +59,6 @@ public class ServiceManager extends SpringBootServletInitializer
 
 		}
 		return application.sources(ServiceManager.class);
-
 	}
 
 	@Override
