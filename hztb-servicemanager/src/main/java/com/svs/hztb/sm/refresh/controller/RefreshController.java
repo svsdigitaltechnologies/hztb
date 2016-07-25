@@ -25,103 +25,113 @@ public class RefreshController {
 
 	/**
 	 * 
-	 * @param RefreshInput
+	 * @param refreshInput
 	 * @return
 	 */
 	@RequestMapping(value = "/opinions", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> getAllOpinions(
-			@RequestBody @Valid RefreshInput refreshInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> getAllOpinions(@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getOpinions(refreshInput);
-		if(refreshOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
+		if (refreshOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(refreshOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionDataList()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionDataList()));
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * This methods returns the responses for a specific opinionId
-	 * @param RefreshInput
-	 * @return ResponseBody 
+	 * 
+	 * @param refreshInput
+	 * @return ResponseBody
 	 */
 	@RequestMapping(value = "/opinionResponses", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> getOpinionResponses(
-			@RequestBody @Valid RefreshInput refreshInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> getOpinionResponses(@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getResponsesByOpinion(refreshInput);
-		if(refreshOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
+		if (refreshOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(refreshOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionResponseInfo()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionResponseInfo()));
 		}
-		
+
 		return response;
 	}
-	
-	
+
 	/**
 	 * This method returns reponses given by specific user
-	 * @param RefreshInput
+	 * 
+	 * @param refreshInput
 	 * @return ResponseBody
 	 */
 	@RequestMapping(value = "/userResponses", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> getResponses(
-			@RequestBody @Valid RefreshInput refreshInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> getResponses(@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getResponsesByUser(refreshInput);
-		if(refreshOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
+		if (refreshOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(refreshOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionResponseInfo().getOpinionResponseDataList()));
+			response = ResponseEntity.status(HttpStatus.SC_OK)
+					.body(toJson(refreshOutput.getOpinionResponseInfo().getOpinionResponseDataList()));
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * This method returns reponses given by specific user
-	 * @param RefreshInput
+	 * 
+	 * @param refreshInput
 	 * @return ResponseBody
 	 */
 	@RequestMapping(value = "/allResponsesCounts", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> allResponsesCounts(
-			@RequestBody @Valid RefreshInput refreshInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> allResponsesCounts(@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getAllResponsesCounts(refreshInput);
-		if(refreshOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
+		if (refreshOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(refreshOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionCountsList()));
+			response = ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getOpinionCountsList()));
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
-	 * This method returns reponses given by specific user
-	 * @param RefreshInput
+	 * This method returns responses given by specific user
+	 * 
+	 * @param refreshInput
 	 * @return ResponseBody
 	 */
 	@RequestMapping(value = "/givenPendingInfo", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> getOpinionsGivenPending(
-			@RequestBody @Valid RefreshInput refreshInput) {
-		ResponseEntity<String> response = null;
+	@ResponseBody
+	public ResponseEntity<String> getOpinionsGivenPending(@RequestBody @Valid RefreshInput refreshInput) {
+		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getOpinionsGivenPending(refreshInput);
-		if(refreshOutput.isError()) {
-			response =  ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(toJson(refreshOutput.getErrorOutput()));
+		if (refreshOutput.isError()) {
+			response = ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR)
+					.body(toJson(refreshOutput.getErrorOutput()));
 		} else {
-			response =  ResponseEntity.status(HttpStatus.SC_OK).body(toJson(refreshOutput.getResponseGivenPendingInfo()));
+			response = ResponseEntity.status(HttpStatus.SC_OK)
+					.body(toJson(refreshOutput.getResponseGivenPendingInfo()));
 		}
-		
+
 		return response;
 	}
-	
-	}
+
+}

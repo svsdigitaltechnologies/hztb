@@ -6,23 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 public class MessageRequest {
-	private List<String> registration_ids;
+	private List<String> registrationIds;
 	private Map<String, String> data;
 
-	
-	public List<String> getRegistration_ids() {
-		return registration_ids;
+	public List<String> getRegistrationIds() {
+		return registrationIds;
 	}
 
-	public void setRegistration_ids(List<String> registration_ids) {
-		this.registration_ids = registration_ids;
+	public void setRegistrationIds(List<String> registrationIds) {
+		this.registrationIds = registrationIds;
 	}
 
 	public void addRegId(String regId) {
-		if(registration_ids == null) {
-			registration_ids = new LinkedList<String>();
+		if (registrationIds == null) {
+			registrationIds = new LinkedList<>();
 		}
-			registration_ids.add(regId);
+		registrationIds.add(regId);
 	}
 
 	public Map<String, String> getData() {
@@ -32,10 +31,10 @@ public class MessageRequest {
 	public void setData(Map<String, String> data) {
 		this.data = data;
 	}
-	
+
 	public void addData(MessageData messageData) {
-		if(data == null)
-			data = new HashMap<String,String>();
+		if (data == null)
+			data = new HashMap<>();
 		data = messageData.getData();
 	}
 

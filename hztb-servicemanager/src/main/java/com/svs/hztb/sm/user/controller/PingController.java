@@ -17,12 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellData;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellMessage;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
-import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
-import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
-import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
@@ -32,9 +28,6 @@ public class PingController {
 	@Autowired
 	private UserDataService userDataService;
 
-	@Autowired
-	private GCMService gcmService;
-
 	/**
 	 * 
 	 * @param pingRequet
@@ -43,27 +36,10 @@ public class PingController {
 	 */
 	@RequestMapping(value = "/ping", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<PingResponse> ping(@RequestBody @Valid PingRequest pingRequest) {
+	@ResponseBody
+	public ResponseEntity<PingResponse> ping(@RequestBody @Valid PingRequest pingRequest) {
 		PingResponse pingResponse = userDataService.ping(pingRequest);
 		return buildPingResponse(pingResponse);
-	}
-
-/*	@RequestMapping(value = "/sendRequestOpinionNotification", consumes = { "application/json" }, produces = {
-			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<PingResponse> sendRequestOpinionNotification(
-			@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
-		gcmService.sendRequestOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
-				requestOpinionInput);
-		return buildPingResponse(null);
-	}*/
-
-	@RequestMapping(value = "/sendResponseOpinionNotification", consumes = { "application/json" }, produces = {
-			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<PingResponse> sendResponseOpinionNotification(
-			@RequestBody @Valid OpinionResponseInput opinionResponseInput) {
-		gcmService.sendResponseOpinionNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
-				opinionResponseInput);
-		return buildPingResponse(null);
 	}
 
 	private ResponseEntity<PingResponse> buildPingResponse(PingResponse pingResponse) {
@@ -72,14 +48,15 @@ public class PingController {
 
 	@RequestMapping(value = "/jsonGetResponse", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<ClickatellResponse> jsonResponse() {
+	@ResponseBody
+	public ResponseEntity<ClickatellResponse> jsonResponse() {
 		ClickatellResponse clickatellResponse = new ClickatellResponse();
 		ClickatellData clickatellData = new ClickatellData();
 		ClickatellMessage clickatellMessage = new ClickatellMessage();
 		clickatellMessage.setAccepted("true");
 		clickatellMessage.setApiMessageId("4e14462eab36c639ed3a06b1a0d05ed6");
 		clickatellMessage.setTo("18479874489");
-		List<ClickatellMessage> list = new ArrayList<ClickatellMessage>();
+		List<ClickatellMessage> list = new ArrayList<>();
 		list.add(clickatellMessage);
 
 		clickatellData.setMessage(list);
@@ -89,14 +66,15 @@ public class PingController {
 
 	@RequestMapping(value = "/jsonPostResponse", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<ClickatellResponse> jsonPostResponse() {
+	@ResponseBody
+	public ResponseEntity<ClickatellResponse> jsonPostResponse() {
 		ClickatellResponse clickatellResponse = new ClickatellResponse();
 		ClickatellData clickatellData = new ClickatellData();
 		ClickatellMessage clickatellMessage = new ClickatellMessage();
 		clickatellMessage.setAccepted("true");
 		clickatellMessage.setApiMessageId("4e14462eab36c639ed3a06b1a0d05ed6");
 		clickatellMessage.setTo("18479874489");
-		List<ClickatellMessage> list = new ArrayList<ClickatellMessage>();
+		List<ClickatellMessage> list = new ArrayList<>();
 		list.add(clickatellMessage);
 		clickatellData.setMessage(list);
 		clickatellResponse.setData(clickatellData);

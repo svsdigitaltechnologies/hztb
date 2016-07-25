@@ -6,8 +6,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ValidationException;
 
-
-public class JSRConstraintViolationException extends ValidationException {
+public class JSRConstraintViolationError extends ValidationException {
 
 	private static final long serialVersionUID = 9027256812688596475L;
 
@@ -17,20 +16,20 @@ public class JSRConstraintViolationException extends ValidationException {
 	 * @param message
 	 * @param constraintViolations
 	 */
-	public JSRConstraintViolationException(String message,
+	public JSRConstraintViolationError(String message,
 			Set<? extends ConstraintViolation<Object>> constraintViolations) {
 		super(message);
 		if (constraintViolations == null) {
 			this.constraintViolations = null;
 		} else {
-			this.constraintViolations = new HashSet<ConstraintViolation<Object>>(constraintViolations);
+			this.constraintViolations = new HashSet<>(constraintViolations);
 		}
 	}
 
 	/**
 	 * @param constraintViolations
 	 */
-	public JSRConstraintViolationException(Set<? extends ConstraintViolation<Object>> constraintViolations) {
+	public JSRConstraintViolationError(Set<? extends ConstraintViolation<Object>> constraintViolations) {
 		this(null, constraintViolations);
 	}
 

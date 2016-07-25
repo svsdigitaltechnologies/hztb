@@ -5,7 +5,7 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.PlatformStatusCode;
@@ -44,7 +44,7 @@ public class RestfulStepDefinition<T, S> extends AbstractStepDefinition {
 		RestfulRequest<T, S> restfulRequest = null;
 		Map<URIParameterName, String> uriParameterNames = transformer.buildURIParameterReplacementMap(flowContext);
 		Map<String, Object> parameterReplacements = uriParameterNames.keySet().stream()
-				.collect(Collectors.toMap(URIParameterName::getValue, p -> uriParameterNames.get(p)));
+				.collect(Collectors.toMap(URIParameterName::getValue, uriParameterNames::get));
 
 		T request = transformer.transformRequest(flowContext);
 		try {
@@ -54,8 +54,8 @@ public class RestfulStepDefinition<T, S> extends AbstractStepDefinition {
 			LOGGER.debug("Restful Request: {}", restfulRequest);
 
 		} catch (Exception exception) {
-			throw new SystemException(String.format("unable to convert URI %s using spel", endpoint.getURI()),
-					exception, PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
+			throw new SystemError(String.format("unable to convert URI %s using spel", endpoint.getURI()), exception,
+					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
 		final PerformanceTimer timer = new PerformanceTimer();
 		RestfulResponse<S> restfulResponse = null;
@@ -74,7 +74,7 @@ public class RestfulStepDefinition<T, S> extends AbstractStepDefinition {
 			LOGGER.callOutDownStream("Error occured while making HTTP {} with exception {}",
 					restfulRequest.getEndpoint().getClientType().getName(), restfulRequest.getEndpoint().getURI(),
 					restfulRequest.getEndpoint().getHttpMethod(), ex);
-			throw new SystemException(
+			throw new SystemError(
 					MessageFormat.format("Error occured while making http {0} with exception {1}",
 							restfulRequest.getEndpoint().getHttpMethod(), ex.getMessage()),
 					ex, PlatformStatusCode.BACKEND_SYSTEM_ERROR);

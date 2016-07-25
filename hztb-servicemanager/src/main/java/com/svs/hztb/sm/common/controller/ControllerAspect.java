@@ -9,7 +9,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
 import com.svs.hztb.common.model.RequestData;
 import com.svs.hztb.restfulclient.validation.ValidationRequest;
@@ -31,7 +31,7 @@ public class ControllerAspect {
 			+ " && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
 	public void processControllerRequest(JoinPoint joinPoint) {
 		RequestData requestData = buildRequestData(joinPoint);
-		ValidationRequest<Object> request = new ValidationRequest<Object>(requestData, requestData);
+		ValidationRequest<Object> request = new ValidationRequest<>(requestData, requestData);
 		PlatformThreadLocalDataFactory.getInstance().setRequestData(requestData);
 		validatorService.validate(request);
 	}
@@ -50,7 +50,7 @@ public class ControllerAspect {
 					headerUtil.buildHeaderMap(headerUtil.getServletThreadLocalRequest()));
 			return requestData;
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new SystemException("Unable to build request data instance from headers", e);
+			throw new SystemError("Unable to build request data instance from headers", e);
 		}
 	}
 }

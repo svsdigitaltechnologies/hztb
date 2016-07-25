@@ -1,7 +1,5 @@
 package com.svs.hztb.sm.user.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
@@ -28,13 +26,14 @@ public class UserController {
 
 	/**
 	 * 
-	 * @param UserProfileRequest
+	 * @param userProfileRequest
 	 * @return UserProfileResponse This method is used to ping the server to
 	 *         check if the user is still using the same device or not.
 	 */
 	@RequestMapping(value = "/getUserProfile", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<UserProfileResponse> getUserProfile(
+	@ResponseBody
+	public ResponseEntity<UserProfileResponse> getUserProfile(
 			@RequestBody @Valid UserProfileRequest userProfileRequest) {
 		UserProfileResponse userProfileResponse = userDataService.getUserProfile(userProfileRequest);
 		return buildGetUserProfileResponse(userProfileResponse);
@@ -46,7 +45,8 @@ public class UserController {
 
 	@RequestMapping(value = "/updateUserProfile", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<UserProfileResponse> updateUserProfile(
+	@ResponseBody
+	public ResponseEntity<UserProfileResponse> updateUserProfile(
 			@RequestBody @Valid UserProfileRequest userProfileRequest) {
 		UserProfileResponse userProfileResponse = userDataService.updateUserProfile(userProfileRequest);
 		return buildUpdateUserProfileResponse(userProfileResponse);
@@ -59,7 +59,8 @@ public class UserController {
 
 	@RequestMapping(value = "/registeredUsers", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<UserProfileResponses> registeredUsers(
+	@ResponseBody
+	public ResponseEntity<UserProfileResponses> registeredUsers(
 			@RequestBody @Valid UserProfileRequests userProfileRequests) {
 		UserProfileResponses userProfileResponses = userDataService.registeredUsers(userProfileRequests);
 		return buildRegisteredUsersResponse(userProfileResponses);

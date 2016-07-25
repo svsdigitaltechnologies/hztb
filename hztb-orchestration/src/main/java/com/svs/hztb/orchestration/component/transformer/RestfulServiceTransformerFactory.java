@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.restfulclient.RestfulEndPoint;
 
 @Component
@@ -16,7 +16,7 @@ public class RestfulServiceTransformerFactory {
 			RestfulServiceTransformer<?, ?> restfulServiceTransformer) {
 		for (RestfulEndPoint p : restfulEndPoints) {
 			if (transformerMap.containsKey(p)) {
-				throw new SystemException(
+				throw new SystemError(
 						String.format("Multiple transformers configured for the same endpoint %s", p.name()));
 			}
 			transformerMap.put(p, restfulServiceTransformer);

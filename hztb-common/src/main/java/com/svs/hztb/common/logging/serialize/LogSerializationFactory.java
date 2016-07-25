@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.google.common.collect.ImmutableMap;
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 
@@ -99,7 +99,7 @@ public class LogSerializationFactory {
 					serializer.setAnnotation(annotation);
 					fieldSerializerMap.put(field.getName(), serializer);
 				} catch (Exception e) {
-					throw new SystemException("Unable to inject custom log serializer", e);
+					throw new SystemError("Unable to inject custom log serializer", e);
 				}
 			}
 		}

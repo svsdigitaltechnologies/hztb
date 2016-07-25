@@ -2,7 +2,7 @@ package com.svs.hztb.orchestration.component.model;
 
 import java.util.List;
 
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.ContextImpl;
@@ -36,7 +36,7 @@ public class FlowContext extends ContextImpl {
 	public void setModelElement(Object element) {
 		LOGGER.debug("Adding model element to the flow context {}", element);
 		if (element instanceof RequestData) {
-			throw new SystemException("Request data elements should be added via the FlowContext constructor");
+			throw new SystemError("Request data elements should be added via the FlowContext constructor");
 		}
 		context.put(ELEMENT_PREFIX + element.getClass().getName(), element);
 	}

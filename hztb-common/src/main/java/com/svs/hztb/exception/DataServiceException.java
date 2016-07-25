@@ -4,19 +4,7 @@ public class DataServiceException extends Exception {
 
 	private static final long serialVersionUID = -2532741174331476019L;
 
-	private String statusCode;
-
-	public DataServiceException() {
-		super();
-	}
-
-	public DataServiceException(String message) {
-		super(message);
-	}
-
-	public DataServiceException(Throwable cause) {
-		super(cause);
-	}
+	private final String statusCode;
 
 	public DataServiceException(Throwable cause, String statusCode) {
 		super(cause);
@@ -31,14 +19,11 @@ public class DataServiceException extends Exception {
 	public DataServiceException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
+		this.statusCode = null;
 	}
 
 	public String getStatusCode() {
 		return statusCode;
-	}
-
-	public void setStatusCode(String statusCode) {
-		this.statusCode = statusCode;
 	}
 
 }

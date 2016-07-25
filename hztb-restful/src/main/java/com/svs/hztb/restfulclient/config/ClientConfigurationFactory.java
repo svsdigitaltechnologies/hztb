@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import com.svs.hztb.common.exception.SystemException;
+import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.restfulclient.ClientRequestHandler;
 import com.svs.hztb.restfulclient.JSONClientRequestHandler;
 import com.svs.hztb.restfulclient.validation.ValidatorService;
@@ -118,7 +118,7 @@ public class ClientConfigurationFactory {
 			return new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
 		} catch (Exception e) {
-			throw new SystemException("Could not create SSL context", e);
+			throw new SystemError("Could not create SSL context", e);
 		}
 	}
 

@@ -18,20 +18,18 @@ import com.svs.hztb.sm.common.transformer.GCMRestfulAbstractTransformer;
 @Component
 public class GCMNotificationTransformer extends GCMRestfulAbstractTransformer<MessageRequest, MessageResponse> {
 
-
 	@Override
 	public MessageRequest transformRequest(FlowContext flowContext) {
 		MessageRequest messageRequest = new MessageRequest();
 		NotificationRequest notificationRequest = flowContext.getModelElement(NotificationRequest.class);
 		List<String> deviceRegIds = notificationRequest.getDeviceRegIds();
-		deviceRegIds.stream().forEach(p -> messageRequest.addRegId(p));
+		deviceRegIds.stream().forEach(messageRequest::addRegId);
 
 		MessageData messageData = new MessageData();
 		messageData.addData("title", notificationRequest.getTitle());
 		messageData.addData("message", notificationRequest.getMessage());
-		Optional.ofNullable(notificationRequest.getProduct()).ifPresent(p ->{
-			messageData.addData("productName", p.getName());
-		});
+		Optional.ofNullable(notificationRequest.getProduct())
+				.ifPresent(p -> messageData.addData("productName", p.getName()));
 		messageData.addData("notificationType", notificationRequest.getNotificationType());
 		messageRequest.addData(messageData);
 		flowContext.setModelElement(messageRequest);

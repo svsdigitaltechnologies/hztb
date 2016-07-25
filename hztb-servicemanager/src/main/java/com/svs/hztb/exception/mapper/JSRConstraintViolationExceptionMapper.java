@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.svs.hztb.common.exception.JSRConstraintViolationException;
+import com.svs.hztb.common.exception.JSRConstraintViolationError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.HztbResponse;
@@ -23,8 +23,8 @@ public class JSRConstraintViolationExceptionMapper extends AbstractJSRConstraint
 
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(JSRConstraintViolationExceptionMapper.class);
 
-	@ExceptionHandler(JSRConstraintViolationException.class)
-	public ResponseEntity<HztbResponse> toResponse(JSRConstraintViolationException exception) {
+	@ExceptionHandler(JSRConstraintViolationError.class)
+	public ResponseEntity<HztbResponse> toResponse(JSRConstraintViolationError exception) {
 		LOGGER.error("JSON JSR-303 validation exception occured: {}", exception);
 		List<Pair<String, String>> errors = new ArrayList<>();
 		for (ConstraintViolation<?> violatoin : exception.getConstraintViolations()) {

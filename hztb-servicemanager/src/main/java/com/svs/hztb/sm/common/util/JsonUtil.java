@@ -5,8 +5,16 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 
-public class JsonUtil {
+public final class JsonUtil {
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(JsonUtil.class);
+
+	private JsonUtil() {
+
+	}
+
 	public static String toJson(Object object) {
 		String jsonString = "";
 		ObjectMapper mapper = new ObjectMapper();
@@ -14,10 +22,9 @@ public class JsonUtil {
 		try {
 			mapper.writeValue(strWriter, object);
 			jsonString = strWriter.toString();
-			
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Error occured while toJson {}", e);
 		}
 		return jsonString;
 	}
