@@ -17,6 +17,7 @@ import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.logging.filter.RequestWrapper;
 import com.svs.hztb.common.logging.filter.ResponseWrapper;
+import com.svs.hztb.common.util.PerformanceTimer;
 
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
@@ -53,6 +54,8 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
 	private void logRequest(final RequestWrapper requestWrapper) {
 		try {
+			final PerformanceTimer timer = new PerformanceTimer();
+			timer.logPerformance(requestWrapper.getRequestURL().toString());
 			LOGGER.debug("Requested URI: " + requestWrapper.getRequestURL());
 			LOGGER.debug("Logging incoming HTTP request");
 			String contents = requestWrapper.getContents();

@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.service.UserDataService;
 
 @RestController
 @RequestMapping("/user")
 public class RegistrationController {
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(RegistrationController.class);
 
 	@Autowired
 	private UserDataService userDataService;
