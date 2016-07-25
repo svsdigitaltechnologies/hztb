@@ -31,7 +31,7 @@ public class ControllerAspect {
 			+ " && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
 	public void processControllerRequest(JoinPoint joinPoint) {
 		RequestData requestData = buildRequestData(joinPoint);
-		ValidationRequest<Object> request = new ValidationRequest<Object>(requestData, requestData);
+		ValidationRequest<Object> request = new ValidationRequest<>(requestData, requestData);
 		PlatformThreadLocalDataFactory.getInstance().setRequestData(requestData);
 		validatorService.validate(request);
 	}
