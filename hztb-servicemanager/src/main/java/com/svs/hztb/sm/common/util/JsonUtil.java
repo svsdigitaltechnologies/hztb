@@ -8,8 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 
-public class JsonUtil {
-	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(HeaderUtil.class);
+public final class JsonUtil {
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(JsonUtil.class);
+
+	private JsonUtil() {
+
+	}
 
 	public static String toJson(Object object) {
 		String jsonString = "";
