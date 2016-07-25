@@ -54,11 +54,7 @@ public class ServiceManager extends SpringBootServletInitializer
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		String str = null;
-		if (str.equals("something")) {
-
-		}
-		return application.sources(ServiceManager.class);
+		return application.sources(ServiceManager.class)
 	}
 
 	@Override
