@@ -8,9 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.svs.hztb.awsclient.config.AWSConfigurationProvider;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 
 @Component
 public class AWSClientProcessor {
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(AWSClientProcessor.class);
 
 	@Autowired
 	private AWSConfigurationProvider awsConfigurationProvider;
@@ -43,7 +47,7 @@ public class AWSClientProcessor {
 		} else if ("Product".equals(type)) {
 			fileName = productBucketName + SLASH + name + ".jpg";
 		}
-
+		LOGGER.debug("S3 put request start {}", fileName);
 		/*
 		 * awsConfigurationProvider.getAmazonS3Client().putObject(new
 		 * PutObjectRequest(hztbBucketName, fileName, bis, omd)
