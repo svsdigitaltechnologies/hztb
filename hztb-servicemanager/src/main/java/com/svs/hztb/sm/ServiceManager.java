@@ -53,6 +53,7 @@ public class ServiceManager extends SpringBootServletInitializer
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(ServiceManager.class)
+				
 
 	}
 
