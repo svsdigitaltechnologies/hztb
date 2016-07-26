@@ -11,6 +11,12 @@ import com.svs.hztb.common.logging.serialize.LogSerializationFactory;
 import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
 import com.svs.hztb.common.util.StringUtil;
 
+/**
+ * Implementation class for Loggers
+ * 
+ * @author skairamkonda
+ *
+ */
 public class DefaultLoggerImpl implements Logger {
 
 	private static final String PERFORMANCE_LOG_NAME = "performance";
@@ -19,7 +25,6 @@ public class DefaultLoggerImpl implements Logger {
 	private static final String STACK_TRACE_LOG_NAME = "stacktraces";
 	private static final String FAILURE_LOG_NAME = "failures";
 	private static final String GCM_LOG_NAME = "gcm";
-	
 
 	private final org.slf4j.Logger logger;
 	private final org.slf4j.Logger performanceLogger;
@@ -28,7 +33,6 @@ public class DefaultLoggerImpl implements Logger {
 	private final org.slf4j.Logger stackTraceLogger;
 	private final org.slf4j.Logger failureLogger;
 	private final org.slf4j.Logger gcmLogger;
-	
 
 	private static final String MESSAGE_PREFIX = "[{}]"; // [REQUEST_ID]
 	private static final String CALL_OUT_MESSAGE_PREFIX = "CALL OUT : {} " + MESSAGE_PREFIX;
@@ -37,6 +41,12 @@ public class DefaultLoggerImpl implements Logger {
 			+ ", METHOD NAME : {}, CALL DURATION : {}ms";
 	private static final String FAILURE_MESSAGE_PREFIX = MESSAGE_PREFIX + ": {}";
 
+	/**
+	 * DefaultLoggerImpl constructor
+	 * 
+	 * @param clazz
+	 * 
+	 */
 	public DefaultLoggerImpl(Class<?> clazz) {
 		this.logger = LoggerFactory.getLogger(clazz);
 		this.performanceLogger = LoggerFactory.getLogger(PERFORMANCE_LOG_NAME);
@@ -223,7 +233,8 @@ public class DefaultLoggerImpl implements Logger {
 
 	@Override
 	public void logGCMActivity(String message, Object... args) {
-		logMessage(gcmLogger, StandardLevel.DEBUG, MESSAGE_PREFIX + message, convertToArray(buildRequestLogData(), args));
-		
+		logMessage(gcmLogger, StandardLevel.DEBUG, MESSAGE_PREFIX + message,
+				convertToArray(buildRequestLogData(), args));
+
 	}
 }

@@ -62,6 +62,6 @@ public class ServiceManager extends SpringBootServletInitializer
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		startupService.start(ServiceManager.class.getAnnotation(ComponentScan.class).value());
+		startupService.start();
 	}
 }

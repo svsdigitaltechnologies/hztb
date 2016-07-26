@@ -20,6 +20,11 @@ import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 
+/**
+ * 
+ * @author skairamkonda
+ *
+ */
 @SuppressWarnings("rawtypes")
 public class LogSerializationFactory {
 
@@ -43,6 +48,11 @@ public class LogSerializationFactory {
 		return instance;
 	}
 
+	/**
+	 * 
+	 * @param jsonClass
+	 * @return
+	 */
 	public Map<String, AbstractLogSerializer> getFieldSerializerMap(Class<? extends Object> jsonClass) {
 		Map<String, AbstractLogSerializer> fieldSerializerMap = classSerializeMap.get(jsonClass);
 		if (fieldSerializerMap == null) {
@@ -51,17 +61,27 @@ public class LogSerializationFactory {
 		return fieldSerializerMap;
 	}
 
+	/**
+	 * 
+	 * @param clazz
+	 * @param fieldSerializerMap
+	 */
 	@SafeVarargs
 	public final void addLogSerializerConfig(Class<?> clazz,
 			Pair<String, AbstractLogSerializer>... fieldSerializerMap) {
 		ImmutableMap.Builder<String, AbstractLogSerializer> builder = ImmutableMap
-				.<String, AbstractLogSerializer> builder();
+				.<String, AbstractLogSerializer>builder();
 		for (Pair<String, AbstractLogSerializer> pair : fieldSerializerMap) {
 			builder.put(pair.getLeft(), pair.getRight());
 		}
 		classSerializeMap.put(clazz, builder.build());
 	}
 
+	/**
+	 * 
+	 * @param json
+	 * @return
+	 */
 	public String getJsonString(Object json) {
 		if (json == null) {
 			return null;

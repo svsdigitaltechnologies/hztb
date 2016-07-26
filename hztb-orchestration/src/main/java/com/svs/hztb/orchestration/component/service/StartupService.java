@@ -15,9 +15,9 @@ import com.svs.hztb.restfulclient.RestfulEndPoint;
 
 @Component
 public class StartupService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(StartupService.class);
-	
+
 	@Autowired
 	private ApplicationContext ctx;
 
@@ -29,7 +29,7 @@ public class StartupService {
 
 	private AtomicBoolean invoked = new AtomicBoolean();
 
-	public void start(String[] catalogPackagesToScan) {
+	public void start() {
 		if (!invoked.getAndSet(true)) {
 			scanTransformers();
 		}

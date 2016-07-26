@@ -11,11 +11,23 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.io.output.TeeOutputStream;
 
+/**
+ * ResponseWrapper
+ * 
+ * @author skairamkonda
+ *
+ */
 public class ResponseWrapper extends HttpServletResponseWrapper {
 
 	private ByteArrayOutputStream bos = new ByteArrayOutputStream();
 	private PrintWriter writer = new PrintWriter(bos);
 
+	/**
+	 * ResponseWrapper constructor
+	 * 
+	 * @param response
+	 * @throws IOException
+	 */
 	public ResponseWrapper(HttpServletResponse response) throws IOException {
 		super(response);
 	}
@@ -47,6 +59,10 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 		return new TeePrintWriter(super.getWriter(), writer);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public byte[] toByteArray() {
 		return bos.toByteArray();
 	}

@@ -21,7 +21,7 @@ import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 import com.svs.hztb.api.sm.model.user.UserProfileResponses;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
-import com.svs.hztb.aws.client.AWSClientProcessor;
+import com.svs.hztb.aws.client.AWSS3ClientProcessor;
 import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
 import com.svs.hztb.common.enums.ServiceManagerStatusCode;
@@ -63,7 +63,7 @@ public class UserDataServiceImpl implements UserDataService {
 	private GCMService gcmService;
 
 	@Autowired
-	private AWSClientProcessor awsClientProcessor;
+	private AWSS3ClientProcessor awsClientProcessor;
 
 	@Override
 	public RegistrationResponse register(RegistrationRequest registrationRequest) {
@@ -254,8 +254,9 @@ public class UserDataServiceImpl implements UserDataService {
 			// skairamkonda use optional here
 
 			if (null != user.getProfilePic())
-				user.setProfilePicUrl(awsClientProcessor.execute(user.getProfilePic(),
-						NotificationType.PROFILE.getNotificationId(), user.getUserId()));
+				user.setProfilePicUrl(awsClientProcessor.putObject(user.getProfilePic(),
+						NotificationType.PROFILE.getNotificationId(), user.getUserId(),
+						PlatformThreadLocalDataFactory.getInstance().getRequestData().getRequestId()));
 
 			dataServiceRequest = new DataServiceRequest<>(user);
 			user = userAdapter.updateUserDetails(dataServiceRequest);

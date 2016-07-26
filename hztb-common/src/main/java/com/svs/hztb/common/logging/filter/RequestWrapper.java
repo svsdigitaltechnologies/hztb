@@ -11,20 +11,32 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.io.IOUtils;
 
+/**
+ * RequestWrapper
+ * 
+ * @author skairamkonda
+ *
+ */
 public class RequestWrapper extends HttpServletRequestWrapper {
 
 	private ByteArrayInputStream bais = null;
 	private ByteArrayOutputStream baos = null;
 	private BufferedServlertInputStream bsis = null;
 	private byte[] buffer = null;
-	
+
+	/**
+	 * RequestWrapper constructor
+	 * 
+	 * @param request
+	 * @throws IOException
+	 */
 	public RequestWrapper(HttpServletRequest request) throws IOException {
 		super(request);
 		InputStream is = request.getInputStream();
 		this.baos = new ByteArrayOutputStream();
 		byte[] buf = new byte[1024];
 		int letti;
-		while((letti = is.read(buf)) > 0 ){
+		while ((letti = is.read(buf)) > 0) {
 			this.baos.write(buf, 0, letti);
 		}
 		this.buffer = this.baos.toByteArray();
