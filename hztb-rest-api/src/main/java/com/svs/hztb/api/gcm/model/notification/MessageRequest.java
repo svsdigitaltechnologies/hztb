@@ -6,22 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 public class MessageRequest {
-	private List<String> registrationIds;
+	private List<String> registration_ids;
 	private Map<String, String> data;
 
-	public List<String> getRegistrationIds() {
-		return registrationIds;
+	public List<String> getRegistration_ids() {
+		return registration_ids;
 	}
 
-	public void setRegistrationIds(List<String> registrationIds) {
-		this.registrationIds = registrationIds;
+	public void setRegistration_ids(List<String> registration_ids) {
+		this.registration_ids = registration_ids;
 	}
 
 	public void addRegId(String regId) {
-		if (registrationIds == null) {
-			registrationIds = new LinkedList<>();
+		if (registration_ids == null) {
+			registration_ids = new LinkedList<>();
 		}
-		registrationIds.add(regId);
+		registration_ids.add(regId);
 	}
 
 	public Map<String, String> getData() {

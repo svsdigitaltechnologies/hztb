@@ -1,6 +1,5 @@
 package com.svs.hztb.api.sm.model.opinion;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,13 +11,14 @@ public class RequestOpinionInput {
 	private int channelId;
 	private String storeGeoCode;
 	private String productUrl;
-	//Added for sample, delete this
+	// Added for sample, delete this
 	private Date date;
-	
-	//private int requestedGroupId;
+
+	// private int requestedGroupId;
 	private String groupName;
+
 	private List<Integer> requestedUserIds;
-	private List<Integer> requestedGroupIds; 
+	private List<Integer> requestedGroupIds;
 
 	public int getRequesterUserId() {
 		return requesterUserId;
@@ -52,8 +52,6 @@ public class RequestOpinionInput {
 		this.storeGeoCode = storeGeoCode;
 	}
 
-	
-
 	public List<Integer> getRequestedUserIds() {
 		return requestedUserIds;
 	}
@@ -70,7 +68,6 @@ public class RequestOpinionInput {
 		this.productUrl = productUrl;
 	}
 
-	
 	public Date getDate() {
 		return date;
 	}
@@ -94,9 +91,5 @@ public class RequestOpinionInput {
 	public void setRequestedGroupIds(List<Integer> requestedGroupIds) {
 		this.requestedGroupIds = requestedGroupIds;
 	}
-
-
-	
-	
 
 }
