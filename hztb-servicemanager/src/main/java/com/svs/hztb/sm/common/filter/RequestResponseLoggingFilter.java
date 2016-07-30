@@ -59,7 +59,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
 	private void logRequest(final RequestWrapper requestWrapper) {
 		try {
-			LOGGER.debug("Logging incoming HTTP request");
+			LOGGER.debug("Logging incoming HTTP request :{} ", requestWrapper.getRequestURL());
 			String contents = requestWrapper.getContents();
 			LOGGER.debug(REQUEST_BODY_MESSAGE_TEMPLATE, contents);
 		} catch (IOException ioException) {

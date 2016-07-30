@@ -5,12 +5,21 @@ import java.util.List;
 
 import com.svs.hztb.api.sm.model.product.Product;
 
-public class RequestOpinionInput {
+/**
+ * 
+ * Request class for Opinion Requests.
+ * 
+ * @author skairamk
+ *
+ */
+public class OpinionRequest {
 	private int requesterUserId;
 	private Product product;
 	private int channelId;
 	private String storeGeoCode;
 	private String productUrl;
+	private byte[] selfiePic;
+
 	// Added for sample, delete this
 	private Date date;
 
@@ -90,6 +99,14 @@ public class RequestOpinionInput {
 
 	public void setRequestedGroupIds(List<Integer> requestedGroupIds) {
 		this.requestedGroupIds = requestedGroupIds;
+	}
+
+	public byte[] getSelfiePic() {
+		return selfiePic;
+	}
+
+	public void setSelfiePic(byte[] selfiePic) {
+		this.selfiePic = selfiePic;
 	}
 
 }

@@ -4,7 +4,8 @@ package com.svs.hztb.common.enums;
  * Enum - defines all the enum types for notifications
  */
 public enum NotificationType {
-	WELCOME("Welcome"), REQUEST("Request"), RESPONSE("Response"), PRODUCT("Product"), PROFILE("Profile");
+	WELCOME("Welcome"), REQUEST("Request"), RESPONSE("Response"), PRODUCT("Product"), PROFILE("Profile"), SELFIE(
+			"Selfie");
 
 	private String notificationId;
 

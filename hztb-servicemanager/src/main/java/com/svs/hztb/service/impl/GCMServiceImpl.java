@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.svs.hztb.api.sm.model.notification.NotificationRequest;
 import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
+import com.svs.hztb.api.sm.model.opinion.OpinionRequest;
 import com.svs.hztb.api.sm.model.product.Product;
 import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.exception.SystemError;

@@ -15,7 +15,7 @@ import com.svs.hztb.api.sm.model.refresh.GivenPendingData;
 import com.svs.hztb.api.sm.model.refresh.OpinionCountData;
 import com.svs.hztb.api.sm.model.refresh.OpinionData;
 import com.svs.hztb.api.sm.model.refresh.OpinionResponseData;
-import com.svs.hztb.api.sm.model.refresh.RefreshInput;
+import com.svs.hztb.api.sm.model.refresh.OpinionRefreshRequest;
 import com.svs.hztb.api.sm.model.refresh.RefreshOutput;
 import com.svs.hztb.api.sm.model.refresh.ResponseGivenPendingInfo;
 import com.svs.hztb.converters.OpinionEntitityToDataConverter;
@@ -56,7 +56,7 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 	
 	
 	@Override
-	public RefreshOutput getResponsesByUser(RefreshInput refreshInput) {
+	public RefreshOutput getResponsesByUser(OpinionRefreshRequest refreshInput) {
 		List<OpinionResponseEntity> opinionResponseEntities = null;
 		RefreshOutput refreshOutput = new RefreshOutput();
 		
@@ -71,7 +71,7 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 		return refreshOutput;
 	}
 	@Override
-	public RefreshOutput getResponsesByOpinion(RefreshInput refreshInput) {
+	public RefreshOutput getResponsesByOpinion(OpinionRefreshRequest refreshInput) {
 		List<OpinionResponseEntity> opinionResponseEntities = null;
 		RefreshOutput refreshOutput = new RefreshOutput();
 		
@@ -97,7 +97,7 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 		return refreshOutput;
 	}
 	@Override
-	public RefreshOutput getOpinions(RefreshInput refreshInput) {
+	public RefreshOutput getOpinions(OpinionRefreshRequest refreshInput) {
 		
 		List<OpinionEntity> opinionEntities = null;
 		RefreshOutput refreshOutput = new RefreshOutput();
@@ -124,7 +124,7 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 		return refreshOutput;
 	}
 	@Override
-	public RefreshOutput getAllResponsesCounts(RefreshInput refreshInput) {
+	public RefreshOutput getAllResponsesCounts(OpinionRefreshRequest refreshInput) {
 		//Get all opinions of the users//
 		RefreshOutput refreshOutput = new RefreshOutput();
 		Map<Integer, OpinionCountData> givenCounts = new HashMap<Integer, OpinionCountData>();
@@ -155,7 +155,7 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 	}
 
 	
-	public RefreshOutput getAllResponsesCounts1(RefreshInput refreshInput) {
+	public RefreshOutput getAllResponsesCounts1(OpinionRefreshRequest refreshInput) {
 		//Get all opinions of the users//
 		RefreshOutput refreshOutput = new RefreshOutput();
 		
@@ -210,7 +210,7 @@ public class RefreshDataServiceImpl implements RefreshDataService {
 	
 	
 	@Override
-	public RefreshOutput getOpinionsGivenPending(RefreshInput refreshInput) {
+	public RefreshOutput getOpinionsGivenPending(OpinionRefreshRequest refreshInput) {
 		//Get all opinions of the users//
 		RefreshOutput refreshOutput = new RefreshOutput();
 		

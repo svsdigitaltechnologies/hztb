@@ -1,9 +1,12 @@
 package com.svs.hztb.aws.client;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -31,6 +34,9 @@ public class AWSS3ClientProcessor {
 	@Value("${aws.product.bucketname}")
 	private String productBucketName;
 
+	@Value("${aws.selfie.bucketname}")
+	private String selfieBucketName;
+
 	@Value("${aws.hztb.bucketname}")
 	private String hztbBucketName;
 
@@ -38,6 +44,9 @@ public class AWSS3ClientProcessor {
 	private String awss3Url;
 
 	private static final String SLASH = "/";
+
+	final String URL = "URL";
+	final String FILENAME = "FILENAME";
 
 	/**
 	 * This method is used to put and object onto S3.
@@ -49,12 +58,26 @@ public class AWSS3ClientProcessor {
 	 * @return String
 	 * 
 	 */
-	public String putObject(byte[] objectBytes, String notificationType, String objectName, String requestId) {
+	@Async
+	public void putObject(byte[] objectBytes, String fileName, String requestId) {
 		LOGGER.debug("AWSS3ClientProcessor.putObject request start {}", requestId);
 		ByteArrayInputStream bis = new ByteArrayInputStream(objectBytes);
 		ObjectMetadata omd = new ObjectMetadata();
 		omd.setContentType("image/jpeg");
 		omd.setContentLength(objectBytes.length);
+
+		/*
+		 * awsConfigurationProvider.getAmazonS3Client().putObject(new
+		 * PutObjectRequest(hztbBucketName, fileName, bis, omd)
+		 * .withCannedAcl(CannedAccessControlList.PublicRead));
+		 */
+		LOGGER.debug("S3 put request completed with fileName: {}", fileName);
+
+	}
+
+	public Map<String, String> prepareFileName(String notificationType, String objectName, String requestId) {
+		Map<String, String> map = new HashMap<>();
+		LOGGER.debug("AWSS3ClientProcessor.prepareFileName request start {}", requestId);
 
 		String fileName = null;
 
@@ -62,14 +85,17 @@ public class AWSS3ClientProcessor {
 			fileName = profileBucketName + SLASH + objectName + ".jpg";
 		} else if ("Product".equals(notificationType)) {
 			fileName = productBucketName + SLASH + objectName + ".jpg";
+		} else if ("Selfie".equals(notificationType)) {
+			fileName = selfieBucketName + SLASH + objectName + ".jpg";
 		}
-		LOGGER.debug("S3 put request start {}", fileName);
-		/*
-		 * awsConfigurationProvider.getAmazonS3Client().putObject(new
-		 * PutObjectRequest(hztbBucketName, fileName, bis, omd)
-		 * .withCannedAcl(CannedAccessControlList.PublicRead));
-		 */
 
-		return awss3Url + SLASH + hztbBucketName + SLASH + fileName;
+		String url = awss3Url + SLASH + hztbBucketName + SLASH + fileName;
+		map.put(URL, url);
+		map.put(FILENAME, fileName);
+		LOGGER.debug("S3 prepareFileName request completed with fileName: {}", fileName);
+		LOGGER.debug("S3 prepareFileName request completed with URL: {}", url);
+
+		return map;
 	}
+
 }

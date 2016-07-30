@@ -2,6 +2,7 @@ package com.svs.hztb.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,10 +254,19 @@ public class UserDataServiceImpl implements UserDataService {
 			user.setProfilePic(userProfileRequest.getProfilePic());
 			// skairamkonda use optional here
 
-			if (null != user.getProfilePic())
-				user.setProfilePicUrl(awsClientProcessor.putObject(user.getProfilePic(),
+			String profilePicfileName;
+			String profilePicUrl;
+			if (null != user.getProfilePic()) {
+				Map<String, String> map = awsClientProcessor.prepareFileName(
 						NotificationType.PROFILE.getNotificationId(), user.getUserId(),
-						PlatformThreadLocalDataFactory.getInstance().getRequestData().getRequestId()));
+						PlatformThreadLocalDataFactory.getInstance().getRequestData().getRequestId());
+				profilePicfileName = map.get("FILENAME");
+				profilePicUrl = map.get("URL");
+				awsClientProcessor.putObject(user.getProfilePic(), profilePicfileName,
+						PlatformThreadLocalDataFactory.getInstance().getRequestData().getRequestId());
+				user.setProfilePicUrl(profilePicUrl);
+
+			}
 
 			dataServiceRequest = new DataServiceRequest<>(user);
 			user = userAdapter.updateUserDetails(dataServiceRequest);
