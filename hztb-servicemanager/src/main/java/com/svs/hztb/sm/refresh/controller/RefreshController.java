@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.svs.hztb.api.sm.model.refresh.RefreshInput;
+import com.svs.hztb.api.sm.model.refresh.OpinionRefreshRequest;
 import com.svs.hztb.api.sm.model.refresh.RefreshOutput;
 import com.svs.hztb.service.RefreshDataService;
 
@@ -31,7 +31,7 @@ public class RefreshController {
 	@RequestMapping(value = "/opinions", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> getAllOpinions(@RequestBody @Valid RefreshInput refreshInput) {
+	public ResponseEntity<String> getAllOpinions(@RequestBody @Valid OpinionRefreshRequest refreshInput) {
 		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getOpinions(refreshInput);
 		if (refreshOutput.isError()) {
@@ -53,7 +53,7 @@ public class RefreshController {
 	@RequestMapping(value = "/opinionResponses", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> getOpinionResponses(@RequestBody @Valid RefreshInput refreshInput) {
+	public ResponseEntity<String> getOpinionResponses(@RequestBody @Valid OpinionRefreshRequest refreshInput) {
 		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getResponsesByOpinion(refreshInput);
 		if (refreshOutput.isError()) {
@@ -75,7 +75,7 @@ public class RefreshController {
 	@RequestMapping(value = "/userResponses", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> getResponses(@RequestBody @Valid RefreshInput refreshInput) {
+	public ResponseEntity<String> getResponses(@RequestBody @Valid OpinionRefreshRequest refreshInput) {
 		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getResponsesByUser(refreshInput);
 		if (refreshOutput.isError()) {
@@ -98,7 +98,7 @@ public class RefreshController {
 	@RequestMapping(value = "/allResponsesCounts", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> allResponsesCounts(@RequestBody @Valid RefreshInput refreshInput) {
+	public ResponseEntity<String> allResponsesCounts(@RequestBody @Valid OpinionRefreshRequest refreshInput) {
 		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getAllResponsesCounts(refreshInput);
 		if (refreshOutput.isError()) {
@@ -120,7 +120,7 @@ public class RefreshController {
 	@RequestMapping(value = "/givenPendingInfo", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> getOpinionsGivenPending(@RequestBody @Valid RefreshInput refreshInput) {
+	public ResponseEntity<String> getOpinionsGivenPending(@RequestBody @Valid OpinionRefreshRequest refreshInput) {
 		ResponseEntity<String> response;
 		RefreshOutput refreshOutput = refreshDataService.getOpinionsGivenPending(refreshInput);
 		if (refreshOutput.isError()) {

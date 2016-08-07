@@ -13,10 +13,10 @@ public class ErrorStatus implements Serializable {
 
 	private static final String STATUS = "status";
 
-	private final Map<String, String> statusCodes = new HashMap<String, String>();
+	private final Map<String, String> statusCodes = new HashMap<>();
 
 	private final String message;
-	
+
 	@JsonCreator
 	public ErrorStatus(@JsonProperty("status") String statusCode, @JsonProperty("message") String message) {
 		statusCodes.put(STATUS, statusCode);

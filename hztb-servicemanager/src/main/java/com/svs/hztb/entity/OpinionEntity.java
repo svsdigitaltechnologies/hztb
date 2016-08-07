@@ -3,18 +3,15 @@ package com.svs.hztb.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-
-
 
 /**
  * The persistent class for the opinion database table.
@@ -22,14 +19,16 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "opinion", schema = "ebdb")
- @NamedQuery(name="Opinion.findAll", query="SELECT o FROM OpinionEntity o")
+@NamedQuery(name = "Opinion.findAll", query = "SELECT o FROM OpinionEntity o")
 public class OpinionEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "opinion_id")
 	private int opinionId;
 
+	@Column(name = "photo")
 	private String photo;
 
 	@Column(name = "product_url")
@@ -38,8 +37,9 @@ public class OpinionEntity implements Serializable {
 	@Column(name = "reported_action")
 	private String reportedAction;
 
+	@GeneratedValue
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "requested_time" , insertable = false)
+	@Column(name = "requested_time", insertable = false, updatable = false)
 	private Date requestedTime;
 
 	@Column(name = "channel_id")
@@ -49,21 +49,19 @@ public class OpinionEntity implements Serializable {
 	private int groupId;
 
 	@Column(name = "requester_user_id")
-	private int userId;
+	private Long userId;
 
 	@Column(name = "store_id")
 	private String storeId;
-	
-	//bi-directional many-to-one association to Product
-	
-	
-	
-	//@ManyToOne(cascade=CascadeType.MERGE)
-//	@ManyToOne(cascade=CascadeType.ALL)
-//	private ProductEntity product;
+
+	// bi-directional many-to-one association to Product
+
+	// @ManyToOne(cascade=CascadeType.MERGE)
+	// @ManyToOne(cascade=CascadeType.ALL)
+	// private ProductEntity product;
 	@Column(name = "product_name")
 	private String product;
-	
+
 	public OpinionEntity() {
 	}
 
@@ -123,11 +121,11 @@ public class OpinionEntity implements Serializable {
 		this.groupId = groupId;
 	}
 
-	public int getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -146,6 +144,5 @@ public class OpinionEntity implements Serializable {
 	public void setProduct(String product) {
 		this.product = product;
 	}
-
 
 }

@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,11 +14,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
+import com.svs.hztb.common.logging.Logger;
+import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.service.UserDataService;
 
+/**
+ * 
+ * Controller class for Registration Service API
+ * 
+ * @author skairamk
+ *
+ */
 @RestController
 @RequestMapping("/user")
 public class RegistrationController {
+
+	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(RegistrationController.class);
 
 	@Autowired
 	private UserDataService userDataService;
@@ -40,6 +52,7 @@ public class RegistrationController {
 	}
 
 	private ResponseEntity<RegistrationResponse> buildRegisterResponse(RegistrationResponse registrationResponse) {
-		return ResponseEntity.status(HttpStatus.SC_OK).body(registrationResponse);
+		return ResponseEntity.status(HttpStatus.SC_OK).contentType(MediaType.APPLICATION_JSON)
+				.body(registrationResponse);
 	}
 }

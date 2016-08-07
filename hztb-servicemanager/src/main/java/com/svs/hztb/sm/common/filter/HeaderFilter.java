@@ -38,12 +38,14 @@ public class HeaderFilter implements Filter {
 			throws IOException, ServletException {
 		PerformanceTimer timer = new PerformanceTimer();
 		String uri = ((HttpServletRequest) request).getRequestURI();
+		Integer contentLength = ((HttpServletRequest) request).getContentLength();
+
 		RequestData requestData = new SimpleRequestMetadata();
 		headerUtil.populateRequestDataFromHeader(requestData, headerUtil.buildHeaderMap((HttpServletRequest) request));
 		PlatformThreadLocalDataFactory.getInstance().setRequestData(requestData);
 		chain.doFilter(request, response);
-		timer.logPerformance("Request completed for URI: " + uri + " Overall time took for : "
-				+ ((HttpServletRequest) request).getRequestURI());
+		timer.logPerformance("Request completed for URI: " + uri + " ContentLength : " + contentLength + " bytes"
+				+ " Overall time took for : " + ((HttpServletRequest) request).getRequestURI());
 	}
 
 	@Override

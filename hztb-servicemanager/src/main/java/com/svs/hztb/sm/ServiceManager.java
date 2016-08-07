@@ -48,8 +48,6 @@ public class ServiceManager extends SpringBootServletInitializer
 	private static void configureLogging() {
 		System.setProperty("log4j.configurationFile", "log4j2.xml");
 		System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
-		// System.setProperty(LoggingSystem.SYSTEM_PROPERTY,
-		// Log4J2LoggingSystem.class.getName());
 	}
 
 	@Override
@@ -64,6 +62,6 @@ public class ServiceManager extends SpringBootServletInitializer
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		startupService.start(ServiceManager.class.getAnnotation(ComponentScan.class).value());
+		startupService.start();
 	}
 }

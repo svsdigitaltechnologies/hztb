@@ -1,27 +1,37 @@
 package com.svs.hztb.api.sm.model.user;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
+
+/**
+ * 
+ * Base class for User Profile Response
+ * 
+ * @author skairamk
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserProfileResponse {
-	private String mobileNumber;
+
+	@NotNull
+	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)
+	private Long userId;
+
 	private String name;
-	private String imei;
-	private String otpCode;
-	private String otpCreationDateTime;
-	private String deviceRegId;
 	private String emailAddress;
 	private String profilePictureURL;
-	public String getUserId() {
+
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
-	private String userId;
-	
 	public String getProfilePictureURL() {
 		return profilePictureURL;
 	}
@@ -31,14 +41,7 @@ public class UserProfileResponse {
 	}
 
 	public UserProfileResponse() {
-	}
-
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
+		// do nothing
 	}
 
 	public String getName() {
@@ -49,38 +52,6 @@ public class UserProfileResponse {
 		this.name = name;
 	}
 
-	public String getImei() {
-		return imei;
-	}
-
-	public void setImei(String imei) {
-		this.imei = imei;
-	}
-
-	public String getOtpCode() {
-		return otpCode;
-	}
-
-	public void setOtpCode(String otpCode) {
-		this.otpCode = otpCode;
-	}
-
-	public String getOtpCreationDateTime() {
-		return otpCreationDateTime;
-	}
-
-	public void setOtpCreationDateTime(String otpCreationDateTime) {
-		this.otpCreationDateTime = otpCreationDateTime;
-	}
-
-	public String getDeviceRegId() {
-		return deviceRegId;
-	}
-
-	public void setDeviceRegId(String deviceRegId) {
-		this.deviceRegId = deviceRegId;
-	}
-
 	public String getEmailAddress() {
 		return emailAddress;
 	}
@@ -88,5 +59,4 @@ public class UserProfileResponse {
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
-
 }

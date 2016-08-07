@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="DEBUG" monitorInterval="10">
 	<Properties>
-		<Property name="HOST_INSTANCE"> $${bundle:sm_external_config:hztb.instance.name}
+		<Property name="HOST_INSTANCE">
+			$${bundle:sm_external_config:hztb.instance.name}
 		</Property>
 		<Property name="LOG_PATTERN"> %d %p %c{1.} [%t] [$${HOST_INSTANCE}] %m
 			%ex%n</Property>
@@ -142,18 +143,20 @@
 	</Appenders>
 	<Loggers>
 
-		<Root level="DEBUG" includeLocation="true">
-			<AppenderRef ref="CONSOLE" />
+		<Root level="debug" includeLocation="true">
 			<AppenderRef ref="ROLLING" />
+			<AppenderRef ref="CONSOLE" />
 		</Root>
 
 		<Logger name="org.apache.http.wire" level="debug" additivity="false">
-			<AppenderRef ref="CONSOLE-WIRE-FILTER" />
 			<AppenderRef ref="ROLLING-WIRE-FILTER" />
 		</Logger>
-		<Logger name="org.apache.http" level="debug" />
+		<Logger name="org.apache.http" level="info" />
 		<Logger name="com.svs.hztb" level="debug" />
 		<Logger name="org.springframework" level="info" />
+		<Logger name="org.hibernate" level="info" />
+		<Logger name="org.hibernate.sql" level="debug" />
+
 		<Logger name="performance" level="debug" additivity="false">
 			<AppenderRef ref="PERFORMANCE" />
 		</Logger>
@@ -164,7 +167,6 @@
 			<AppenderRef ref="CALLOUT" />
 		</Logger>
 		<Logger name="failures" level="info" additivity="false">
-			<AppenderRef ref="CONSOLE-MSG-ONLY" />
 			<AppenderRef ref="FAILURE" />
 		</Logger>
 		<Logger name="stacktraces" level="debug" additivity="false">

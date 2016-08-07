@@ -18,6 +18,12 @@ import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.logging.filter.RequestWrapper;
 import com.svs.hztb.common.logging.filter.ResponseWrapper;
 
+/**
+ * 
+ * 
+ * @author skairamkonda
+ *
+ */
 @Component
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class RequestResponseLoggingFilter extends OncePerRequestFilter {
@@ -53,8 +59,7 @@ public class RequestResponseLoggingFilter extends OncePerRequestFilter {
 
 	private void logRequest(final RequestWrapper requestWrapper) {
 		try {
-			LOGGER.debug("Requested URI: " + requestWrapper.getRequestURL());
-			LOGGER.debug("Logging incoming HTTP request");
+			LOGGER.debug("Logging incoming HTTP request :{} ", requestWrapper.getRequestURL());
 			String contents = requestWrapper.getContents();
 			LOGGER.debug(REQUEST_BODY_MESSAGE_TEMPLATE, contents);
 		} catch (IOException ioException) {

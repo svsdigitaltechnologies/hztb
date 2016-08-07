@@ -6,6 +6,13 @@ import javax.validation.constraints.Size;
 
 import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
 
+/**
+ * 
+ * Request class for Validate OTP Service API
+ * 
+ * @author skairamk
+ *
+ */
 public class ValidateOTPRequest {
 
 	@NotNull
@@ -19,31 +26,19 @@ public class ValidateOTPRequest {
 	private String otpCode;
 
 	@NotNull
-	@Pattern(regexp = HZTBRegularExpressions.ALPHA_NUMERIC_REGEX)
-	private String imei;
+	@Pattern(regexp = HZTBRegularExpressions.DEVICE_ID_REGEX)
+	@Size(min = 16, max = 64)
+	private String uniqueId;
 
 	@NotNull
 	private String deviceRegId;
 
-	//@NotNull
-	//@Size(min = 1, max = 64)
-	@Pattern(regexp = HZTBRegularExpressions.ALPHA_NUMERIC_REGEX)
-	private String deviceId;
-	
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
-	}
-
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
 	}
 
 	public String getOtpCode() {
@@ -54,12 +49,12 @@ public class ValidateOTPRequest {
 		this.otpCode = otpCode;
 	}
 
-	public String getImei() {
-		return imei;
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
-	public void setImei(String imei) {
-		this.imei = imei;
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	public String getDeviceRegId() {

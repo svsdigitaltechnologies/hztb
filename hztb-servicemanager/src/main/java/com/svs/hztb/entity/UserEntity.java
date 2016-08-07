@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -24,7 +26,8 @@ public class UserEntity implements Serializable {
 
 	@Id
 	@Column(name = "user_id")
-	private int userId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
 
 	@Column(name = "data_pushed_ind")
 	private String dataPushedInd;
@@ -32,15 +35,11 @@ public class UserEntity implements Serializable {
 	@Column(name = "email_address")
 	private String emailAddress;
 
-	private String firstname;
+	@Column(name = "user_name")
+	private String userName;
 
 	@Column(name = "gcm_reg_id")
 	private String gcmRegId;
-
-	@Column(name = "imei_code")
-	private String imeiCode;
-
-	private String lastname;
 
 	@Column(name = "mobile_number")
 	private String mobileNumber;
@@ -50,16 +49,12 @@ public class UserEntity implements Serializable {
 
 	@Column(name = "otp_create_time")
 	private String otpCreateTime;
-	
+
 	@Column(name = "pic_url")
 	private String picUrl;
-	
 
-	// bi-directional many-to-many association to Group
-	@ManyToMany
-	@JoinTable(name = "user_group", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "group_id") })
-	private List<GroupEntity> groups;
+	@Column(name = "pic_version", insertable = false)
+	private String picVersion;
 
 	@Column(name = "invalid_otp_retries")
 	private String invalidOtpRetries;
@@ -67,24 +62,66 @@ public class UserEntity implements Serializable {
 	@Column(name = "device_id")
 	private String deviceId;
 
+	@Column(name = "registered", insertable = false)
+	private String registered;
+
+	@Column(name = "registered_already", insertable = false)
+	private String registeredAlready;
+
+	public String getRegisteredAlready() {
+		return registeredAlready;
+	}
+
+	public void setRegisteredAlready(String registeredAlready) {
+		this.registeredAlready = registeredAlready;
+	}
+
+	public String getRegistered() {
+		return registered;
+	}
+
+	public void setRegistered(String registered) {
+		this.registered = registered;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPicVersion() {
+		return picVersion;
+	}
+
+	public void setPicVersion(String picVersion) {
+		this.picVersion = picVersion;
+	}
+
+	// bi-directional many-to-many association to Group
+	@ManyToMany
+	@JoinTable(name = "user_group", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "group_id") })
+	private List<GroupEntity> groups;
+
 	public UserEntity() {
+		// do nothing
 	}
 
 	public String getPicUrl() {
 		return picUrl;
 	}
 
-
 	public void setPicUrl(String picUrl) {
 		this.picUrl = picUrl;
 	}
 
-
-	public int getUserId() {
+	public Long getUserId() {
 		return this.userId;
 	}
 
-	
 	public String getDeviceId() {
 		return deviceId;
 	}
@@ -93,7 +130,7 @@ public class UserEntity implements Serializable {
 		this.deviceId = deviceId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -113,36 +150,12 @@ public class UserEntity implements Serializable {
 		this.emailAddress = emailAddress;
 	}
 
-	public String getFirstname() {
-		return this.firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
 	public String getGcmRegId() {
 		return this.gcmRegId;
 	}
 
 	public void setGcmRegId(String gcmRegId) {
 		this.gcmRegId = gcmRegId;
-	}
-
-	public String getImeiCode() {
-		return this.imeiCode;
-	}
-
-	public void setImeiCode(String imeiCode) {
-		this.imeiCode = imeiCode;
-	}
-
-	public String getLastname() {
-		return this.lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
 	}
 
 	public String getMobileNumber() {

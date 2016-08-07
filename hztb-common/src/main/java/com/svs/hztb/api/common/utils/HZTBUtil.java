@@ -4,9 +4,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 /**
- * <p>
- * Util class fo generating OTP, OTP allowed.
- * </p>
+ * Util class for generating OTP, OTP allowed.
  * 
  * @author skairamk
  *
@@ -15,7 +13,7 @@ public final class HZTBUtil {
 	static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	private HZTBUtil() {
-
+		// do nothing
 	}
 
 	public static String getUTCDate() {
@@ -23,12 +21,26 @@ public final class HZTBUtil {
 		return t1.toString();
 	}
 
+	/**
+	 * This method is used to generate otp code.
+	 * 
+	 * @return Long
+	 * 
+	 */
 	public static Long generateSixDigitNumber() {
 		Long aNumber;
 		aNumber = (long) ((Math.random() * 900000) + 100000);
 		return aNumber;
 	}
 
+	/**
+	 * This method is used to check if otp validation is allowed or not.
+	 * 
+	 * @param otpCreationDateTime
+	 * @param invalidOtpCount
+	 * @return Long
+	 * 
+	 */
 	public static boolean isOtpValidationAllowed(String otpCreationDateTime, String invalidOtpCount) {
 
 		boolean isOtpValidationAllowed = false;

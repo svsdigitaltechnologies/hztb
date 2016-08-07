@@ -1,16 +1,16 @@
 package com.svs.hztb.api.sm.model.notification;
 
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
+import com.svs.hztb.api.sm.model.opinion.OpinionRequest;
 
 public class RequestOpinionNotification extends NotificationRequest {
 	
-	RequestOpinionInput requestOpinionInput;
+	OpinionRequest requestOpinionInput;
 	
-	public RequestOpinionInput getRequestOpinionInput() {
+	public OpinionRequest getRequestOpinionInput() {
 		return requestOpinionInput;
 	}
 	
-	public void setRequestOpinionInput(RequestOpinionInput requestOpinionInput) {
+	public void setRequestOpinionInput(OpinionRequest requestOpinionInput) {
 		this.requestOpinionInput = requestOpinionInput;
 	}
 }

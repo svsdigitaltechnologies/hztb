@@ -5,8 +5,7 @@ import java.util.function.Function;
 import com.svs.hztb.api.sm.model.refresh.OpinionData;
 import com.svs.hztb.entity.OpinionEntity;
 
-public class OpinionEntitityToDataConverter implements 
-		Function<OpinionEntity, OpinionData>{
+public class OpinionEntitityToDataConverter implements Function<OpinionEntity, OpinionData> {
 
 	@Override
 	public OpinionData apply(OpinionEntity opinionEntity) {
@@ -14,10 +13,9 @@ public class OpinionEntitityToDataConverter implements
 		opinionData.setOpinionId(opinionEntity.getOpinionId());
 		opinionData.setProductName(opinionEntity.getProduct());
 		opinionData.setRequestedGroupId(opinionEntity.getGroupId());
-		//opinionData.setRequestedUserId(opinionEntity.getUserId());
+		opinionData.setSelfieUrl(opinionEntity.getPhoto());
+		// opinionData.setRequestedUserId(opinionEntity.getUserId());
 		return opinionData;
 	}
-
-
 
 }

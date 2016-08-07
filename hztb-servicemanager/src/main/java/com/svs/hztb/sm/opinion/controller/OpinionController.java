@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
+import com.svs.hztb.api.sm.model.opinion.OpinionRequest;
 import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
-import com.svs.hztb.api.sm.model.opinion.RequestOpinionInput;
 import com.svs.hztb.service.OpinionDataService;
 
 @RestController
@@ -37,7 +37,7 @@ public class OpinionController {
 	@RequestMapping(value = "/requestOpinion", consumes = { "application/json" }, produces = {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> requestOpinion(@RequestBody @Valid RequestOpinionInput requestOpinionInput) {
+	public ResponseEntity<String> requestOpinion(@RequestBody @Valid OpinionRequest requestOpinionInput) {
 		ResponseEntity<String> response;
 		OpinionOutput opinionOutput = opinionDataService.requestOpinion(requestOpinionInput);
 		if (opinionOutput.isError()) {
@@ -66,13 +66,13 @@ public class OpinionController {
 
 	@RequestMapping(value = "/sample", produces = { "application/json" }, method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<RequestOpinionInput> sample() {
+	public ResponseEntity<OpinionRequest> sample() {
 
-		RequestOpinionInput requestOpinionRequest = new RequestOpinionInput();
-		requestOpinionRequest.setRequesterUserId(12345);
-		List<Integer> requestedUserIds = new ArrayList<>();
-		requestedUserIds.add(00123);
-		requestedUserIds.add(00234);
+		OpinionRequest requestOpinionRequest = new OpinionRequest();
+		requestOpinionRequest.setRequesterUserId(12345L);
+		List<Long> requestedUserIds = new ArrayList<>();
+		requestedUserIds.add(00123L);
+		requestedUserIds.add(00234L);
 		requestOpinionRequest.setRequestedUserIds(requestedUserIds);
 		requestOpinionRequest.setDate(new Date());
 		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionRequest);

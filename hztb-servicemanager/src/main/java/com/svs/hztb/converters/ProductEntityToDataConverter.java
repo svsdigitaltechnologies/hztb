@@ -5,8 +5,7 @@ import java.util.function.Function;
 import com.svs.hztb.api.sm.model.product.Product;
 import com.svs.hztb.entity.ProductEntity;
 
-public class ProductEntityToDataConverter  implements 
-Function<ProductEntity, Product> {
+public class ProductEntityToDataConverter implements Function<ProductEntity, Product> {
 
 	@Override
 	public Product apply(ProductEntity t) {
@@ -15,6 +14,7 @@ Function<ProductEntity, Product> {
 		product.setLongDesc(t.getLongDesc());
 		product.setPrice(t.getPrice());
 		product.setShortDesc(t.getShortDesc());
+		product.setImageUrl(t.getImageUrl());
 		return product;
 	}
 

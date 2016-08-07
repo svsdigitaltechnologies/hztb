@@ -36,8 +36,8 @@ public abstract class GCMRestfulAbstractTransformer<T, S> extends RestfulService
 		LOGGER.logGCMActivity("Success {}, Failure {}, Canonical Ids {}, Mutilcast id {}", messageResponse.getSuccess(),
 				messageResponse.getFailure(), messageResponse.getCanonicalIds(), messageResponse.getMulticastId());
 
-		for (int i = 0; i < messageRequest.getRegistrationIds().size(); i++) {
-			String regId = messageRequest.getRegistrationIds().get(i);
+		for (int i = 0; i < messageRequest.getRegistration_ids().size(); i++) {
+			String regId = messageRequest.getRegistration_ids().get(i);
 			printGCMResponse(messageResponse.getResults().get(i), regId);
 		}
 	}

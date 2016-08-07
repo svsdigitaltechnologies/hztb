@@ -6,6 +6,12 @@ import javax.validation.constraints.Size;
 
 import com.svs.hztb.common.util.StringUtil;
 
+/**
+ * Implementation class for Failure Log Message
+ * 
+ * @author skairamkonda
+ *
+ */
 public class FailureLogMessage {
 	static final int REASON_FAILURE_TYPE_MAX = 30;
 	static final int REASON_FAILURE_TEXT_MAX = 30;
@@ -35,6 +41,17 @@ public class FailureLogMessage {
 	@NotNull
 	private Object payload;
 
+	/**
+	 * FailureLogMessage constructor
+	 * 
+	 * @param timestamp
+	 * @param deliveryChannel
+	 * @param messageType
+	 * @param reasonFailureType
+	 * @param reasonFailureText
+	 * @param payload
+	 * 
+	 */
 	public FailureLogMessage(String timestamp, String deliveryChannel, String messageType, String reasonFailureType,
 			String reasonFailureText, Object payload) {
 		this.timestamp = timestamp;

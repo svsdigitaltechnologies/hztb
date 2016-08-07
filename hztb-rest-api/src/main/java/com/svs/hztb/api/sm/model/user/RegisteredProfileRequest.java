@@ -2,6 +2,7 @@ package com.svs.hztb.api.sm.model.user;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
 
@@ -11,18 +12,19 @@ import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
  * @author skairamk
  *
  */
-public class UserProfileRequest {
+public class RegisteredProfileRequest {
 
 	@NotNull
+	@Size(min = 1, max = 15)
 	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)
-	private String userId;
+	private String mobileNumber;
 
-	public String getUserId() {
-		return userId;
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
 }
