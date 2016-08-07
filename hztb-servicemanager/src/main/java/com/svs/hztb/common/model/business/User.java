@@ -2,55 +2,94 @@ package com.svs.hztb.common.model.business;
 
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
+import com.svs.hztb.api.sm.model.user.UpdateUserProfileRequest;
 import com.svs.hztb.api.sm.model.user.UserProfileRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 
 /**
  * This class is an business object for user data
  */
-
 public class User {
 
 	private String mobileNumber;
 	private String name;
-	private String imei;
 	private String otpCode;
 	private String otpCreationDateTime;
 	private String deviceRegId;
 	private String dataPushed;
 	private String emailAddress;
-	private String userId;
+	private Long userId;
 	private String invalidOtpCount;
 	private byte[] profilePic;
 	private String profilePicUrl;
+	private String profilePicVersion;
 	private String deviceId;
+	private String registered;
+	private String registeredAlready;
 
 	public User() {
-		// Intentianally left blank.
+		// Intentionally left blank.
 	}
 
+	/**
+	 * Constructor for registration request.
+	 * 
+	 * @param registrationRequest
+	 */
 	public User(RegistrationRequest registrationRequest) {
 		this.mobileNumber = registrationRequest.getMobileNumber();
+		this.deviceId = registrationRequest.getUniqueId();
 	}
 
+	/**
+	 * Constructor for ping request.
+	 * 
+	 * @param pingRequest
+	 */
 	public User(PingRequest pingRequest) {
-		this.mobileNumber = pingRequest.getMobileNumber();
-		this.setImei(pingRequest.getImei());
+		this.userId = Long.parseLong(pingRequest.getUserId());
+		this.deviceId = pingRequest.getUniqueId();
 	}
 
+	/**
+	 * Constructor for validateOTP request.
+	 * 
+	 * @param validateOTPRequest
+	 */
 	public User(ValidateOTPRequest validateOTPRequest) {
 		this.mobileNumber = validateOTPRequest.getMobileNumber();
 		this.otpCode = validateOTPRequest.getOtpCode();
-		this.imei = validateOTPRequest.getImei();
 		this.deviceRegId = validateOTPRequest.getDeviceRegId();
-		this.deviceId = validateOTPRequest.getDeviceId();
+		this.deviceId = validateOTPRequest.getUniqueId();
 	}
 
-	public User(UserProfileRequest userProfileRequest) {
-		this.mobileNumber = userProfileRequest.getMobileNumber();
+	/**
+	 * Constructor for updateUserProfile request.
+	 * 
+	 * @param userProfileRequest
+	 */
+	public User(UpdateUserProfileRequest userProfileRequest) {
+		this.userId = Long.parseLong(userProfileRequest.getUserId());
 		this.name = userProfileRequest.getName();
 		this.emailAddress = userProfileRequest.getEmailAddress();
 		this.profilePic = userProfileRequest.getProfilePic();
+	}
+
+	/**
+	 * Constructor for getUserProfile request.
+	 * 
+	 * @param userProfileRequest
+	 */
+	public User(UserProfileRequest userProfileRequest) {
+		this.userId = Long.parseLong(userProfileRequest.getUserId());
+	}
+
+	public String getProfilePicVersion() {
+		return profilePicVersion;
+	}
+
+	public void setProfilePicVersion(String profilePicVersion) {
+		this.profilePicVersion = profilePicVersion;
 	}
 
 	public String getDeviceId() {
@@ -85,11 +124,11 @@ public class User {
 		this.invalidOtpCount = invalidOtpCount;
 	}
 
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -133,14 +172,6 @@ public class User {
 		this.otpCode = otpCode;
 	}
 
-	public String getImei() {
-		return imei;
-	}
-
-	public void setImei(String imei) {
-		this.imei = imei;
-	}
-
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
@@ -155,6 +186,22 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getRegistered() {
+		return registered;
+	}
+
+	public void setRegistered(String registered) {
+		this.registered = registered;
+	}
+
+	public String getRegisteredAlready() {
+		return registeredAlready;
+	}
+
+	public void setRegisteredAlready(String registeredAlready) {
+		this.registeredAlready = registeredAlready;
 	}
 
 }

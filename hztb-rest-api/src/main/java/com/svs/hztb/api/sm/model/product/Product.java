@@ -1,10 +1,26 @@
 package com.svs.hztb.api.sm.model.product;
 
+/**
+ * 
+ * Model class for Product.
+ * 
+ * @author skairamk
+ *
+ */
 public class Product {
 	private String name;
 	private String longDesc;
 	private String shortDesc;
 	private double price;
+	private String imageUrl;
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
 	public String getName() {
 		return name;

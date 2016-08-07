@@ -3,14 +3,17 @@ package com.svs.hztb.api.sm.model.refresh;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.svs.hztb.api.sm.model.product.Product;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OpinionData {
 	private int opinionId;
 	// private int requestedUserId;
 	private int requestedGroupId;
 	private String productName;
 	private Product product;
+	private String selfieUrl;
 	private Map<String, Integer> responseCounts = new HashMap<String, Integer>();
 
 	public int getOpinionId() {
@@ -19,6 +22,14 @@ public class OpinionData {
 
 	public void setOpinionId(int opinionId) {
 		this.opinionId = opinionId;
+	}
+
+	public String getSelfieUrl() {
+		return selfieUrl;
+	}
+
+	public void setSelfieUrl(String selfieUrl) {
+		this.selfieUrl = selfieUrl;
 	}
 
 	// public int getRequestedUserId() {

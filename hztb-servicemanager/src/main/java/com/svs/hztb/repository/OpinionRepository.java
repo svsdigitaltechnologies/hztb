@@ -11,10 +11,10 @@ import com.svs.hztb.entity.OpinionEntity;
 
 public interface OpinionRepository extends JpaRepository<OpinionEntity, Integer> {
 	@Query("SELECT o FROM OpinionEntity o WHERE o.requestedTime >= :opinionRequestTime and o.userId = :userId")
-	List<OpinionEntity> findByUserIdLastUpdatedTime(@Param("userId") int userId,
+	List<OpinionEntity> findByUserIdLastUpdatedTime(@Param("userId") Long userId,
 			@Param("opinionRequestTime") Date requestedTime);
 
-	List<OpinionEntity> findByUserId(int userId);
+	List<OpinionEntity> findByUserId(Long userId);
 
 	OpinionEntity findByOpinionId(int opinionId);
 

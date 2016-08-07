@@ -1,15 +1,12 @@
 package com.svs.hztb.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -35,11 +32,11 @@ public class GroupEntity implements Serializable {
 	private String groupName;
 
 	@Column(name = "group_owner")
-	private int groupOwner;
+	private Long groupOwner;
 
-//	// bi-directional many-to-many association to User
-//	@ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
-//	private List<UserEntity> users;
+	// // bi-directional many-to-many association to User
+	// @ManyToMany(mappedBy = "groups", cascade = CascadeType.ALL)
+	// private List<UserEntity> users;
 
 	public GroupEntity() {
 	}
@@ -68,20 +65,20 @@ public class GroupEntity implements Serializable {
 		this.groupName = groupName;
 	}
 
-	public int getGroupOwner() {
+	public Long getGroupOwner() {
 		return this.groupOwner;
 	}
 
-	public void setGroupOwner(int groupOwner) {
+	public void setGroupOwner(Long groupOwner) {
 		this.groupOwner = groupOwner;
 	}
 
-//	public List<UserEntity> getUsers() {
-//		return this.users;
-//	}
-//
-//	public void setUsers(List<UserEntity> users) {
-//		this.users = users;
-//	}
+	// public List<UserEntity> getUsers() {
+	// return this.users;
+	// }
+	//
+	// public void setUsers(List<UserEntity> users) {
+	// this.users = users;
+	// }
 
 }

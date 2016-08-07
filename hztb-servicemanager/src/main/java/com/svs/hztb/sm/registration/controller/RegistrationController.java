@@ -18,6 +18,13 @@ import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.service.UserDataService;
 
+/**
+ * 
+ * Controller class for Registration Service API
+ * 
+ * @author skairamk
+ *
+ */
 @RestController
 @RequestMapping("/user")
 public class RegistrationController {

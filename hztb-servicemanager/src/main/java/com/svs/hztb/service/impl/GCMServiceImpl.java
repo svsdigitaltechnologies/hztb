@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.svs.hztb.api.sm.model.notification.NotificationRequest;
 import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
-import com.svs.hztb.api.sm.model.opinion.OpinionRequest;
 import com.svs.hztb.api.sm.model.product.Product;
 import com.svs.hztb.common.enums.NotificationType;
 import com.svs.hztb.common.exception.SystemError;
@@ -23,7 +22,6 @@ import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
 import com.svs.hztb.common.model.RequestData;
 import com.svs.hztb.common.model.business.User;
 import com.svs.hztb.entity.OpinionEntity;
-import com.svs.hztb.entity.ProductEntity;
 import com.svs.hztb.entity.UserEntity;
 import com.svs.hztb.orchestration.component.model.FlowContext;
 import com.svs.hztb.orchestration.component.step.StepDefinition;
@@ -42,17 +40,16 @@ public class GCMServiceImpl implements GCMService {
 
 	@Autowired
 	private StepDefinitionFactory stepDefinitionFactory;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private ProductRepository productRepository;
 
-
 	@Autowired
 	private OpinionRepository opinionRepository;
-	
+
 	@Value("${gcm.welcome.message}")
 	private String welcomeMessage;
 
@@ -61,10 +58,10 @@ public class GCMServiceImpl implements GCMService {
 
 	@Value("${gcm.opinionrequest.message}")
 	private String opinionRequestMessage;
-	
+
 	@Value("${gcm.opinionresponse.message}")
 	private String opinionResponseMessage;
-	
+
 	/**
 	 * Initial delay before first retry, without jitter.
 	 */
@@ -107,24 +104,24 @@ public class GCMServiceImpl implements GCMService {
 
 	@Override
 	@Async
-	public void sendRequestOpinionNotification(RequestData requestData, List<Integer> toUserIds, Integer fromUserId) {
+	public void sendRequestOpinionNotification(RequestData requestData, List<Long> toUserIds, Long fromUserId) {
 
 		LOGGER.debug("Async Call {}", "sendRequestOpinionNotification");
 
 		NotificationRequest notificationRequest = new NotificationRequest();
-		
+
 		List<UserEntity> userEntities = (List<UserEntity>) userRepository.findAll(toUserIds);
 		UserEntity requestedUserEntity = userRepository.findOne(fromUserId);
-		
+
 		userEntities.stream().forEach(p -> notificationRequest.addDeviceRegId(p.getGcmRegId()));
-		
+
 		notificationRequest.setTitle(title);
 		notificationRequest.setMessage("HowzThisBuddy " + opinionRequestMessage);
 		notificationRequest.setNotificationType(NotificationType.REQUEST.getNotificationId());
 
-		
-		Optional.ofNullable(requestedUserEntity.getFirstname()).ifPresent(p -> notificationRequest.setMessage(p + " " + opinionRequestMessage));
-		
+		Optional.ofNullable(requestedUserEntity.getUserName())
+				.ifPresent(p -> notificationRequest.setMessage(p + " " + opinionRequestMessage));
+
 		PlatformThreadLocalDataFactory.getInstance().setRequestData(requestData);
 
 		FlowContext flowContext = new FlowContext(PlatformThreadLocalDataFactory.getInstance().getRequestData());
@@ -147,20 +144,20 @@ public class GCMServiceImpl implements GCMService {
 	public void sendResponseOpinionNotification(RequestData requestData, OpinionResponseInput opinionResponseInput) {
 		LOGGER.debug("Async Call {}", "sendResponseOpinionNotification");
 		NotificationRequest notificationRequest = new NotificationRequest();
-		
+
 		UserEntity responderUserEntity = userRepository.findOne(opinionResponseInput.getUserId());
 		OpinionEntity opinionEntity = opinionRepository.findOne(opinionResponseInput.getOpinionReqId());
 		UserEntity requestedUserEntity = userRepository.findOne(opinionEntity.getUserId());
-		
+
 		notificationRequest.addDeviceRegId(requestedUserEntity.getGcmRegId());
 		Product product = new Product();
 		product.setName(opinionEntity.getProduct());
 		notificationRequest.setTitle(title);
 		notificationRequest.setMessage("HowzThisBuddy " + opinionResponseMessage);
 		notificationRequest.setNotificationType(NotificationType.RESPONSE.getNotificationId());
-		
-		Optional.ofNullable(responderUserEntity.getFirstname()).ifPresent(p -> notificationRequest.setMessage(p + " " + opinionResponseMessage + " " + opinionResponseInput.getResponseCode()));
 
+		Optional.ofNullable(responderUserEntity.getUserName()).ifPresent(p -> notificationRequest
+				.setMessage(p + " " + opinionResponseMessage + " " + opinionResponseInput.getResponseCode()));
 
 		PlatformThreadLocalDataFactory.getInstance().setRequestData(requestData);
 

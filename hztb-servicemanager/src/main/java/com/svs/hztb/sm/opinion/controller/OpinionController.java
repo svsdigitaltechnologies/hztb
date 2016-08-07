@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.svs.hztb.api.sm.model.opinion.OpinionOutput;
-import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
 import com.svs.hztb.api.sm.model.opinion.OpinionRequest;
+import com.svs.hztb.api.sm.model.opinion.OpinionResponseInput;
 import com.svs.hztb.service.OpinionDataService;
 
 @RestController
@@ -69,10 +69,10 @@ public class OpinionController {
 	public ResponseEntity<OpinionRequest> sample() {
 
 		OpinionRequest requestOpinionRequest = new OpinionRequest();
-		requestOpinionRequest.setRequesterUserId(12345);
-		List<Integer> requestedUserIds = new ArrayList<>();
-		requestedUserIds.add(00123);
-		requestedUserIds.add(00234);
+		requestOpinionRequest.setRequesterUserId(12345L);
+		List<Long> requestedUserIds = new ArrayList<>();
+		requestedUserIds.add(00123L);
+		requestedUserIds.add(00234L);
 		requestOpinionRequest.setRequestedUserIds(requestedUserIds);
 		requestOpinionRequest.setDate(new Date());
 		return ResponseEntity.status(HttpStatus.SC_OK).body(requestOpinionRequest);

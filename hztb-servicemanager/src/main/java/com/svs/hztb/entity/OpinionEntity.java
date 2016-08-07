@@ -37,8 +37,9 @@ public class OpinionEntity implements Serializable {
 	@Column(name = "reported_action")
 	private String reportedAction;
 
+	@GeneratedValue
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "requested_time", insertable = false)
+	@Column(name = "requested_time", insertable = false, updatable = false)
 	private Date requestedTime;
 
 	@Column(name = "channel_id")
@@ -48,7 +49,7 @@ public class OpinionEntity implements Serializable {
 	private int groupId;
 
 	@Column(name = "requester_user_id")
-	private int userId;
+	private Long userId;
 
 	@Column(name = "store_id")
 	private String storeId;
@@ -120,11 +121,11 @@ public class OpinionEntity implements Serializable {
 		this.groupId = groupId;
 	}
 
-	public int getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 

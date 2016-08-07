@@ -17,6 +17,12 @@ import com.svs.hztb.common.enums.ServiceManagerStatusCode;
 import com.svs.hztb.orchestration.exception.BusinessError;
 import com.svs.hztb.service.UserDataService;
 
+/**
+ * Controller for Validate OTP Service API
+ * 
+ * @author skairamk
+ *
+ */
 @RestController
 @RequestMapping("/user")
 public class ValidateOTPController {

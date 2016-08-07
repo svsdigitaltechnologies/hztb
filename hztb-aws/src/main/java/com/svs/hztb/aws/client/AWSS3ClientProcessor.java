@@ -71,6 +71,7 @@ public class AWSS3ClientProcessor {
 		 * PutObjectRequest(hztbBucketName, fileName, bis, omd)
 		 * .withCannedAcl(CannedAccessControlList.PublicRead));
 		 */
+
 		LOGGER.debug("S3 put request completed with fileName: {}", fileName);
 
 	}
@@ -83,14 +84,20 @@ public class AWSS3ClientProcessor {
 
 		if ("Profile".equals(notificationType)) {
 			fileName = profileBucketName + SLASH + objectName + ".jpg";
+			map.put(URL, "http://static.dnaindia.com/sites/default/files/2015/06/05/343491-hrithik-hi-res-2.jpg");
+
 		} else if ("Product".equals(notificationType)) {
 			fileName = productBucketName + SLASH + objectName + ".jpg";
+
 		} else if ("Selfie".equals(notificationType)) {
 			fileName = selfieBucketName + SLASH + objectName + ".jpg";
+			map.put(URL, "http://diabetesdad.org/files/2014/11/Rockstar.jpg");
+
 		}
 
 		String url = awss3Url + SLASH + hztbBucketName + SLASH + fileName;
-		map.put(URL, url);
+		// map.put(URL, url);
+
 		map.put(FILENAME, fileName);
 		LOGGER.debug("S3 prepareFileName request completed with fileName: {}", fileName);
 		LOGGER.debug("S3 prepareFileName request completed with URL: {}", url);

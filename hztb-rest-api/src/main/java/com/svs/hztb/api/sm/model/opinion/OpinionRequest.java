@@ -13,11 +13,10 @@ import com.svs.hztb.api.sm.model.product.Product;
  *
  */
 public class OpinionRequest {
-	private int requesterUserId;
+	private Long requesterUserId;
 	private Product product;
 	private int channelId;
 	private String storeGeoCode;
-	private String productUrl;
 	private byte[] selfiePic;
 
 	// Added for sample, delete this
@@ -26,14 +25,14 @@ public class OpinionRequest {
 	// private int requestedGroupId;
 	private String groupName;
 
-	private List<Integer> requestedUserIds;
+	private List<Long> requestedUserIds;
 	private List<Integer> requestedGroupIds;
 
-	public int getRequesterUserId() {
+	public Long getRequesterUserId() {
 		return requesterUserId;
 	}
 
-	public void setRequesterUserId(int requesterUserId) {
+	public void setRequesterUserId(Long requesterUserId) {
 		this.requesterUserId = requesterUserId;
 	}
 
@@ -61,20 +60,12 @@ public class OpinionRequest {
 		this.storeGeoCode = storeGeoCode;
 	}
 
-	public List<Integer> getRequestedUserIds() {
+	public List<Long> getRequestedUserIds() {
 		return requestedUserIds;
 	}
 
-	public void setRequestedUserIds(List<Integer> requestedUserIds) {
+	public void setRequestedUserIds(List<Long> requestedUserIds) {
 		this.requestedUserIds = requestedUserIds;
-	}
-
-	public String getProductUrl() {
-		return productUrl;
-	}
-
-	public void setProductUrl(String productUrl) {
-		this.productUrl = productUrl;
 	}
 
 	public Date getDate() {

@@ -80,9 +80,9 @@ public class GroupDataServiceImpl implements GroupDataService {
 		return groupOutput;
 	}
 
-	private List<UserGroupEntity> createUserGroup(List<Integer> addMembers, GroupEntity groupEntity) {
+	private List<UserGroupEntity> createUserGroup(List<Long> addMembers, GroupEntity groupEntity) {
 		List<UserGroupEntity> userGroupEntityList = new ArrayList<UserGroupEntity>();
-		for (int userId : addMembers) {
+		for (Long userId : addMembers) {
 			UserGroupEntity userGroupEntity = new UserGroupEntity();
 			UserGroupPK userGroupPK = new UserGroupPK();
 			userGroupPK.setGroupId(groupEntity.getGroupId());

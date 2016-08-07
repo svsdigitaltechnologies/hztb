@@ -5,18 +5,22 @@ import java.util.List;
 
 public class OpinionResponseInfo {
 	private List<OpinionResponseData> opinionResponseDataList = new ArrayList<OpinionResponseData>();
-	private List<Integer> unResponsiveUsers = new ArrayList<Integer>();
+	private List<Long> unResponsiveUsers = new ArrayList<>();
+
 	public List<OpinionResponseData> getOpinionResponseDataList() {
 		return opinionResponseDataList;
 	}
+
 	public void setOpinionResponseDataList(List<OpinionResponseData> opinionResponseDataList) {
 		this.opinionResponseDataList = opinionResponseDataList;
 	}
-	public List<Integer> getUnResponsiveUsers() {
+
+	public List<Long> getUnResponsiveUsers() {
 		return unResponsiveUsers;
 	}
-	public void setUnResponsiveUsers(List<Integer> unResponsiveUsers) {
+
+	public void setUnResponsiveUsers(List<Long> unResponsiveUsers) {
 		this.unResponsiveUsers = unResponsiveUsers;
 	}
- 
+
 }

@@ -103,7 +103,7 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 
 		opinionRepository.save(savedOpinionEntity);
 
-		List<Integer> requestedUserIds = new ArrayList<>();
+		List<Long> requestedUserIds = new ArrayList<>();
 		List<UserGroupEntity> userEntitiesList = userGroupEntityRepository.findByGroupId(opinionEntity.getGroupId());
 		for (UserGroupEntity userGroupEntity : userEntitiesList) {
 			requestedUserIds.add(userGroupEntity.getId().getUserId());
@@ -153,7 +153,7 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 
 	private List<UserGroupEntity> createUserGroup(OpinionRequest requestOpinionRequest, GroupEntity group) {
 		List<UserGroupEntity> userGroupEntityList = new ArrayList<UserGroupEntity>();
-		for (int userId : requestOpinionRequest.getRequestedUserIds()) {
+		for (Long userId : requestOpinionRequest.getRequestedUserIds()) {
 			UserGroupEntity userGroupEntity = new UserGroupEntity();
 			UserGroupPK userGroupPK = new UserGroupPK();
 			userGroupPK.setGroupId(group.getGroupId());
@@ -205,8 +205,6 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 		OpinionEntity opinionEntity = new OpinionEntity();
 		opinionEntity.setUserId(requestOpinionRequest.getRequesterUserId());
 
-		opinionEntity.setProductUrl(requestOpinionRequest.getProductUrl());
-
 		Product product = requestOpinionRequest.getProduct();
 
 		if (null != product) {
@@ -218,6 +216,7 @@ public class OpinionDataServiceImpl implements OpinionDataService {
 				productEntity.setLongDesc(product.getLongDesc());
 				productEntity.setShortDesc(product.getShortDesc());
 				productEntity.setPrice(product.getPrice());
+				productEntity.setImageUrl(product.getImageUrl());
 				productRepository.save(productEntity);
 			}
 

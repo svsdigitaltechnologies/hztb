@@ -2,33 +2,29 @@ package com.svs.hztb.api.sm.model.ping;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
+import com.svs.hztb.api.sm.model.user.UserProfileRequest;
 
-public class PingRequest {
+/**
+ * 
+ * Request class for Ping Service API
+ * 
+ * @author skairamk
+ *
+ */
+public class PingRequest extends UserProfileRequest {
+
 	@NotNull
-	@Size(min = 1, max = 15)
-	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)
-	private String mobileNumber;
+	@Pattern(regexp = HZTBRegularExpressions.DEVICE_ID_REGEX)
+	private String uniqueId;
 
-	@NotNull
-	@Pattern(regexp = HZTBRegularExpressions.ALPHA_NUMERIC_REGEX)
-	private String imei;
-
-	public String getMobileNumber() {
-		return mobileNumber;
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
-	public String getImei() {
-		return imei;
-	}
-
-	public void setImei(String imei) {
-		this.imei = imei;
-	}
 }

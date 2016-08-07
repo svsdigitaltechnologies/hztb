@@ -7,17 +7,17 @@ package com.svs.hztb.api.sm.model.refresh;
  *
  */
 public class OpinionRefreshRequest {
-	private int userId;
-	private int responderUserId;
+	private Long userId;
+	private Long responderUserId;
 	private int opinionId;
 	private String lastUpdatedTime;
 	private byte[] selfiePic;
 
-	public int getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -37,11 +37,11 @@ public class OpinionRefreshRequest {
 		this.opinionId = opinionId;
 	}
 
-	public int getResponderUserId() {
+	public Long getResponderUserId() {
 		return responderUserId;
 	}
 
-	public void setResponderUserId(int responderUserId) {
+	public void setResponderUserId(Long responderUserId) {
 		this.responderUserId = responderUserId;
 	}
 

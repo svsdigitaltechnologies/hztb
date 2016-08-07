@@ -16,10 +16,13 @@ import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
+import com.svs.hztb.api.sm.model.user.RegisteredProfileResponse;
+import com.svs.hztb.api.sm.model.user.RegisteredProfilesRequest;
+import com.svs.hztb.api.sm.model.user.RegisteredProfilesResponse;
+import com.svs.hztb.api.sm.model.user.UpdateUserProfileRequest;
+import com.svs.hztb.api.sm.model.user.UpdateUserProfileResponse;
 import com.svs.hztb.api.sm.model.user.UserProfileRequest;
-import com.svs.hztb.api.sm.model.user.UserProfileRequests;
 import com.svs.hztb.api.sm.model.user.UserProfileResponse;
-import com.svs.hztb.api.sm.model.user.UserProfileResponses;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPRequest;
 import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
 import com.svs.hztb.aws.client.AWSS3ClientProcessor;
@@ -45,7 +48,6 @@ import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 /**
  * This class is an service implementation for user related methods
  */
-
 @Service
 @Transactional
 public class UserDataServiceImpl implements UserDataService {
@@ -53,6 +55,10 @@ public class UserDataServiceImpl implements UserDataService {
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserDataServiceImpl.class);
 
 	private static final String ZERO = "0";
+
+	private static final String NO = "N";
+
+	private static final String YES = "Y";
 
 	@Autowired
 	private UserAdapter userAdapter;
@@ -70,22 +76,22 @@ public class UserDataServiceImpl implements UserDataService {
 	public RegistrationResponse register(RegistrationRequest registrationRequest) {
 		RegistrationResponse registrationResponse = null;
 		try {
-			Long otpCode = HZTBUtil.generateSixDigitNumber();
-			String utcDateTime = HZTBUtil.getUTCDate();
 
 			User user = new User(registrationRequest);
-			user.setOtpCode(otpCode.toString());
-			user.setOtpCreationDateTime(utcDateTime);
-			user.setInvalidOtpCount(ZERO);
-
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<>(user);
-			User findUser = userAdapter.findUser(dataServiceRequest);
+			User findUser = userAdapter.findUserByMobileAndDeviceId(dataServiceRequest);
+
+			user.setOtpCode(HZTBUtil.generateSixDigitNumber().toString());
+			user.setOtpCreationDateTime(HZTBUtil.getUTCDate());
+			user.setInvalidOtpCount(ZERO);
 
 			if (null != findUser) {
 				user.setUserId(findUser.getUserId());
-				dataServiceRequest = new DataServiceRequest<>(user);
+				user.setRegistered(NO);
+				dataServiceRequest.setPayload(user);
 				user = userAdapter.updateUserDetails(dataServiceRequest);
 			} else {
+				dataServiceRequest.setPayload(user);
 				user = userAdapter.createUser(dataServiceRequest);
 			}
 
@@ -130,8 +136,8 @@ public class UserDataServiceImpl implements UserDataService {
 		try {
 			User user = new User(pingRequest);
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<>(user);
-			user = userAdapter.ping(dataServiceRequest);
-			pingResponse = populatePingResponse(user);
+			userAdapter.ping(dataServiceRequest);
+			pingResponse = populatePingResponse();
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during ping : {}", dataServiceException);
 			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
@@ -143,10 +149,8 @@ public class UserDataServiceImpl implements UserDataService {
 		return pingResponse;
 	}
 
-	private PingResponse populatePingResponse(User user) {
-		PingResponse pingResponse = new PingResponse();
-		pingResponse.setMobileNumber(user.getMobileNumber());
-		return pingResponse;
+	private PingResponse populatePingResponse() {
+		return new PingResponse();
 	}
 
 	@Override
@@ -157,35 +161,30 @@ public class UserDataServiceImpl implements UserDataService {
 		try {
 			User user = new User(validateOTPRequest);
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<>(user);
-			User userFromDB = userAdapter.getUserDetails(dataServiceRequest);
+			User userFromDB = userAdapter.getUserByMobileAndDeviceId(dataServiceRequest);
 			Boolean isOTPValidationAllowed = HZTBUtil.isOtpValidationAllowed(userFromDB.getOtpCreationDateTime(),
 					userFromDB.getInvalidOtpCount());
-
+			User updatedUser;
 			if (isOTPValidationAllowed) {
 				if (validateOTPRequest.getOtpCode().equals(userFromDB.getOtpCode())) {
-					dataServiceRequest.getPayload().setUserId(userFromDB.getUserId());
-
-					// updating IMEI, device registration id
-					userFromDB = userAdapter.updateUserDetails(dataServiceRequest);
-
-					gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(),
-							userFromDB);
+					updatedUser = updateUserDetails(dataServiceRequest, userFromDB, user);
 					isOTPValiationSuccesful = true;
 				} else {
 					// OTP incorrect scenario
-					User updateUser = new User();
-					updateUser.setUserId(userFromDB.getUserId());
+					updatedUser = new User();
+					updatedUser.setUserId(userFromDB.getUserId());
 					Integer invalidOtpEntries = Integer.parseInt(userFromDB.getInvalidOtpCount());
 					invalidOtpEntries = invalidOtpEntries + 1;
-					updateUser.setInvalidOtpCount(invalidOtpEntries.toString());
-					dataServiceRequest = new DataServiceRequest<>(updateUser);
+					updatedUser.setInvalidOtpCount(invalidOtpEntries.toString());
+					dataServiceRequest = new DataServiceRequest<>(updatedUser);
 					userAdapter.updateUserDetails(dataServiceRequest);
+					isOTPValiationSuccesful = false;
 				}
 			} else {
 				throw new BusinessError(ServiceManagerStatusCode.OTP_NOT_VALID.getMessage(),
 						ServiceManagerStatusCode.OTP_NOT_VALID);
 			}
-			validateOTPResponse = populateValidateOTPResponse(user, isOTPValiationSuccesful);
+			validateOTPResponse = populateValidateOTPResponse(updatedUser, isOTPValiationSuccesful);
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during validateOTP : {}", dataServiceException);
 			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
@@ -201,9 +200,9 @@ public class UserDataServiceImpl implements UserDataService {
 
 	private ValidateOTPResponse populateValidateOTPResponse(User user, Boolean isOTPValiationSuccesful) {
 		ValidateOTPResponse validateOTPResponse = new ValidateOTPResponse();
-		validateOTPResponse.setMobileNumber(user.getMobileNumber());
 		validateOTPResponse.setIsValidateOTPSuccesful(isOTPValiationSuccesful);
 		validateOTPResponse.setUserId(user.getUserId());
+		validateOTPResponse.setIsUserAlreadyRegistered(user.getRegisteredAlready().equals(YES) ? true : false);
 		return validateOTPResponse;
 	}
 
@@ -228,49 +227,61 @@ public class UserDataServiceImpl implements UserDataService {
 		return userProfileResponse;
 	}
 
+	private RegisteredProfileResponse populateRegisteredProfilesResponse(User user) {
+		RegisteredProfileResponse registeredProfileResponse = new RegisteredProfileResponse();
+		Optional.ofNullable(user.getMobileNumber()).ifPresent(registeredProfileResponse::setMobileNumber);
+		Optional.ofNullable(user.getName()).ifPresent(registeredProfileResponse::setName);
+		Optional.ofNullable(user.getUserId()).ifPresent(registeredProfileResponse::setUserId);
+
+		Optional.ofNullable(user.getProfilePicUrl()).ifPresent(registeredProfileResponse::setProfilePictureURL);
+		return registeredProfileResponse;
+	}
+
 	private UserProfileResponse populateUserResponse(User user) {
 		UserProfileResponse userProfileResponse = new UserProfileResponse();
-		Optional.ofNullable(user.getMobileNumber()).ifPresent(userProfileResponse::setMobileNumber);
 		Optional.ofNullable(user.getEmailAddress()).ifPresent(userProfileResponse::setEmailAddress);
 		Optional.ofNullable(user.getName()).ifPresent(userProfileResponse::setName);
-		Optional.ofNullable(user.getDeviceRegId()).ifPresent(userProfileResponse::setDeviceRegId);
-		Optional.ofNullable(user.getImei()).ifPresent(userProfileResponse::setImei);
-		Optional.ofNullable(user.getOtpCode()).ifPresent(userProfileResponse::setOtpCode);
-		Optional.ofNullable(user.getOtpCreationDateTime()).ifPresent(userProfileResponse::setOtpCreationDateTime);
 		Optional.ofNullable(user.getUserId()).ifPresent(userProfileResponse::setUserId);
 
 		Optional.ofNullable(user.getProfilePicUrl()).ifPresent(userProfileResponse::setProfilePictureURL);
 		return userProfileResponse;
 	}
 
+	private UpdateUserProfileResponse populateUpdateUserResponse(User user) {
+		UpdateUserProfileResponse updateUserProfileResponse = new UpdateUserProfileResponse();
+		Optional.ofNullable(user.getProfilePicUrl()).ifPresent(updateUserProfileResponse::setProfilePictureURL);
+		return updateUserProfileResponse;
+	}
+
 	@Override
-	public UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest) {
-		UserProfileResponse userProfileResponse = null;
+	public UpdateUserProfileResponse updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest) {
+		UpdateUserProfileResponse updateUserProfileResponse = null;
 		try {
-			User user = new User(userProfileRequest);
+			User user = new User(updateUserProfileRequest);
 			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<>(user);
 			User findUser = userAdapter.getUserDetails(dataServiceRequest);
 			user.setUserId(findUser.getUserId());
-			user.setProfilePic(userProfileRequest.getProfilePic());
-			// skairamkonda use optional here
+
+			Optional.ofNullable(updateUserProfileRequest.getProfilePic()).ifPresent(user::setProfilePic);
 
 			String profilePicfileName;
 			String profilePicUrl;
 			if (null != user.getProfilePic()) {
 				Map<String, String> map = awsClientProcessor.prepareFileName(
-						NotificationType.PROFILE.getNotificationId(), user.getUserId(),
+						NotificationType.PROFILE.getNotificationId(), user.getUserId().toString(),
 						PlatformThreadLocalDataFactory.getInstance().getRequestData().getRequestId());
 				profilePicfileName = map.get("FILENAME");
 				profilePicUrl = map.get("URL");
 				awsClientProcessor.putObject(user.getProfilePic(), profilePicfileName,
 						PlatformThreadLocalDataFactory.getInstance().getRequestData().getRequestId());
-				user.setProfilePicUrl(profilePicUrl);
 
+				user.setProfilePicUrl(profilePicUrl);
+				user.setProfilePicVersion((Integer.parseInt(findUser.getProfilePicVersion()) + 1) + "");
 			}
 
-			dataServiceRequest = new DataServiceRequest<>(user);
+			dataServiceRequest.setPayload(user);
 			user = userAdapter.updateUserDetails(dataServiceRequest);
-			userProfileResponse = populateUserResponse(user);
+			updateUserProfileResponse = populateUpdateUserResponse(user);
 
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during updateUserProfile : {}", dataServiceException);
@@ -282,21 +293,22 @@ public class UserDataServiceImpl implements UserDataService {
 			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
-		return userProfileResponse;
+		return updateUserProfileResponse;
 	}
 
 	@Override
-	public UserProfileResponses registeredUsers(UserProfileRequests userProfileRequests) {
+	public RegisteredProfilesResponse registeredUsers(RegisteredProfilesRequest registeredProfilesRequest) {
 		List<User> usersList = null;
-		UserProfileResponses userProfileResponses = null;
+		RegisteredProfilesResponse registeredProfilesResponse = null;
 
 		try {
 			List<String> mobileNumbers = new ArrayList<>();
-			userProfileRequests.getUserProfileRequests().stream().forEach(p -> mobileNumbers.add(p.getMobileNumber()));
+			registeredProfilesRequest.getRegisteredProfileRequests().stream()
+					.forEach(p -> mobileNumbers.add(p.getMobileNumber()));
 
 			DataServiceRequest<List<String>> dataServiceRequest = new DataServiceRequest<>(mobileNumbers);
 			usersList = userAdapter.registeredUsers(dataServiceRequest);
-			userProfileResponses = populateUserResponses(usersList);
+			registeredProfilesResponse = populateUserResponses(usersList);
 
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during registeredUser : {}", dataServiceException);
@@ -308,13 +320,48 @@ public class UserDataServiceImpl implements UserDataService {
 			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
-		return userProfileResponses;
+		return registeredProfilesResponse;
 	}
 
-	private UserProfileResponses populateUserResponses(List<User> usersList) {
-		UserProfileResponses userProfileResponses = new UserProfileResponses();
-		usersList.stream().forEach(p -> userProfileResponses.addUserProfileResponse(populateUserResponse(p)));
-		return userProfileResponses;
+	private RegisteredProfilesResponse populateUserResponses(List<User> usersList) {
+		RegisteredProfilesResponse registeredProfilesResponse = new RegisteredProfilesResponse();
+		usersList.stream().forEach(
+				p -> registeredProfilesResponse.addRegisteredProfileResponse(populateRegisteredProfilesResponse(p)));
+		return registeredProfilesResponse;
+	}
+
+	private User updateUserDetails(DataServiceRequest<User> dataServiceRequest, User userFromDB, User userFromRequest)
+			throws DataServiceException {
+
+		dataServiceRequest.setPayload(userFromDB);
+
+		User oldUserFromDB = userAdapter.findByMobileNumberAndRegisteredAndNotUserId(dataServiceRequest);
+		User updatedUser;
+
+		if (null != oldUserFromDB) {
+			oldUserFromDB.setDeviceId(userFromDB.getDeviceId());
+			oldUserFromDB.setDeviceRegId(userFromRequest.getDeviceRegId());
+			oldUserFromDB.setInvalidOtpCount(userFromDB.getInvalidOtpCount());
+			oldUserFromDB.setOtpCode(userFromDB.getOtpCode());
+			oldUserFromDB.setOtpCreationDateTime(userFromDB.getOtpCreationDateTime());
+			oldUserFromDB.setRegistered(YES);
+			dataServiceRequest.setPayload(oldUserFromDB);
+			updatedUser = userAdapter.updateUserDetails(dataServiceRequest);
+			dataServiceRequest.setPayload(userFromDB);
+			userAdapter.deleteUserByUserId(dataServiceRequest);
+		} else {
+
+			userFromDB.setDeviceRegId(userFromRequest.getDeviceRegId());
+			userFromDB.setRegistered(YES);
+			String userAlreadyRegistered = userFromDB.getRegisteredAlready();
+			userFromDB.setRegisteredAlready(YES);
+			updatedUser = userAdapter.updateUserDetails(dataServiceRequest);
+			updatedUser.setRegisteredAlready(userAlreadyRegistered.equals(YES) ? YES : NO);
+		}
+
+		gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), userFromDB);
+		return updatedUser;
+
 	}
 
 }
