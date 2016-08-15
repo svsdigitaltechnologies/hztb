@@ -2,8 +2,6 @@ package com.svs.hztb.service;
 
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
-import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
-import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
 import com.svs.hztb.api.sm.model.user.RegisteredProfilesRequest;
 import com.svs.hztb.api.sm.model.user.RegisteredProfilesResponse;
 import com.svs.hztb.api.sm.model.user.UpdateUserProfileRequest;
@@ -22,8 +20,6 @@ import com.svs.hztb.api.sm.model.validateotp.ValidateOTPResponse;
  */
 public interface UserDataService {
 
-	RegistrationResponse register(RegistrationRequest registrationRequest);
-
 	PingResponse ping(PingRequest pingRequest);
 
 	ValidateOTPResponse validateOTP(ValidateOTPRequest validateOTPRequest);
@@ -33,4 +29,5 @@ public interface UserDataService {
 	RegisteredProfilesResponse registeredUsers(RegisteredProfilesRequest registeredProfilesRequest);
 
 	UpdateUserProfileResponse updateUserProfile(UpdateUserProfileRequest updateUserProfileRequest);
+
 }

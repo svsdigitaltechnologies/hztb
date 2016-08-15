@@ -41,34 +41,6 @@ public interface UserAdapter {
 	User getUserDetails(DataServiceRequest<User> dataServiceRequest) throws DataServiceException;
 
 	/**
-	 * get user by Mobile Number and Device Id
-	 * 
-	 * @param dataServiceRequest
-	 * @return
-	 * @throws DataServiceException
-	 */
-	User getUserByMobileAndDeviceId(DataServiceRequest<User> dataServiceRequest) throws DataServiceException;
-
-	/**
-	 * get user by Mobile Number and Device Id
-	 * 
-	 * @param dataServiceRequest
-	 * @return
-	 * @throws DataServiceException
-	 */
-	User findUserByMobileAndDeviceId(DataServiceRequest<User> dataServiceRequest) throws DataServiceException;
-
-	/**
-	 * get user by Mobile Number and User Id
-	 * 
-	 * @param dataServiceRequest
-	 * @return
-	 * @throws DataServiceException
-	 */
-	User findByMobileNumberAndRegisteredAndNotUserId(DataServiceRequest<User> dataServiceRequest)
-			throws DataServiceException;
-
-	/**
 	 * update user details
 	 * 
 	 * @param dataServiceRequest
@@ -87,11 +59,12 @@ public interface UserAdapter {
 	List<User> registeredUsers(DataServiceRequest<List<String>> mobileNumbers) throws DataServiceException;
 
 	/**
-	 * delete user by user id
+	 * get user by Mobile Number
 	 * 
 	 * @param dataServiceRequest
 	 * @return
 	 * @throws DataServiceException
 	 */
-	void deleteUserByUserId(DataServiceRequest<User> dataServiceRequest) throws DataServiceException;
+	User findByPhoneNumber(DataServiceRequest<User> dataServiceRequest) throws DataServiceException;
+
 }

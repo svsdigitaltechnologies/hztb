@@ -29,55 +29,6 @@ public class UserAdapterImpl implements UserAdapter {
 	private UserRepository userRepository;
 
 	/**
-	 * This method is used to get user details.
-	 * 
-	 * @throws DataServiceException
-	 */
-	@Override
-	public User findUserByMobileAndDeviceId(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
-		User user = null;
-		try {
-			UserEntity userEntity = userRepository.findByMobileAndDeviceId(
-					dataServiceRequest.getPayload().getMobileNumber(), dataServiceRequest.getPayload().getDeviceId());
-			if (null != userEntity) {
-				user = populateUserResponse(userEntity);
-			}
-		} catch (Exception exception) {
-			LOGGER.error(
-					"Data Services - Unexpected exception occured while findUserByMobileAndDeviceId. the detailed exception is: {} ",
-					exception);
-			throw new DataServiceException(exception.getMessage(), "1");
-		}
-
-		return user;
-	}
-
-	/**
-	 * This method is used to get user details.
-	 * 
-	 * @throws DataServiceException
-	 */
-	@Override
-	public User findByMobileNumberAndRegisteredAndNotUserId(DataServiceRequest<User> dataServiceRequest)
-			throws DataServiceException {
-		User user = null;
-		try {
-			UserEntity userEntity = userRepository.findByMobileNumberAndRegisteredAndNotUserId(
-					dataServiceRequest.getPayload().getMobileNumber(), dataServiceRequest.getPayload().getUserId());
-			if (null != userEntity) {
-				user = populateUserResponse(userEntity);
-			}
-		} catch (Exception exception) {
-			LOGGER.error(
-					"Data Services - Unexpected exception occured while findByMobileNumberAndRegisteredAndNotUserId. the detailed exception is: {} ",
-					exception);
-			throw new DataServiceException(exception.getMessage(), "1");
-		}
-
-		return user;
-	}
-
-	/**
 	 * This method is used to register a user.
 	 * 
 	 * @throws DataServiceException
@@ -89,10 +40,11 @@ public class UserAdapterImpl implements UserAdapter {
 		try {
 			UserEntity userEntity = new UserEntity();
 			userEntity.setMobileNumber(dataServiceRequest.getPayload().getMobileNumber());
-			userEntity.setDeviceId(dataServiceRequest.getPayload().getDeviceId());
-			userEntity.setOtpCode(dataServiceRequest.getPayload().getOtpCode());
-			userEntity.setOtpCreateTime(dataServiceRequest.getPayload().getOtpCreationDateTime());
-			userEntity.setInvalidOtpRetries(dataServiceRequest.getPayload().getInvalidOtpCount());
+			userEntity.setDeviceId(dataServiceRequest.getPayload().getUniqueId());
+			userEntity.setIdentity(dataServiceRequest.getPayload().getIdentity());
+			userEntity.setRegistered(dataServiceRequest.getPayload().getRegistered());
+			userEntity.setGcmRegId(dataServiceRequest.getPayload().getDeviceRegId());
+			userEntity.setPw(dataServiceRequest.getPayload().getPw());
 			userRepository.save(userEntity);
 			user = populateUserResponse(userEntity);
 		} catch (Exception exception) {
@@ -111,11 +63,11 @@ public class UserAdapterImpl implements UserAdapter {
 		User user = null;
 		try {
 			UserEntity userEntity = userRepository.findByUserIdAndDeviceIdAndRegistered(
-					dataServiceRequest.getPayload().getUserId(), dataServiceRequest.getPayload().getDeviceId());
+					dataServiceRequest.getPayload().getUserId(), dataServiceRequest.getPayload().getUniqueId());
 			if (null == userEntity) {
 				throw new DataServiceException("User not available with UserId: ["
 						+ dataServiceRequest.getPayload().getUserId() + "] and Device Id : ["
-						+ dataServiceRequest.getPayload().getDeviceId() + "] and Registered", "4");
+						+ dataServiceRequest.getPayload().getUniqueId() + "] and Registered", "4");
 			}
 			user = populatePingResponse(userEntity);
 		} catch (DataServiceException dataServiceException) {
@@ -165,52 +117,17 @@ public class UserAdapterImpl implements UserAdapter {
 		return user;
 	}
 
-	/**
-	 * This method is used to get user details.
-	 * 
-	 * @throws DataServiceException
-	 */
-	@Override
-	public User getUserByMobileAndDeviceId(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
-		User user = null;
-		try {
-			UserEntity userEntity = userRepository.findByMobileAndDeviceId(
-					dataServiceRequest.getPayload().getMobileNumber(), dataServiceRequest.getPayload().getDeviceId());
-
-			if (null == userEntity) {
-				throw new DataServiceException("User not available with Mobile Number : ["
-						+ dataServiceRequest.getPayload().getMobileNumber() + "]", "2");
-			}
-			user = populateUserResponse(userEntity);
-		} catch (DataServiceException dataServiceException) {
-			LOGGER.error(
-					"Data Services exception occured during getUserByMobileAndDeviceId. the detailed exception is: {} ",
-					dataServiceException);
-			throw dataServiceException;
-		} catch (Exception exception) {
-			LOGGER.error(
-					"Data Services - Unexpected exception occured during getUserByMobileAndDeviceId. the detailed exception is: {} ",
-					exception);
-			throw new DataServiceException(exception.getMessage(), "1");
-		}
-		return user;
-	}
-
 	private User populateUserResponse(UserEntity userEntity) {
 		User user = new User();
 		Optional.ofNullable(userEntity.getMobileNumber()).ifPresent(user::setMobileNumber);
-		Optional.ofNullable(userEntity.getDataPushedInd()).ifPresent(user::setDataPushed);
 		Optional.ofNullable(userEntity.getEmailAddress()).ifPresent(user::setEmailAddress);
 		Optional.ofNullable(userEntity.getUserName()).ifPresent(user::setName);
 		Optional.ofNullable(userEntity.getGcmRegId()).ifPresent(user::setDeviceRegId);
-		Optional.ofNullable(userEntity.getOtpCode()).ifPresent(user::setOtpCode);
-		Optional.ofNullable(userEntity.getOtpCreateTime()).ifPresent(user::setOtpCreationDateTime);
 		Optional.ofNullable(userEntity.getUserId()).ifPresent(user::setUserId);
-		Optional.ofNullable(userEntity.getInvalidOtpRetries()).ifPresent(user::setInvalidOtpCount);
 		Optional.ofNullable(userEntity.getPicUrl()).ifPresent(user::setProfilePicUrl);
 		Optional.ofNullable(userEntity.getRegistered()).ifPresent(user::setRegistered);
-		Optional.ofNullable(userEntity.getRegisteredAlready()).ifPresent(user::setRegisteredAlready);
-		Optional.ofNullable(userEntity.getDeviceId()).ifPresent(user::setDeviceId);
+		Optional.ofNullable(userEntity.getDeviceId()).ifPresent(user::setUniqueId);
+		Optional.ofNullable(userEntity.getPw()).ifPresent(user::setPw);
 		return user;
 	}
 
@@ -242,19 +159,14 @@ public class UserAdapterImpl implements UserAdapter {
 					.ifPresent(userEntity::setMobileNumber);
 			Optional.ofNullable(dataServiceRequest.getPayload().getName()).ifPresent(userEntity::setUserName);
 			Optional.ofNullable(dataServiceRequest.getPayload().getUserId()).ifPresent(userEntity::setUserId);
-			Optional.ofNullable(dataServiceRequest.getPayload().getOtpCode()).ifPresent(userEntity::setOtpCode);
-			Optional.ofNullable(dataServiceRequest.getPayload().getOtpCreationDateTime())
-					.ifPresent(userEntity::setOtpCreateTime);
-			Optional.ofNullable(dataServiceRequest.getPayload().getInvalidOtpCount())
-					.ifPresent(userEntity::setInvalidOtpRetries);
 			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicUrl()).ifPresent(userEntity::setPicUrl);
 			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicVersion())
 					.ifPresent(userEntity::setPicVersion);
 
-			Optional.ofNullable(dataServiceRequest.getPayload().getDeviceId()).ifPresent(userEntity::setDeviceId);
+			Optional.ofNullable(dataServiceRequest.getPayload().getUniqueId()).ifPresent(userEntity::setDeviceId);
+			Optional.ofNullable(dataServiceRequest.getPayload().getIdentity()).ifPresent(userEntity::setIdentity);
 			Optional.ofNullable(dataServiceRequest.getPayload().getRegistered()).ifPresent(userEntity::setRegistered);
-			Optional.ofNullable(dataServiceRequest.getPayload().getRegisteredAlready())
-					.ifPresent(userEntity::setRegisteredAlready);
+			Optional.ofNullable(dataServiceRequest.getPayload().getPw()).ifPresent(userEntity::setPw);
 
 			userRepository.save(userEntity);
 		} catch (Exception exception) {
@@ -294,23 +206,23 @@ public class UserAdapterImpl implements UserAdapter {
 		return usersList;
 	}
 
-	/**
-	 * This method is used to delete user by userId the registered users.
-	 * 
-	 * @throws DataServiceException
-	 */
 	@Override
-	public void deleteUserByUserId(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
-
+	public User findByPhoneNumber(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
+		User user = null;
 		try {
-			userRepository.delete(dataServiceRequest.getPayload().getUserId());
-
+			UserEntity userEntity = userRepository
+					.findByMobileNumber(dataServiceRequest.getPayload().getMobileNumber());
+			if (null != userEntity) {
+				user = populateUserResponse(userEntity);
+			}
 		} catch (Exception exception) {
 			LOGGER.error(
-					"Data Services - Unexpected exception occured during deleteUserByUserId. the detailed exception is: {} ",
+					"Data Services - Unexpected exception occured while findUserByMobileAndDeviceId. the detailed exception is: {} ",
 					exception);
 			throw new DataServiceException(exception.getMessage(), "1");
 		}
+
+		return user;
 	}
 
 }

@@ -5,6 +5,7 @@ import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
+import com.svs.hztb.common.model.HztbResponse;
 
 /**
  * 
@@ -14,7 +15,7 @@ import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserProfileResponse {
+public class UserProfileResponse extends HztbResponse {
 
 	@NotNull
 	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)
@@ -23,6 +24,8 @@ public class UserProfileResponse {
 	private String name;
 	private String emailAddress;
 	private String profilePictureURL;
+
+	private String pw;
 
 	public Long getUserId() {
 		return userId;
@@ -42,6 +45,7 @@ public class UserProfileResponse {
 
 	public UserProfileResponse() {
 		// do nothing
+		super();
 	}
 
 	public String getName() {
@@ -59,4 +63,13 @@ public class UserProfileResponse {
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
 }

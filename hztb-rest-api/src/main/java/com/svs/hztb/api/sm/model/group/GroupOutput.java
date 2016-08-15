@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.svs.hztb.api.sm.model.BasicOutput;
-import com.svs.hztb.api.sm.model.ErrorOutput;
+import com.svs.hztb.api.sm.model.Error;
 import com.svs.hztb.api.sm.model.opinion.Status;
 
 public class GroupOutput extends BasicOutput {
 	private Status status;
-	private ErrorOutput errorOutput;
+	private Error errorOutput;
 	private List<GroupDetail> groupDetailList = new ArrayList<>();
 
 	public Status getStatus() {
@@ -20,11 +20,11 @@ public class GroupOutput extends BasicOutput {
 		this.status = status;
 	}
 
-	public ErrorOutput getErrorOutput() {
+	public Error getErrorOutput() {
 		return errorOutput;
 	}
 
-	public void setErrorOutput(ErrorOutput errorOutput) {
+	public void setErrorOutput(Error errorOutput) {
 		this.errorOutput = errorOutput;
 	}
 

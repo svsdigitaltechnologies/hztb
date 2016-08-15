@@ -1,5 +1,6 @@
 package com.svs.hztb.api.sm.model.validateotp;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.svs.hztb.api.sm.model.user.UserProfileResponse;
 
 /**
@@ -8,10 +9,11 @@ import com.svs.hztb.api.sm.model.user.UserProfileResponse;
  * @author skairamk
  *
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ValidateOTPResponse extends UserProfileResponse {
 
-	private Boolean isValidateOTPSuccesful;
 	private Boolean isUserAlreadyRegistered;
+	private String otpWaitTime;
 
 	public Boolean getIsUserAlreadyRegistered() {
 		return isUserAlreadyRegistered;
@@ -21,12 +23,12 @@ public class ValidateOTPResponse extends UserProfileResponse {
 		this.isUserAlreadyRegistered = isUserAlreadyRegistered;
 	}
 
-	public Boolean getIsValidateOTPSuccesful() {
-		return isValidateOTPSuccesful;
+	public String getOtpWaitTime() {
+		return otpWaitTime;
 	}
 
-	public void setIsValidateOTPSuccesful(Boolean isValidateOTPSuccesful) {
-		this.isValidateOTPSuccesful = isValidateOTPSuccesful;
+	public void setOtpWaitTime(String otpWaitTime) {
+		this.otpWaitTime = otpWaitTime;
 	}
 
 }
