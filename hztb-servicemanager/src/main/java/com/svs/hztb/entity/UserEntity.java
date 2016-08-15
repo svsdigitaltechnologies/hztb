@@ -29,9 +29,6 @@ public class UserEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
-	@Column(name = "data_pushed_ind")
-	private String dataPushedInd;
-
 	@Column(name = "email_address")
 	private String emailAddress;
 
@@ -44,37 +41,23 @@ public class UserEntity implements Serializable {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@Column(name = "otp_code")
-	private String otpCode;
-
-	@Column(name = "otp_create_time")
-	private String otpCreateTime;
-
 	@Column(name = "pic_url")
 	private String picUrl;
 
 	@Column(name = "pic_version", insertable = false)
 	private String picVersion;
 
-	@Column(name = "invalid_otp_retries")
-	private String invalidOtpRetries;
-
 	@Column(name = "device_id")
 	private String deviceId;
 
-	@Column(name = "registered", insertable = false)
+	@Column(name = "registered")
 	private String registered;
 
-	@Column(name = "registered_already", insertable = false)
-	private String registeredAlready;
+	@Column(name = "identity")
+	private String identity;
 
-	public String getRegisteredAlready() {
-		return registeredAlready;
-	}
-
-	public void setRegisteredAlready(String registeredAlready) {
-		this.registeredAlready = registeredAlready;
-	}
+	@Column(name = "pw")
+	private String pw;
 
 	public String getRegistered() {
 		return registered;
@@ -134,14 +117,6 @@ public class UserEntity implements Serializable {
 		this.userId = userId;
 	}
 
-	public String getDataPushedInd() {
-		return this.dataPushedInd;
-	}
-
-	public void setDataPushedInd(String dataPushedInd) {
-		this.dataPushedInd = dataPushedInd;
-	}
-
 	public String getEmailAddress() {
 		return this.emailAddress;
 	}
@@ -166,22 +141,6 @@ public class UserEntity implements Serializable {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public String getOtpCode() {
-		return this.otpCode;
-	}
-
-	public void setOtpCode(String otpCode) {
-		this.otpCode = otpCode;
-	}
-
-	public String getOtpCreateTime() {
-		return this.otpCreateTime;
-	}
-
-	public void setOtpCreateTime(String otpCreateTime) {
-		this.otpCreateTime = otpCreateTime;
-	}
-
 	public List<GroupEntity> getGroups() {
 		return this.groups;
 	}
@@ -190,12 +149,20 @@ public class UserEntity implements Serializable {
 		this.groups = groups;
 	}
 
-	public String getInvalidOtpRetries() {
-		return invalidOtpRetries;
+	public String getIdentity() {
+		return identity;
 	}
 
-	public void setInvalidOtpRetries(String invalidOtpRetries) {
-		this.invalidOtpRetries = invalidOtpRetries;
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 
 }

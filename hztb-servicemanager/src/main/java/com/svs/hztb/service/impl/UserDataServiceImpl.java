@@ -9,13 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.svs.hztb.adapter.OneTimePasswordAdapter;
 import com.svs.hztb.adapter.UserAdapter;
 import com.svs.hztb.api.common.utils.HZTBUtil;
-import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.ping.PingResponse;
-import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
-import com.svs.hztb.api.sm.model.registration.RegistrationResponse;
 import com.svs.hztb.api.sm.model.user.RegisteredProfileResponse;
 import com.svs.hztb.api.sm.model.user.RegisteredProfilesRequest;
 import com.svs.hztb.api.sm.model.user.RegisteredProfilesResponse;
@@ -32,29 +30,26 @@ import com.svs.hztb.common.enums.ServiceManagerStatusCode;
 import com.svs.hztb.common.exception.SystemError;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
+import com.svs.hztb.common.model.ErrorStatus;
 import com.svs.hztb.common.model.PlatformStatusCode;
 import com.svs.hztb.common.model.PlatformThreadLocalDataFactory;
+import com.svs.hztb.common.model.business.OneTimePassword;
 import com.svs.hztb.common.model.business.User;
 import com.svs.hztb.ds.model.DataServiceRequest;
 import com.svs.hztb.exception.DataServiceException;
-import com.svs.hztb.orchestration.component.model.FlowContext;
-import com.svs.hztb.orchestration.component.step.StepDefinition;
-import com.svs.hztb.orchestration.component.step.StepDefinitionFactory;
 import com.svs.hztb.orchestration.exception.BusinessError;
+import com.svs.hztb.service.BaseService;
 import com.svs.hztb.service.GCMService;
 import com.svs.hztb.service.UserDataService;
-import com.svs.hztb.sm.common.enums.ServiceManagerRestfulEndpoint;
 
 /**
  * This class is an service implementation for user related methods
  */
 @Service
 @Transactional
-public class UserDataServiceImpl implements UserDataService {
+public class UserDataServiceImpl extends BaseService implements UserDataService {
 
 	private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(UserDataServiceImpl.class);
-
-	private static final String ZERO = "0";
 
 	private static final String NO = "N";
 
@@ -64,70 +59,13 @@ public class UserDataServiceImpl implements UserDataService {
 	private UserAdapter userAdapter;
 
 	@Autowired
-	private StepDefinitionFactory stepDefinitionFactory;
+	private OneTimePasswordAdapter oneTimePasswordAdapter;
 
 	@Autowired
 	private GCMService gcmService;
 
 	@Autowired
 	private AWSS3ClientProcessor awsClientProcessor;
-
-	@Override
-	public RegistrationResponse register(RegistrationRequest registrationRequest) {
-		RegistrationResponse registrationResponse = null;
-		try {
-
-			User user = new User(registrationRequest);
-			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<>(user);
-			User findUser = userAdapter.findUserByMobileAndDeviceId(dataServiceRequest);
-
-			user.setOtpCode(HZTBUtil.generateSixDigitNumber().toString());
-			user.setOtpCreationDateTime(HZTBUtil.getUTCDate());
-			user.setInvalidOtpCount(ZERO);
-
-			if (null != findUser) {
-				user.setUserId(findUser.getUserId());
-				user.setRegistered(NO);
-				dataServiceRequest.setPayload(user);
-				user = userAdapter.updateUserDetails(dataServiceRequest);
-			} else {
-				dataServiceRequest.setPayload(user);
-				user = userAdapter.createUser(dataServiceRequest);
-			}
-
-			if (user.getMobileNumber().startsWith("1")) {
-				FlowContext flowContext = new FlowContext(
-						PlatformThreadLocalDataFactory.getInstance().getRequestData());
-				flowContext.setModelElement(user);
-
-				StepDefinition stepDefinition = stepDefinitionFactory
-						.createRestfulStep(ServiceManagerRestfulEndpoint.CLICKATELL);
-				stepDefinition.execute(flowContext);
-
-				ClickatellResponse clickatellResponse = flowContext.getModelElement(ClickatellResponse.class);
-				LOGGER.debug("Clickatell Response {} ",
-						clickatellResponse.getData().getMessage().get(0).getApiMessageId());
-			}
-
-			registrationResponse = populateRegistrationUserResponse(user);
-		} catch (DataServiceException dataServiceException) {
-			LOGGER.error("Error occured during register : {}", dataServiceException);
-			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
-					dataServiceException.getStatusCode());
-		} catch (BusinessError businessException) {
-			throw businessException;
-		} catch (Exception exception) {
-			throw new SystemError(exception.getMessage(), exception,
-					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
-		}
-		return registrationResponse;
-	}
-
-	private RegistrationResponse populateRegistrationUserResponse(User user) {
-		RegistrationResponse registrationResponse = new RegistrationResponse();
-		registrationResponse.setMobileNumber(user.getMobileNumber());
-		return registrationResponse;
-	}
 
 	@Override
 	public PingResponse ping(PingRequest pingRequest) {
@@ -156,35 +94,21 @@ public class UserDataServiceImpl implements UserDataService {
 	@Override
 	public ValidateOTPResponse validateOTP(ValidateOTPRequest validateOTPRequest) {
 		ValidateOTPResponse validateOTPResponse = null;
-		Boolean isOTPValiationSuccesful = false;
 
 		try {
-			User user = new User(validateOTPRequest);
-			DataServiceRequest<User> dataServiceRequest = new DataServiceRequest<>(user);
-			User userFromDB = userAdapter.getUserByMobileAndDeviceId(dataServiceRequest);
-			Boolean isOTPValidationAllowed = HZTBUtil.isOtpValidationAllowed(userFromDB.getOtpCreationDateTime(),
-					userFromDB.getInvalidOtpCount());
-			User updatedUser;
-			if (isOTPValidationAllowed) {
-				if (validateOTPRequest.getOtpCode().equals(userFromDB.getOtpCode())) {
-					updatedUser = updateUserDetails(dataServiceRequest, userFromDB, user);
-					isOTPValiationSuccesful = true;
-				} else {
-					// OTP incorrect scenario
-					updatedUser = new User();
-					updatedUser.setUserId(userFromDB.getUserId());
-					Integer invalidOtpEntries = Integer.parseInt(userFromDB.getInvalidOtpCount());
-					invalidOtpEntries = invalidOtpEntries + 1;
-					updatedUser.setInvalidOtpCount(invalidOtpEntries.toString());
-					dataServiceRequest = new DataServiceRequest<>(updatedUser);
-					userAdapter.updateUserDetails(dataServiceRequest);
-					isOTPValiationSuccesful = false;
-				}
-			} else {
-				throw new BusinessError(ServiceManagerStatusCode.OTP_NOT_VALID.getMessage(),
-						ServiceManagerStatusCode.OTP_NOT_VALID);
+			OneTimePassword oneTimePassword = new OneTimePassword(validateOTPRequest);
+			DataServiceRequest<OneTimePassword> dataServiceRequest = new DataServiceRequest<>(oneTimePassword);
+			oneTimePassword = oneTimePasswordAdapter.findOTPbyPhoneAndUniqueIdAndIdentity(dataServiceRequest);
+
+			List<ErrorStatus> errors = checkOneTimePassword(oneTimePassword);
+
+			if (!errors.isEmpty()) {
+				validateOTPResponse = new ValidateOTPResponse();
+				return (ValidateOTPResponse) buildErrorResponse(errors, validateOTPResponse);
 			}
-			validateOTPResponse = populateValidateOTPResponse(updatedUser, isOTPValiationSuccesful);
+
+			return validateOTP(validateOTPRequest, oneTimePassword);
+
 		} catch (DataServiceException dataServiceException) {
 			LOGGER.error("Error occured during validateOTP : {}", dataServiceException);
 			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
@@ -195,15 +119,16 @@ public class UserDataServiceImpl implements UserDataService {
 			throw new SystemError(exception.getMessage(), exception,
 					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
 		}
-		return validateOTPResponse;
 	}
 
-	private ValidateOTPResponse populateValidateOTPResponse(User user, Boolean isOTPValiationSuccesful) {
+	private ValidateOTPResponse populateValidateOTPResponse(User user) {
 		ValidateOTPResponse validateOTPResponse = new ValidateOTPResponse();
-		validateOTPResponse.setIsValidateOTPSuccesful(isOTPValiationSuccesful);
 		validateOTPResponse.setUserId(user.getUserId());
-		validateOTPResponse.setIsUserAlreadyRegistered(user.getRegisteredAlready().equals(YES) ? true : false);
-		return validateOTPResponse;
+		Optional.ofNullable(user.getRegistered())
+				.ifPresent(p -> validateOTPResponse.setIsUserAlreadyRegistered(p.equals(YES) ? true : false));
+		Optional.ofNullable(user.getPw()).ifPresent(validateOTPResponse::setPw);
+		return (ValidateOTPResponse) buildSuccessResponse(validateOTPResponse);
+
 	}
 
 	@Override
@@ -242,7 +167,6 @@ public class UserDataServiceImpl implements UserDataService {
 		Optional.ofNullable(user.getEmailAddress()).ifPresent(userProfileResponse::setEmailAddress);
 		Optional.ofNullable(user.getName()).ifPresent(userProfileResponse::setName);
 		Optional.ofNullable(user.getUserId()).ifPresent(userProfileResponse::setUserId);
-
 		Optional.ofNullable(user.getProfilePicUrl()).ifPresent(userProfileResponse::setProfilePictureURL);
 		return userProfileResponse;
 	}
@@ -330,38 +254,80 @@ public class UserDataServiceImpl implements UserDataService {
 		return registeredProfilesResponse;
 	}
 
-	private User updateUserDetails(DataServiceRequest<User> dataServiceRequest, User userFromDB, User userFromRequest)
-			throws DataServiceException {
-
-		dataServiceRequest.setPayload(userFromDB);
-
-		User oldUserFromDB = userAdapter.findByMobileNumberAndRegisteredAndNotUserId(dataServiceRequest);
+	private User createOrUpdateUser(ValidateOTPRequest validateOTPRequest) throws DataServiceException {
+		User user = new User(validateOTPRequest);
 		User updatedUser;
-
-		if (null != oldUserFromDB) {
-			oldUserFromDB.setDeviceId(userFromDB.getDeviceId());
-			oldUserFromDB.setDeviceRegId(userFromRequest.getDeviceRegId());
-			oldUserFromDB.setInvalidOtpCount(userFromDB.getInvalidOtpCount());
-			oldUserFromDB.setOtpCode(userFromDB.getOtpCode());
-			oldUserFromDB.setOtpCreationDateTime(userFromDB.getOtpCreationDateTime());
-			oldUserFromDB.setRegistered(YES);
-			dataServiceRequest.setPayload(oldUserFromDB);
-			updatedUser = userAdapter.updateUserDetails(dataServiceRequest);
-			dataServiceRequest.setPayload(userFromDB);
-			userAdapter.deleteUserByUserId(dataServiceRequest);
+		DataServiceRequest<User> userDataServiceRequest = new DataServiceRequest<>(user);
+		User findUser = userAdapter.findByPhoneNumber(userDataServiceRequest);
+		user.setPw(HZTBUtil.generatePw());
+		if (null == findUser) {
+			user.setRegistered(YES);
+			userDataServiceRequest.setPayload(user);
+			updatedUser = userAdapter.createUser(userDataServiceRequest);
+			updatedUser.setRegistered(NO);
 		} else {
-
-			userFromDB.setDeviceRegId(userFromRequest.getDeviceRegId());
-			userFromDB.setRegistered(YES);
-			String userAlreadyRegistered = userFromDB.getRegisteredAlready();
-			userFromDB.setRegisteredAlready(YES);
-			updatedUser = userAdapter.updateUserDetails(dataServiceRequest);
-			updatedUser.setRegisteredAlready(userAlreadyRegistered.equals(YES) ? YES : NO);
+			user.setUserId(findUser.getUserId());
+			userDataServiceRequest.setPayload(user);
+			updatedUser = userAdapter.updateUserDetails(userDataServiceRequest);
 		}
-
-		gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), userFromDB);
+		gcmService.sendWelcomeNotification(PlatformThreadLocalDataFactory.getInstance().getRequestData(), user);
 		return updatedUser;
+	}
+
+	private List<ErrorStatus> checkOneTimePassword(OneTimePassword oneTimePassword) {
+		List<ErrorStatus> errors = new ArrayList<>();
+
+		if (null == oneTimePassword) {
+			ErrorStatus error = new ErrorStatus(ServiceManagerStatusCode.USER_NOT_AVAILABLE.getStatusCode(),
+					ServiceManagerStatusCode.USER_NOT_AVAILABLE.getMessage());
+			errors.add(error);
+			return errors;
+		}
+		return checkOTPValidationAllowed(oneTimePassword);
+	}
+
+	private List<ErrorStatus> checkOTPValidationAllowed(OneTimePassword oneTimePassword) {
+		Boolean isOTPValidationAllowed = HZTBUtil.isOtpValidationAllowed(oneTimePassword.getOtpCreationDateTime(),
+				oneTimePassword.getInvalidOtpCount());
+		List<ErrorStatus> errors = new ArrayList<>();
+
+		if (!isOTPValidationAllowed) {
+			ErrorStatus error = new ErrorStatus(ServiceManagerStatusCode.OTP_NOT_VALID.getStatusCode(),
+					ServiceManagerStatusCode.OTP_NOT_VALID.getMessage());
+			errors.add(error);
+
+		}
+		return errors;
 
 	}
 
+	private List<ErrorStatus> otpIsInvalid() {
+		List<ErrorStatus> errors = new ArrayList<>();
+		ErrorStatus error = new ErrorStatus(ServiceManagerStatusCode.INVALID_OTP.getStatusCode(),
+				ServiceManagerStatusCode.INVALID_OTP.getMessage());
+		errors.add(error);
+		return errors;
+
+	}
+
+	private ValidateOTPResponse validateOTP(ValidateOTPRequest validateOTPRequest, OneTimePassword oneTimePassword)
+			throws DataServiceException {
+		DataServiceRequest<OneTimePassword> dataServiceRequest = new DataServiceRequest<>(oneTimePassword);
+
+		ValidateOTPResponse validateOTPResponse;
+		if (validateOTPRequest.getOtpCode().equals(oneTimePassword.getOtpCode())) {
+			User updatedUser = createOrUpdateUser(validateOTPRequest);
+			oneTimePasswordAdapter.deleteOTPCode(dataServiceRequest);
+			validateOTPResponse = populateValidateOTPResponse(updatedUser);
+			return validateOTPResponse;
+		} else {
+			oneTimePassword.setInvalidOtpCount(oneTimePassword.getInvalidOtpCount() + 1);
+			oneTimePasswordAdapter.updateOTPCode(dataServiceRequest);
+			List<ErrorStatus> errors = otpIsInvalid();
+			validateOTPResponse = new ValidateOTPResponse();
+			validateOTPResponse = (ValidateOTPResponse) buildErrorResponse(errors, validateOTPResponse);
+			validateOTPResponse.setOtpWaitTime((oneTimePassword.getInvalidOtpCount() * (60 / 2)) + "");
+			return validateOTPResponse;
+		}
+	}
 }

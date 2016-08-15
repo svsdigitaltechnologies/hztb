@@ -12,7 +12,7 @@ import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
 import com.svs.hztb.common.logging.Logger;
 import com.svs.hztb.common.logging.LoggerFactory;
 import com.svs.hztb.common.model.DownstreamError;
-import com.svs.hztb.common.model.business.User;
+import com.svs.hztb.common.model.business.OneTimePassword;
 import com.svs.hztb.orchestration.component.model.FlowContext;
 import com.svs.hztb.restfulclient.model.RestfulResponse;
 import com.svs.hztb.sm.common.annotation.RestfulTransformer;
@@ -27,10 +27,11 @@ public class ClickatellTransformer extends ClickatellRestfulAbstractTransformer<
 
 	@Override
 	public ClickatellRequest transformRequest(FlowContext flowContext) {
-		User user = flowContext.getModelElement(User.class);
+		OneTimePassword oneTimePassword = flowContext.getModelElement(OneTimePassword.class);
 		ClickatellRequest clickatellRequest = new ClickatellRequest();
-		clickatellRequest.setTo(user.getMobileNumber());
-		clickatellRequest.setText("HowzThisBuddy: Please enter " + user.getOtpCode() + " as the verification code when prompted on the registration screen");
+		clickatellRequest.setTo(oneTimePassword.getMobileNumber());
+		clickatellRequest.setText("HowzThisBuddy: Please enter " + oneTimePassword.getOtpCode()
+				+ " as the verification code when prompted on the registration screen");
 		return clickatellRequest;
 	}
 

@@ -31,8 +31,9 @@ public class ClickatellPosttTransformer
 		User user = flowContext.getModelElement(User.class);
 		ClickatellRequest clickatellRequest = new ClickatellRequest();
 		clickatellRequest.setTo(user.getMobileNumber());
-		clickatellRequest.setText(user.getOtpCode());
-		return clickatellRequest;
+		/*
+		 * clickatellRequest.setText(user.getOtpCode());
+		 */ return clickatellRequest;
 	}
 
 	@Override

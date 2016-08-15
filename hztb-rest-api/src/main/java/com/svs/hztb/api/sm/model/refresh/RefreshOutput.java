@@ -5,12 +5,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.svs.hztb.api.sm.model.BasicOutput;
-import com.svs.hztb.api.sm.model.ErrorOutput;
+import com.svs.hztb.api.sm.model.Error;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RefreshOutput extends BasicOutput {
 
-	private ErrorOutput errorOutput;
+	private Error errorOutput;
 	private List<OpinionData> opinionDataList;
 	private OpinionResponseInfo opinionResponseInfo = new OpinionResponseInfo();
 	private ResponseGivenPendingInfo responseGivenPendingInfo = new ResponseGivenPendingInfo();
@@ -18,11 +18,11 @@ public class RefreshOutput extends BasicOutput {
 	private Collection<OpinionCountData> opinionCountsList;
 	// private List<OpinionResponseData> opinionResponseDataList;
 
-	public ErrorOutput getErrorOutput() {
+	public Error getErrorOutput() {
 		return errorOutput;
 	}
 
-	public void setErrorOutput(ErrorOutput errorOutput) {
+	public void setErrorOutput(Error errorOutput) {
 		this.errorOutput = errorOutput;
 	}
 

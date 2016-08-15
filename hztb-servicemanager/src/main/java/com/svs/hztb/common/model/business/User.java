@@ -1,6 +1,7 @@
 package com.svs.hztb.common.model.business;
 
 import com.svs.hztb.api.sm.model.ping.PingRequest;
+import com.svs.hztb.api.sm.model.registration.OneTimePasswordRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
 import com.svs.hztb.api.sm.model.user.UpdateUserProfileRequest;
 import com.svs.hztb.api.sm.model.user.UserProfileRequest;
@@ -13,19 +14,18 @@ public class User {
 
 	private String mobileNumber;
 	private String name;
-	private String otpCode;
-	private String otpCreationDateTime;
 	private String deviceRegId;
 	private String dataPushed;
 	private String emailAddress;
 	private Long userId;
-	private String invalidOtpCount;
 	private byte[] profilePic;
 	private String profilePicUrl;
 	private String profilePicVersion;
-	private String deviceId;
+	private String uniqueId;
 	private String registered;
 	private String registeredAlready;
+	private String identity;
+	private String pw;
 
 	public User() {
 		// Intentionally left blank.
@@ -38,7 +38,18 @@ public class User {
 	 */
 	public User(RegistrationRequest registrationRequest) {
 		this.mobileNumber = registrationRequest.getMobileNumber();
-		this.deviceId = registrationRequest.getUniqueId();
+		this.uniqueId = registrationRequest.getUniqueId();
+	}
+
+	/**
+	 * Constructor for code registration request.
+	 * 
+	 * @param codeRegistrationRequest
+	 */
+	public User(OneTimePasswordRequest codeRegistrationRequest) {
+		this.mobileNumber = codeRegistrationRequest.getMobileNumber();
+		this.identity = codeRegistrationRequest.getId();
+		this.uniqueId = codeRegistrationRequest.getUniqueId();
 	}
 
 	/**
@@ -48,7 +59,7 @@ public class User {
 	 */
 	public User(PingRequest pingRequest) {
 		this.userId = Long.parseLong(pingRequest.getUserId());
-		this.deviceId = pingRequest.getUniqueId();
+		this.uniqueId = pingRequest.getUniqueId();
 	}
 
 	/**
@@ -58,9 +69,9 @@ public class User {
 	 */
 	public User(ValidateOTPRequest validateOTPRequest) {
 		this.mobileNumber = validateOTPRequest.getMobileNumber();
-		this.otpCode = validateOTPRequest.getOtpCode();
 		this.deviceRegId = validateOTPRequest.getDeviceRegId();
-		this.deviceId = validateOTPRequest.getUniqueId();
+		this.uniqueId = validateOTPRequest.getUniqueId();
+		this.identity = validateOTPRequest.getId();
 	}
 
 	/**
@@ -84,20 +95,20 @@ public class User {
 		this.userId = Long.parseLong(userProfileRequest.getUserId());
 	}
 
+	public String getIdentity() {
+		return identity;
+	}
+
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
+
 	public String getProfilePicVersion() {
 		return profilePicVersion;
 	}
 
 	public void setProfilePicVersion(String profilePicVersion) {
 		this.profilePicVersion = profilePicVersion;
-	}
-
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
 	}
 
 	public byte[] getProfilePic() {
@@ -114,14 +125,6 @@ public class User {
 
 	public void setProfilePicUrl(String profilePicUrl) {
 		this.profilePicUrl = profilePicUrl;
-	}
-
-	public String getInvalidOtpCount() {
-		return invalidOtpCount;
-	}
-
-	public void setInvalidOtpCount(String invalidOtpCount) {
-		this.invalidOtpCount = invalidOtpCount;
 	}
 
 	public Long getUserId() {
@@ -156,22 +159,6 @@ public class User {
 		this.deviceRegId = deviceRegId;
 	}
 
-	public String getOtpCreationDateTime() {
-		return otpCreationDateTime;
-	}
-
-	public void setOtpCreationDateTime(String otpCreationDateTime) {
-		this.otpCreationDateTime = otpCreationDateTime;
-	}
-
-	public String getOtpCode() {
-		return otpCode;
-	}
-
-	public void setOtpCode(String otpCode) {
-		this.otpCode = otpCode;
-	}
-
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
@@ -202,6 +189,22 @@ public class User {
 
 	public void setRegisteredAlready(String registeredAlready) {
 		this.registeredAlready = registeredAlready;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 
 }

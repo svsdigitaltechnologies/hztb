@@ -47,12 +47,16 @@ public class RegistrationController {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<RegistrationResponse> register(@RequestBody @Valid RegistrationRequest registrationRequest) {
-		RegistrationResponse registrationResponse = userDataService.register(registrationRequest);
-		return buildRegisterResponse(registrationResponse);
+		/*
+		 * RegistrationResponse registrationResponse =
+		 * userDataService.register(registrationRequest); return
+		 * buildRegisterResponse(registrationResponse);
+		 */ return null;
 	}
 
 	private ResponseEntity<RegistrationResponse> buildRegisterResponse(RegistrationResponse registrationResponse) {
 		return ResponseEntity.status(HttpStatus.SC_OK).contentType(MediaType.APPLICATION_JSON)
 				.body(registrationResponse);
 	}
+
 }
