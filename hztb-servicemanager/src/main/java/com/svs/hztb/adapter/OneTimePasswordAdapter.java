@@ -12,6 +12,26 @@ import com.svs.hztb.exception.DataServiceException;
 public interface OneTimePasswordAdapter {
 
 	/**
+	 * find otp record using phone number
+	 * 
+	 * @param dataServiceRequest
+	 * @return
+	 * @throws DataServiceException
+	 */
+	OneTimePassword findOTPbyPhoneNumber(DataServiceRequest<OneTimePassword> dataServiceRequest)
+			throws DataServiceException;
+
+	/**
+	 * find otp record using phone number and unique id
+	 * 
+	 * @param dataServiceRequest
+	 * @return
+	 * @throws DataServiceException
+	 */
+	OneTimePassword findOTPbyPhoneAndId(DataServiceRequest<OneTimePassword> dataServiceRequest)
+			throws DataServiceException;
+
+	/**
 	 * find otp record using phone number and unique id
 	 * 
 	 * @param dataServiceRequest
@@ -38,16 +58,6 @@ public interface OneTimePasswordAdapter {
 	 * @throws DataServiceException
 	 */
 	OneTimePassword updateOTPCode(DataServiceRequest<OneTimePassword> dataServiceRequest) throws DataServiceException;
-
-	/**
-	 * find otp record using phone number, unique id and Identity.
-	 * 
-	 * @param dataServiceRequest
-	 * @return
-	 * @throws DataServiceException
-	 */
-	OneTimePassword findOTPbyPhoneAndUniqueIdAndIdentity(DataServiceRequest<OneTimePassword> dataServiceRequest)
-			throws DataServiceException;
 
 	/**
 	 * find otp record using phone number, unique id and Identity.

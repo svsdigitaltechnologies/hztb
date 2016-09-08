@@ -21,7 +21,9 @@ public enum ServiceManagerStatusCode implements StatusCode {
 											String.valueOf(HttpStatus.BAD_REQUEST.value()),
 											"Invalid OTP"), OTP_NOT_VALID("10005",
 													String.valueOf(HttpStatus.BAD_REQUEST.value()),
-													"OTP is either expired or invalid OTP count exceeded"),
+													"OTP is either expired or invalid OTP count exceeded"), OTP_IS_STALE(
+															"10006", String.valueOf(HttpStatus.BAD_REQUEST.value()),
+															"OTP is stale"),
 
 	NEED_PAYMENT("20000", String.valueOf(HttpStatus.BAD_REQUEST.value()), "Need Payment"), INVALID_VERSION_NUMBER(
 			"20001", String.valueOf(HttpStatus.BAD_REQUEST.value()),

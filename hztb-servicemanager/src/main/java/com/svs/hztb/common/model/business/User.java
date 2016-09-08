@@ -1,5 +1,7 @@
 package com.svs.hztb.common.model.business;
 
+import java.util.Optional;
+
 import com.svs.hztb.api.sm.model.ping.PingRequest;
 import com.svs.hztb.api.sm.model.registration.OneTimePasswordRequest;
 import com.svs.hztb.api.sm.model.registration.RegistrationRequest;
@@ -21,7 +23,6 @@ public class User {
 	private byte[] profilePic;
 	private String profilePicUrl;
 	private String profilePicVersion;
-	private String uniqueId;
 	private String registered;
 	private String registeredAlready;
 	private String identity;
@@ -38,7 +39,6 @@ public class User {
 	 */
 	public User(RegistrationRequest registrationRequest) {
 		this.mobileNumber = registrationRequest.getMobileNumber();
-		this.uniqueId = registrationRequest.getUniqueId();
 	}
 
 	/**
@@ -49,7 +49,6 @@ public class User {
 	public User(OneTimePasswordRequest codeRegistrationRequest) {
 		this.mobileNumber = codeRegistrationRequest.getMobileNumber();
 		this.identity = codeRegistrationRequest.getId();
-		this.uniqueId = codeRegistrationRequest.getUniqueId();
 	}
 
 	/**
@@ -59,7 +58,6 @@ public class User {
 	 */
 	public User(PingRequest pingRequest) {
 		this.userId = Long.parseLong(pingRequest.getUserId());
-		this.uniqueId = pingRequest.getUniqueId();
 	}
 
 	/**
@@ -69,8 +67,6 @@ public class User {
 	 */
 	public User(ValidateOTPRequest validateOTPRequest) {
 		this.mobileNumber = validateOTPRequest.getMobileNumber();
-		this.deviceRegId = validateOTPRequest.getDeviceRegId();
-		this.uniqueId = validateOTPRequest.getUniqueId();
 		this.identity = validateOTPRequest.getId();
 	}
 
@@ -81,9 +77,10 @@ public class User {
 	 */
 	public User(UpdateUserProfileRequest userProfileRequest) {
 		this.userId = Long.parseLong(userProfileRequest.getUserId());
-		this.name = userProfileRequest.getName();
+		Optional.ofNullable(userProfileRequest.getName()).ifPresent(p -> this.setName(p.trim()));
 		this.emailAddress = userProfileRequest.getEmailAddress();
 		this.profilePic = userProfileRequest.getProfilePic();
+		this.deviceRegId = userProfileRequest.getDeviceRegId();
 	}
 
 	/**
@@ -189,14 +186,6 @@ public class User {
 
 	public void setRegisteredAlready(String registeredAlready) {
 		this.registeredAlready = registeredAlready;
-	}
-
-	public String getUniqueId() {
-		return uniqueId;
-	}
-
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
 	}
 
 	public String getPw() {

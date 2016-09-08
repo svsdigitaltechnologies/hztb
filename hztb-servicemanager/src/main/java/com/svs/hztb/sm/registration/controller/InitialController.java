@@ -45,7 +45,7 @@ public class InitialController {
 			"application/json" }, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<InitialCheckResponse> initialCheck(@RequestBody @Valid InitialCheckRequest initialRequest) {
-		LOGGER.debug("In InitialController, requestCode method {}", initialRequest);
+		LOGGER.debug("In InitialController, initialCheck method {}", initialRequest);
 		InitialCheckResponse initialResponse = initialService.checkVersion(initialRequest);
 
 		return buildInitialResponse(initialResponse);

@@ -48,7 +48,6 @@ public class OneTimePasswordAdapterImpl implements OneTimePasswordAdapter {
 		Optional.ofNullable(oneTimePasswordEntity.getMobileNumber()).ifPresent(oneTimePassword::setMobileNumber);
 		Optional.ofNullable(oneTimePasswordEntity.getCodeTime()).ifPresent(oneTimePassword::setOtpCreationDateTime);
 		Optional.ofNullable(oneTimePasswordEntity.getSmsSentCount()).ifPresent(oneTimePassword::setSmsSentCount);
-		Optional.ofNullable(oneTimePasswordEntity.getUniqueId()).ifPresent(oneTimePassword::setUniqueId);
 		return oneTimePassword;
 	}
 
@@ -76,20 +75,22 @@ public class OneTimePasswordAdapterImpl implements OneTimePasswordAdapter {
 		oneTimePasswordEntity.setIdentity(oneTimePassword.getIdentity());
 		oneTimePasswordEntity.setMobileNumber(oneTimePassword.getMobileNumber());
 		oneTimePasswordEntity.setSmsSentCount(oneTimePassword.getSmsSentCount());
-		oneTimePasswordEntity.setUniqueId(oneTimePassword.getUniqueId());
 		oneTimePasswordEntity.setInvalidAttempts(oneTimePassword.getInvalidOtpCount());
 		return oneTimePasswordEntity;
 	}
 
 	@Override
-	public OneTimePassword findOTPbyPhoneAndUniqueIdAndIdentity(DataServiceRequest<OneTimePassword> dataServiceRequest)
+	public void deleteOTPCode(DataServiceRequest<OneTimePassword> dataServiceRequest) throws DataServiceException {
+		oneTimePasswordRepository.delete(dataServiceRequest.getPayload().getId());
+	}
+
+	@Override
+	public OneTimePassword findOTPbyPhoneNumber(DataServiceRequest<OneTimePassword> dataServiceRequest)
 			throws DataServiceException {
-		LOGGER.debug("In OneTimePasswordAdapterImpl, findOTPbyPhoneAndUniqueIdAndIdentity method {}",
-				dataServiceRequest);
+		LOGGER.debug("In OneTimePasswordAdapterImpl, findOTPbyPhoneNumber method {}", dataServiceRequest);
 		OneTimePassword oneTimePassword = null;
-		OneTimePasswordEntity oneTimePasswordEntity = oneTimePasswordRepository.findByPhoneAndUniqueIdAndIdentity(
-				dataServiceRequest.getPayload().getMobileNumber(), dataServiceRequest.getPayload().getUniqueId(),
-				dataServiceRequest.getPayload().getIdentity());
+		OneTimePasswordEntity oneTimePasswordEntity = oneTimePasswordRepository
+				.findByPhoneNumber(dataServiceRequest.getPayload().getMobileNumber());
 		if (null != oneTimePasswordEntity) {
 			oneTimePassword = populateOneTimePassword(oneTimePasswordEntity);
 		}
@@ -97,8 +98,16 @@ public class OneTimePasswordAdapterImpl implements OneTimePasswordAdapter {
 	}
 
 	@Override
-	public void deleteOTPCode(DataServiceRequest<OneTimePassword> dataServiceRequest) throws DataServiceException {
-		oneTimePasswordRepository.delete(dataServiceRequest.getPayload().getId());
+	public OneTimePassword findOTPbyPhoneAndId(DataServiceRequest<OneTimePassword> dataServiceRequest)
+			throws DataServiceException {
+		LOGGER.debug("In OneTimePasswordAdapterImpl, findOTPbyPhoneAndId method {}", dataServiceRequest);
+		OneTimePassword oneTimePassword = null;
+		OneTimePasswordEntity oneTimePasswordEntity = oneTimePasswordRepository.findByPhoneAndIdentity(
+				dataServiceRequest.getPayload().getMobileNumber(), dataServiceRequest.getPayload().getIdentity());
+		if (null != oneTimePasswordEntity) {
+			oneTimePassword = populateOneTimePassword(oneTimePasswordEntity);
+		}
+		return oneTimePassword;
 	}
 
 }

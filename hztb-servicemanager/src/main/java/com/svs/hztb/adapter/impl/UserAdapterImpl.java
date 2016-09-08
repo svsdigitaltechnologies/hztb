@@ -40,7 +40,6 @@ public class UserAdapterImpl implements UserAdapter {
 		try {
 			UserEntity userEntity = new UserEntity();
 			userEntity.setMobileNumber(dataServiceRequest.getPayload().getMobileNumber());
-			userEntity.setDeviceId(dataServiceRequest.getPayload().getUniqueId());
 			userEntity.setIdentity(dataServiceRequest.getPayload().getIdentity());
 			userEntity.setRegistered(dataServiceRequest.getPayload().getRegistered());
 			userEntity.setGcmRegId(dataServiceRequest.getPayload().getDeviceRegId());
@@ -62,12 +61,13 @@ public class UserAdapterImpl implements UserAdapter {
 	public User ping(DataServiceRequest<User> dataServiceRequest) throws DataServiceException {
 		User user = null;
 		try {
-			UserEntity userEntity = userRepository.findByUserIdAndDeviceIdAndRegistered(
-					dataServiceRequest.getPayload().getUserId(), dataServiceRequest.getPayload().getUniqueId());
+			UserEntity userEntity = userRepository.findByUserIdAndIdAndRegistered(
+					dataServiceRequest.getPayload().getUserId(), dataServiceRequest.getPayload().getIdentity());
 			if (null == userEntity) {
-				throw new DataServiceException("User not available with UserId: ["
-						+ dataServiceRequest.getPayload().getUserId() + "] and Device Id : ["
-						+ dataServiceRequest.getPayload().getUniqueId() + "] and Registered", "4");
+				throw new DataServiceException(
+						"User not available with UserId: [" + dataServiceRequest.getPayload().getUserId()
+								+ "] and Id : [" + dataServiceRequest.getPayload().getIdentity() + "] and Registered",
+						"4");
 			}
 			user = populatePingResponse(userEntity);
 		} catch (DataServiceException dataServiceException) {
@@ -126,7 +126,6 @@ public class UserAdapterImpl implements UserAdapter {
 		Optional.ofNullable(userEntity.getUserId()).ifPresent(user::setUserId);
 		Optional.ofNullable(userEntity.getPicUrl()).ifPresent(user::setProfilePicUrl);
 		Optional.ofNullable(userEntity.getRegistered()).ifPresent(user::setRegistered);
-		Optional.ofNullable(userEntity.getDeviceId()).ifPresent(user::setUniqueId);
 		Optional.ofNullable(userEntity.getPw()).ifPresent(user::setPw);
 		return user;
 	}
@@ -163,7 +162,6 @@ public class UserAdapterImpl implements UserAdapter {
 			Optional.ofNullable(dataServiceRequest.getPayload().getProfilePicVersion())
 					.ifPresent(userEntity::setPicVersion);
 
-			Optional.ofNullable(dataServiceRequest.getPayload().getUniqueId()).ifPresent(userEntity::setDeviceId);
 			Optional.ofNullable(dataServiceRequest.getPayload().getIdentity()).ifPresent(userEntity::setIdentity);
 			Optional.ofNullable(dataServiceRequest.getPayload().getRegistered()).ifPresent(userEntity::setRegistered);
 			Optional.ofNullable(dataServiceRequest.getPayload().getPw()).ifPresent(userEntity::setPw);

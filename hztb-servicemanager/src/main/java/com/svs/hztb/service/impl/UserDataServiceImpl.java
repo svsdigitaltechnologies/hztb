@@ -98,7 +98,7 @@ public class UserDataServiceImpl extends BaseService implements UserDataService 
 		try {
 			OneTimePassword oneTimePassword = new OneTimePassword(validateOTPRequest);
 			DataServiceRequest<OneTimePassword> dataServiceRequest = new DataServiceRequest<>(oneTimePassword);
-			oneTimePassword = oneTimePasswordAdapter.findOTPbyPhoneAndUniqueIdAndIdentity(dataServiceRequest);
+			oneTimePassword = oneTimePasswordAdapter.findOTPbyPhoneAndId(dataServiceRequest);
 
 			List<ErrorStatus> errors = checkOneTimePassword(oneTimePassword);
 
@@ -174,7 +174,7 @@ public class UserDataServiceImpl extends BaseService implements UserDataService 
 	private UpdateUserProfileResponse populateUpdateUserResponse(User user) {
 		UpdateUserProfileResponse updateUserProfileResponse = new UpdateUserProfileResponse();
 		Optional.ofNullable(user.getProfilePicUrl()).ifPresent(updateUserProfileResponse::setProfilePictureURL);
-		return updateUserProfileResponse;
+		return (UpdateUserProfileResponse) buildSuccessResponse(updateUserProfileResponse);
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class UserDataServiceImpl extends BaseService implements UserDataService 
 		RegisteredProfilesResponse registeredProfilesResponse = new RegisteredProfilesResponse();
 		usersList.stream().forEach(
 				p -> registeredProfilesResponse.addRegisteredProfileResponse(populateRegisteredProfilesResponse(p)));
-		return registeredProfilesResponse;
+		return (RegisteredProfilesResponse) buildSuccessResponse(registeredProfilesResponse);
 	}
 
 	private User createOrUpdateUser(ValidateOTPRequest validateOTPRequest) throws DataServiceException {
@@ -278,8 +278,8 @@ public class UserDataServiceImpl extends BaseService implements UserDataService 
 		List<ErrorStatus> errors = new ArrayList<>();
 
 		if (null == oneTimePassword) {
-			ErrorStatus error = new ErrorStatus(ServiceManagerStatusCode.USER_NOT_AVAILABLE.getStatusCode(),
-					ServiceManagerStatusCode.USER_NOT_AVAILABLE.getMessage());
+			ErrorStatus error = new ErrorStatus(ServiceManagerStatusCode.OTP_IS_STALE.getStatusCode(),
+					ServiceManagerStatusCode.OTP_IS_STALE.getMessage());
 			errors.add(error);
 			return errors;
 		}

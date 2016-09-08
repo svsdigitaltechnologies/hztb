@@ -47,9 +47,6 @@ public class UserEntity implements Serializable {
 	@Column(name = "pic_version", insertable = false)
 	private String picVersion;
 
-	@Column(name = "device_id")
-	private String deviceId;
-
 	@Column(name = "registered")
 	private String registered;
 
@@ -103,14 +100,6 @@ public class UserEntity implements Serializable {
 
 	public Long getUserId() {
 		return this.userId;
-	}
-
-	public String getDeviceId() {
-		return deviceId;
-	}
-
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
 	}
 
 	public void setUserId(Long userId) {
