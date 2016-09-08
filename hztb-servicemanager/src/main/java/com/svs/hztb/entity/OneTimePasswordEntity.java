@@ -31,9 +31,6 @@ public class OneTimePasswordEntity implements Serializable {
 	@Column(name = "identity")
 	private String identity;
 
-	@Column(name = "unique_id")
-	private String uniqueId;
-
 	@Column(name = "code")
 	private String code;
 
@@ -68,14 +65,6 @@ public class OneTimePasswordEntity implements Serializable {
 
 	public void setIdentity(String identity) {
 		this.identity = identity;
-	}
-
-	public String getUniqueId() {
-		return uniqueId;
-	}
-
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
 	}
 
 	public String getCode() {

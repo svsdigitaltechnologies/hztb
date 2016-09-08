@@ -22,8 +22,8 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 	@Query("from UserEntity where mobileNumber=?1 and userId<>?2 and registered_already = 'Y'")
 	UserEntity findByMobileNumberAndRegisteredAndNotUserId(String mobileNumber, Long userId);
 
-	@Query("from UserEntity where userId=?1 and device_id=?2 and registered='Y'")
-	UserEntity findByUserIdAndDeviceIdAndRegistered(Long userId, String deviceId);
+	@Query("from UserEntity where userId=?1 and identity=?2 and registered='Y'")
+	UserEntity findByUserIdAndIdAndRegistered(Long userId, String identity);
 
 	@Query("from UserEntity where mobileNumber=?1 and device_id=?2 and identity=?3")
 	UserEntity findByUserIdAndUniqueIddAndIdentity(String mobileNumber, String device_id, String identity);

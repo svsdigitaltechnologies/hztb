@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.svs.hztb.adapter.OneTimePasswordAdapter;
 import com.svs.hztb.api.common.utils.HZTBUtil;
 import com.svs.hztb.api.sm.model.clickatell.ClickatellResponse;
+import com.svs.hztb.api.sm.model.registration.GetOTPResponse;
 import com.svs.hztb.api.sm.model.registration.OneTimePasswordRequest;
 import com.svs.hztb.api.sm.model.registration.OneTimePasswordResponse;
 import com.svs.hztb.common.enums.ServiceManagerClientType;
@@ -53,7 +54,7 @@ public class OneTimePasswordDataServiceImpl extends BaseService implements OneTi
 		try {
 			OneTimePassword oneTimePassword = new OneTimePassword(oneTimePasswordRequest);
 			DataServiceRequest<OneTimePassword> dataServiceRequest = new DataServiceRequest<>(oneTimePassword);
-			OneTimePassword findOneTimePassword = oneTimePasswordAdapter.findOTPbyPhoneAndUniqueId(dataServiceRequest);
+			OneTimePassword findOneTimePassword = oneTimePasswordAdapter.findOTPbyPhoneNumber(dataServiceRequest);
 
 			// if pn, unique id doesn't exist's, then create a new record and
 			// send otp to phone number
@@ -71,7 +72,6 @@ public class OneTimePasswordDataServiceImpl extends BaseService implements OneTi
 			findOneTimePassword.setIdentity(oneTimePassword.getIdentity());
 			// if pn, unique id exists, check sms sent count
 			oneTimePassword = updateOTPCode(dataServiceRequest, findOneTimePassword);
-			sendOTPToMobileNumber(oneTimePassword);
 			oneTimePassword.setVoiceWaitTime(SmsWaitTime.SMS_SENT_4.getWaitTime().toString());
 			oneTimePassword.setOtpWaitTime(THREE);
 			return populateOneTimePasswordResponse(oneTimePassword);
@@ -131,19 +131,21 @@ public class OneTimePasswordDataServiceImpl extends BaseService implements OneTi
 	}
 
 	private OneTimePassword updateOTPCode(DataServiceRequest<OneTimePassword> dataServiceRequest,
-			OneTimePassword findOneTimePassword) throws DataServiceException {
+			OneTimePassword findOneTimePassword) throws Exception {
 		OneTimePassword localOneTimePassword = null;
 
 		if (findOneTimePassword.getSmsSentCount().intValue() == SmsWaitTime.SMS_SENT_1.getSentCount()) {
 			localOneTimePassword = checkSmsCountAndWaitTime(dataServiceRequest, findOneTimePassword,
 					SmsWaitTime.SMS_SENT_1, SmsWaitTime.SMS_SENT_2);
 			if (localOneTimePassword.getSmsWaitTime() == null) {
+				sendOTPToMobileNumber(localOneTimePassword);
 				localOneTimePassword.setSmsWaitTime(SmsWaitTime.SMS_SENT_2.getWaitTime().toString());
 			}
 		} else if (findOneTimePassword.getSmsSentCount().intValue() == SmsWaitTime.SMS_SENT_2.getSentCount()) {
 			localOneTimePassword = checkSmsCountAndWaitTime(dataServiceRequest, findOneTimePassword,
 					SmsWaitTime.SMS_SENT_2, SmsWaitTime.SMS_SENT_3);
 			if (localOneTimePassword.getSmsWaitTime() == null) {
+				sendOTPToMobileNumber(localOneTimePassword);
 				localOneTimePassword.setSmsWaitTime(SmsWaitTime.SMS_SENT_3.getWaitTime().toString());
 			}
 
@@ -151,12 +153,14 @@ public class OneTimePasswordDataServiceImpl extends BaseService implements OneTi
 			localOneTimePassword = checkSmsCountAndWaitTime(dataServiceRequest, findOneTimePassword,
 					SmsWaitTime.SMS_SENT_3, SmsWaitTime.SMS_SENT_4);
 			if (localOneTimePassword.getSmsWaitTime() == null) {
+				sendOTPToMobileNumber(localOneTimePassword);
 				localOneTimePassword.setSmsWaitTime(SmsWaitTime.SMS_SENT_4.getWaitTime().toString());
 			}
 		} else if (findOneTimePassword.getSmsSentCount().intValue() == SmsWaitTime.SMS_SENT_4.getSentCount()) {
 			localOneTimePassword = checkSmsCountAndWaitTime(dataServiceRequest, findOneTimePassword,
 					SmsWaitTime.SMS_SENT_4, SmsWaitTime.SMS_SENT_1);
 			if (localOneTimePassword.getSmsWaitTime() == null) {
+				sendOTPToMobileNumber(localOneTimePassword);
 				localOneTimePassword.setSmsWaitTime(SmsWaitTime.SMS_SENT_1.getWaitTime().toString());
 			}
 		}
@@ -179,4 +183,35 @@ public class OneTimePasswordDataServiceImpl extends BaseService implements OneTi
 		}
 
 	}
+
+	@Override
+	public GetOTPResponse getOTPCode(OneTimePasswordRequest oneTimePasswordRequest) {
+		try {
+			OneTimePassword oneTimePassword = new OneTimePassword(oneTimePasswordRequest);
+			DataServiceRequest<OneTimePassword> dataServiceRequest = new DataServiceRequest<>(oneTimePassword);
+			OneTimePassword findOneTimePassword = oneTimePasswordAdapter.findOTPbyPhoneNumber(dataServiceRequest);
+			if (null == findOneTimePassword) {
+				throw new DataServiceException("User not available with phone number : ["
+						+ dataServiceRequest.getPayload().getMobileNumber() + "]", "2");
+			}
+			return populateGetOTPResponse(findOneTimePassword);
+
+		} catch (DataServiceException dataServiceException) {
+			LOGGER.error("Error occured during requestCode : {}", dataServiceException);
+			throw BusinessError.build(ServiceManagerClientType.DS, dataServiceException.getMessage(),
+					dataServiceException.getStatusCode());
+		} catch (Exception exception) {
+			throw new SystemError(exception.getMessage(), exception,
+					PlatformStatusCode.ERROR_OCCURED_DURING_BUSINESS_PROCESSING);
+		}
+	}
+
+	private GetOTPResponse populateGetOTPResponse(OneTimePassword oneTimePassword) {
+		GetOTPResponse getOTPResponse = new GetOTPResponse();
+		Optional.ofNullable(oneTimePassword.getOtpCode()).ifPresent(getOTPResponse::setOtpCode);
+
+		return (GetOTPResponse) buildSuccessResponse(getOTPResponse);
+
+	}
+
 }

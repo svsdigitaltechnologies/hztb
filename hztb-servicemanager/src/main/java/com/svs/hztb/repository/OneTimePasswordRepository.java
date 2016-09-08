@@ -21,7 +21,10 @@ public interface OneTimePasswordRepository extends CrudRepository<OneTimePasswor
 	@Query("from OneTimePasswordEntity where pn=?1 and unique_id=?2")
 	OneTimePasswordEntity findByPhoneAndUniqueId(String pn, String uniqueId);
 
-	@Query("from OneTimePasswordEntity where pn=?1 and unique_id=?2 and identity=?3")
-	OneTimePasswordEntity findByPhoneAndUniqueIdAndIdentity(String pn, String uniqueId, String identity);
+	@Query("from OneTimePasswordEntity where pn=?1 and identity=?2")
+	OneTimePasswordEntity findByPhoneAndIdentity(String pn, String identity);
+
+	@Query("from OneTimePasswordEntity where pn=?1")
+	OneTimePasswordEntity findByPhoneNumber(String pn);
 
 }

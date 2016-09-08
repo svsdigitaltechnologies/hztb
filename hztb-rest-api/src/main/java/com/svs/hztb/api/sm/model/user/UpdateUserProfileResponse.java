@@ -5,6 +5,7 @@ import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
+import com.svs.hztb.common.model.HztbResponse;
 
 /**
  * 
@@ -14,7 +15,7 @@ import com.svs.hztb.api.common.utils.HZTBRegularExpressions;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UpdateUserProfileResponse {
+public class UpdateUserProfileResponse extends HztbResponse {
 
 	@NotNull
 	@Pattern(regexp = HZTBRegularExpressions.ONLY_DIGITS_REGEX)

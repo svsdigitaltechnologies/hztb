@@ -28,15 +28,7 @@ public class ValidateOTPRequest {
 	@NotNull
 	@Pattern(regexp = HZTBRegularExpressions.DEVICE_ID_REGEX)
 	@Size(min = 16, max = 64)
-	private String uniqueId;
-
-	@NotNull
-	@Pattern(regexp = HZTBRegularExpressions.DEVICE_ID_REGEX)
-	@Size(min = 16, max = 64)
 	private String id;
-
-	@NotNull
-	private String deviceRegId;
 
 	public String getMobileNumber() {
 		return mobileNumber;
@@ -52,22 +44,6 @@ public class ValidateOTPRequest {
 
 	public void setOtpCode(String otpCode) {
 		this.otpCode = otpCode;
-	}
-
-	public String getUniqueId() {
-		return uniqueId;
-	}
-
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
-	}
-
-	public String getDeviceRegId() {
-		return deviceRegId;
-	}
-
-	public void setDeviceRegId(String deviceRegId) {
-		this.deviceRegId = deviceRegId;
 	}
 
 	public String getId() {

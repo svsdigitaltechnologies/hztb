@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.svs.hztb.common.model.HztbResponse;
 
 /**
  * Request class for registered users service api.
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RegisteredProfilesResponse {
+public class RegisteredProfilesResponse extends HztbResponse {
 	private List<RegisteredProfileResponse> registeredProfileResponses;
 
 	public List<RegisteredProfileResponse> getRegisteredProfileResponses() {

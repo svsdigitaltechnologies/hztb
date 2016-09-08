@@ -23,11 +23,6 @@ public class OneTimePasswordRequest extends HztbRequest {
 	@NotNull
 	@Pattern(regexp = HZTBRegularExpressions.DEVICE_ID_REGEX)
 	@Size(min = 16, max = 64)
-	private String uniqueId;
-
-	@NotNull
-	@Pattern(regexp = HZTBRegularExpressions.DEVICE_ID_REGEX)
-	@Size(min = 16, max = 64)
 	private String id;
 
 	public String getMobileNumber() {
@@ -36,14 +31,6 @@ public class OneTimePasswordRequest extends HztbRequest {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
-	}
-
-	public String getUniqueId() {
-		return uniqueId;
-	}
-
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
 	}
 
 	public String getId() {

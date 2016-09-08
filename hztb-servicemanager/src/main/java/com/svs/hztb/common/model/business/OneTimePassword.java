@@ -34,7 +34,6 @@ public class OneTimePassword {
 	public OneTimePassword(OneTimePasswordRequest oneTimePasswordRequest) {
 		this.mobileNumber = oneTimePasswordRequest.getMobileNumber();
 		this.identity = oneTimePasswordRequest.getId();
-		this.uniqueId = oneTimePasswordRequest.getUniqueId();
 	}
 
 	/**
@@ -44,7 +43,6 @@ public class OneTimePassword {
 	public OneTimePassword(ValidateOTPRequest validateOTPRequest) {
 		this.mobileNumber = validateOTPRequest.getMobileNumber();
 		this.identity = validateOTPRequest.getId();
-		this.uniqueId = validateOTPRequest.getUniqueId();
 	}
 
 	public Long getId() {

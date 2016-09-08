@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.svs.hztb.api.sm.model.registration.GetOTPResponse;
 import com.svs.hztb.api.sm.model.registration.OneTimePasswordRequest;
 import com.svs.hztb.api.sm.model.registration.OneTimePasswordResponse;
 import com.svs.hztb.common.logging.Logger;
@@ -61,4 +62,26 @@ public class OneTimePasswordController {
 				.body(oneTimePasswordResponse);
 	}
 
+	/**
+	 * 
+	 * @param oneTimePasswordRequest
+	 * @return oneTimePasswordResponse
+	 * 
+	 *         This method is used to request code for a new user to the
+	 *         application 1. Generates a new OTP code and inserts/updates a
+	 *         record in code_register table. 2. sends the otp code to the
+	 *         mobile phone.
+	 */
+	@RequestMapping(value = "/getotp", consumes = { "application/json" }, produces = {
+			"application/json" }, method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<GetOTPResponse> getOTP(@RequestBody @Valid OneTimePasswordRequest oneTimePasswordRequest) {
+		LOGGER.debug("In OneTimePasswordController, getOTP method {}", oneTimePasswordRequest);
+		GetOTPResponse getOTPResponse = oneTimePasswordDataService.getOTPCode(oneTimePasswordRequest);
+		return buildGetOTPResponse(getOTPResponse);
+	}
+
+	private ResponseEntity<GetOTPResponse> buildGetOTPResponse(GetOTPResponse getOTPResponse) {
+		return ResponseEntity.status(HttpStatus.SC_OK).contentType(MediaType.APPLICATION_JSON).body(getOTPResponse);
+	}
 }
